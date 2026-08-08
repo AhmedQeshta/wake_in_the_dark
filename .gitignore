@@ -1,0 +1,91 @@
+# =========================
+# Unity generated folders
+# =========================
+
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+Recordings/
+
+# =========================
+# Builds
+# =========================
+
+[Bb]uild/
+[Bb]uilds/
+
+*.apk
+*.aab
+*.unitypackage
+
+# =========================
+# Visual Studio / Rider / VS Code
+# =========================
+
+.vs/
+.idea/
+.vscode/
+
+*.csproj
+*.csproj.user
+*.sln
+*.sln.iml
+*.sln.DotSettings
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# =========================
+# OS generated files
+# =========================
+
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# Unity generated files
+# =========================
+
+ExportedObj/
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+sysinfo.txt
+
+# =========================
+# Crash dumps
+# =========================
+
+*.stackdump
+
+# =========================
+# Asset Store
+# =========================
+
+/[Aa]ssets/AssetStoreTools*
+
+# =========================
+# Addressables
+# =========================
+
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# =========================
+# Android temporary files
+# =========================
+
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# =========================
+# Crashlytics
+# =========================
+
+crashlytics-build.properties
