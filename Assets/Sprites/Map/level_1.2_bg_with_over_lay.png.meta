@@ -1,0 +1,4035 @@
+fileFormatVersion: 2
+guid: 05b90a96bd43318498e60e36c3339d0d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5405129658060809521
+    second: level_1.2_bg_with_over_lay_0
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 135a4a159c0e20b40800000000000000
+      internalID: 5405129658060809521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1124f79b322dcc448a4a95319a3e5ec
+      internalID: -1009432088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10eb1221448f94b41964aa005d31269a
+      internalID: 897220609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_3
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8e8cbfec453caf74e8edee2d33128452
+      internalID: 1730293705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 812f310cdb20eb94c8312b0239c60dcc
+      internalID: -1584374406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_5
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62929e02dc19bb54b8c1908f418e8f5f
+      internalID: -1983024056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_6
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7740f3f74b9cc5b4bb853557b6ec8744
+      internalID: -241496061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_7
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4d6f45ba6e29c6489203e6498bf3b58
+      internalID: 982229562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_8
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c3967b8c7f72f8418a05ffe65cd7f34
+      internalID: -100418433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_9
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: baceb1f2bcedce641b2d429758c4a9c2
+      internalID: -269570076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_10
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e722e50004ad414cb9d324056dbc3d6
+      internalID: 1003082242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_11
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: befb733a588b01e489dfd90bee25a6cd
+      internalID: 1793828828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_12
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1546
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc9c2327b4b9d114b8fda2b2fe48bf50
+      internalID: 1899972431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_13
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b14e611dce5b4b048a0786422306831f
+      internalID: 1844749057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_14
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19146202164abd04ba4f65cf37bc8118
+      internalID: 1694757640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_15
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6597ead84700bb489138c559acdad79
+      internalID: -671581662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_16
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9582067b44f79f4b862578faa100361
+      internalID: -624465382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_17
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d6a0b1f4c848654e8953fb8c730f31e
+      internalID: -1653087664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_18
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b66b41f22da0c92438609174c79e3041
+      internalID: -395759570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_19
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 010b9b72d17a26e4785706430b23daf6
+      internalID: -301741786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_20
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65e9fa92cdf207b42a828bbc84a01c9e
+      internalID: -951808624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_21
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b41c7b4fcd481ab4ca7dd94ddfbdc290
+      internalID: -600670238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_22
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 866c6f2abfdcb6745b5c35563a3926cf
+      internalID: 1572070681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_23
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 245ee9c172535984dac8cd74c41fded1
+      internalID: 1855405992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_24
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d01d5ce6fc330f94c9738b31dc0a93d9
+      internalID: 706945607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_25
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1418
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 689e7c4dc7960fc47afdbf2c12fc25c6
+      internalID: -1758164632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_26
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17c06fee71ef6584bbb40add3d4c2381
+      internalID: 195303062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_27
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eefe724822ed2a9479fe5f829d96fcb8
+      internalID: -1805499954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_28
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9ed8bef634a7e041a5f9210fab2e5d3
+      internalID: -998266603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_29
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c011e8536cb9e504eb45f30b58e76d8e
+      internalID: 1622359481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_30
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 420ca6270b83e9245aa40e6e7851cad7
+      internalID: -1753234438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_31
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d9f38e93d30eaf4693e6e6332b15d2b
+      internalID: 863681844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_32
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c4c08e6efcc742140aa8df4f9a12d51c
+      internalID: -257677118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_33
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36a59a54f0dd4504f9bff15e8a5d645e
+      internalID: 1660891683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_34
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13664076416af0a42af1061e2744697c
+      internalID: -980581767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_35
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61c559e738f079a43803714a86218b51
+      internalID: -1301405222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_36
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6730a4df3b12c949836e27c0bb5f240
+      internalID: -686571684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_37
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c787977d845d466429550a62fa7ff01a
+      internalID: -992295743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_38
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1290
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 173e54aaeb103624cbae34ba27d32b1b
+      internalID: -1266679507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_39
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd230de074fae7d44b43e2deeb971233
+      internalID: -936261534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_40
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3486c46915023224eb01b593100f07b9
+      internalID: -624861311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_41
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f935a664d5f5d847a8ce91d20b922fe
+      internalID: -2142862618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_42
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 515919424deaf4c41added0d2e5bdbb5
+      internalID: 233540290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_43
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c4b492b282fa744b93834b0da96efac
+      internalID: -586380949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_44
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dabe74e0bc72ec45b3cefb953df54f7
+      internalID: 1304825764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_45
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8c714aeeb1b8694d982b06260c73078
+      internalID: 76420215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_46
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce183affb63b03b43aa2ee24b34c2a6a
+      internalID: -1409988653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_47
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4413a2bedd4c9474b88ab7f729b92e66
+      internalID: 971384468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_48
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 953700d7e43edb942b6825e294208541
+      internalID: 1078587920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_49
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89409294ca520d04b98cc1a54291319a
+      internalID: 727737015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_50
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12166814bd8dbc14a86ca2d532e34813
+      internalID: -1885204665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_51
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1162
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24f67295912a4254e8aa130479a7cbed
+      internalID: 964645954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29a2bbe4f27240343916c7c75f64102b
+      internalID: 1100373919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_53
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ce419d7c91fc0449b21db57682acdfe
+      internalID: 936878651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_54
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2943d69c8269d242a5a1bd4e93b6715
+      internalID: -1054627437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_55
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 775251e9defd68f45b0abedce3355c87
+      internalID: 1079762785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_56
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c93269a6aeaa1d04484cec75bf21fe63
+      internalID: -1594222919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_57
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4aae71eeaefb12c47870c28a80c0a039
+      internalID: -1299147483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_58
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: deede7c4766865844a200a0fdc9de091
+      internalID: 1284952007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_59
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15c4a8f03fcc46a40898490d4c23e586
+      internalID: 599170778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_60
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edad865008821a544b05b609aa645cd8
+      internalID: -886792232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_61
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de43bc46732a5734b89b0888bdc62bc1
+      internalID: 1679948562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_62
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77bf8aeb52dce544bb7de6366ff44a4b
+      internalID: 1402339071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_63
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 000a70e5da02c9c48b7739dfb0ec8a88
+      internalID: 1388575414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_64
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1034
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3287e1d8d3aa894a983b6a526d1c718
+      internalID: 1518471955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_65
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84d3c7931fa0f214cb6a1e32f3dc8b51
+      internalID: -103090726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_66
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 391d0546ca3b0884e81424bcee36635e
+      internalID: -37166541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_67
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61e67f3b891b15b42a437c4b59cf0d09
+      internalID: 1690643433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_68
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a6750cacd5239f4c9537053bf23b35d
+      internalID: 570437148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_69
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3624e51cd239094e9049c9c6c0bcea9
+      internalID: -695467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_70
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be60c28035187e2449abbf90efb9ce4a
+      internalID: -1701150138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_71
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5cc1250062f957458b7922f66f77d40
+      internalID: -1805260955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_72
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b6edd0977496caa419e0b659da053236
+      internalID: -346806680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_73
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bdc438630f270943a2ec1696424054d
+      internalID: 834907219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_74
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab061188d6d180b42b9f2b106266fdca
+      internalID: -195629173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_75
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41d430eb667185145a7f1421f394ed23
+      internalID: 1486161260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_76
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1629acbe4f5fa8f4d9599fa6fd7b5d7d
+      internalID: 683026983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_77
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 906
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 291b2ca8d13b80f44a0c56b5708d795e
+      internalID: -1694370588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_78
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63bbe64060c54fd4f9b8683dcf103e5d
+      internalID: -2054247065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_79
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a0bd3bc099f6594fbe88a72ba6eeaba
+      internalID: 1214613691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_80
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c7a535ade16b444fa7f1572ca7888d8
+      internalID: -1387586767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_81
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29e9b1dd95692144ca2aa14bca3a3e8e
+      internalID: -468684973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_82
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36ab4b758ea37e14189d643d57b38786
+      internalID: -1877569457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_83
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e76329b01524a7a44bd843e05660f753
+      internalID: 2098499094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_84
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a67e2b26cdf533e419cc5a54e601282b
+      internalID: 1932633893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_85
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7127e564159bf9849964da147f0f5ce1
+      internalID: -117653672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_86
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d801528d430b2fd4ab6163725db89304
+      internalID: 1422225074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_87
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 582c46c270cc4f34785bf4e4abdd7efc
+      internalID: 220128079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_88
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4523ac8fe1951b346aec8908d074c391
+      internalID: 541851049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_89
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c8537e783429724dafccaa02f8df3c5
+      internalID: 1947920719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_90
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 778
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fc643768949801459d0009b2682bdcd
+      internalID: 1579663475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_91
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d87d9e3bed72d4948ac77a4c84e52963
+      internalID: -22613489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_92
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a0ee7ad2f83f364c94c1a6d2d23a6a7
+      internalID: 1421604905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_93
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86e959e2d70739847b8dea8693044dbc
+      internalID: 1629040887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_94
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42496212dd40b634f86e7f2c4dcc8194
+      internalID: -1248466970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_95
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bc9c4c76a516d946bf80b2e5a54afb1
+      internalID: -1933563300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_96
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68dd0d588c0d44b48990ebc9cee89d64
+      internalID: 608746802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_97
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd57849ea108288409c26a7a45cf22db
+      internalID: -556271169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_98
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9fc6571a78fe0846944b160533a6b24
+      internalID: 409642279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_99
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0fcefc5345280f14995d02313450f7e0
+      internalID: -734572566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_100
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81eaf814073e434478e0abb542289b0a
+      internalID: -132849721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_101
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f21630e2e7eb94d44b56586f20b72784
+      internalID: 1703248875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_102
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaa5f43d39f8d6946a0c0beb14d66da0
+      internalID: -367734946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_103
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 650
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83455439a58a80741ab90e0956fc09d9
+      internalID: 2053065754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_104
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 941aa5717920d8b42960b5087ce54d7b
+      internalID: -3854513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_105
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48642ff62001e2f4e80321caa3fd8487
+      internalID: 190436298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_106
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a07335a74d70c2046801d3deda964cc7
+      internalID: -704885419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_107
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8264a2c206b84464da95f8ceea7dcc60
+      internalID: -1579461745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_108
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f00b3d713963f34db7a87640d9a697f
+      internalID: 951509671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_109
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83ee4b2f06fe9b84b93cf43bd494887f
+      internalID: -983187414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_110
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2d97a1766af0bb449a0eaedd7a9e4c51
+      internalID: -739680106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_111
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab03cd533e4fcb54aa3bcf76d7ad9742
+      internalID: 1316293110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_112
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 915b3fce4b39d904abf3861bbea26e42
+      internalID: 1631459248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_113
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfc6f46df0611c64988b1abc131aaa2b
+      internalID: -258616793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_114
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48be5e63f49d37c4f9bbdb3f434c518b
+      internalID: -1136744428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_115
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 944ccaca2a0b5fb42ae1ec50d46a7882
+      internalID: 218600248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_116
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 522
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3baf0e7b24cba164690185246096c36e
+      internalID: -583954275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_117
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14459e102ef529f4a9d71db7ebe9947e
+      internalID: 2024574747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_118
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34a71cb386586934888382d1359e824f
+      internalID: -1304995812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_119
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cad3fb6be3e12a40b528d9004ef444d
+      internalID: 196787539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_120
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a74d5c7d0f9ad4e46890e030b7b43866
+      internalID: -1839174441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_121
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1c41aaeba4475348bc57fb3fcb2b4e6
+      internalID: 459526838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_122
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a55eb040122706147ae76709c6adab00
+      internalID: -1697615588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_123
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 128b9604d49e0ed4fb6b70dfd0c61769
+      internalID: -2014771362
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_124
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43c0a47948ddeda439f658b92f914875
+      internalID: 909116901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_125
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc4ca117c5d4c5a439135cffb1e02da4
+      internalID: 435358625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_126
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29bbda104914b73498c4fc014e5c631d
+      internalID: -1853421369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_127
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a7ba02bf00dc934ab674671f842ddaf
+      internalID: -1438015693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_128
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b5ac7be0290fc34abba2b40ddd1954a
+      internalID: 1730249574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_129
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 394
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fb45562bdb1df24289f1ffa47c9abad
+      internalID: -718606553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_130
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d236b3b6b2e3ed4289b0993958423cf
+      internalID: -914406885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_131
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c33e4a274c1cd24c9ed4a40ae93d5b5
+      internalID: -2036718901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_132
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f3e111edc0c21d4b97c95e029d3f589
+      internalID: -665641433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_133
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ada976858da8554c863bdd9cabf9c7b
+      internalID: -1953333682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_134
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 154448630070b804eaf7dd327367f883
+      internalID: -974424740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_135
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: df4fa3aa288865a4daedcd9c018605ba
+      internalID: -521512294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_136
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e250f31a9eb36f34baf28dbd4e4c0154
+      internalID: 1352040284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_137
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 71eb52d52df8d6e46bbbc93a2ef60810
+      internalID: 1110313109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_138
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6148a9ff42dc2794abc3033fee1fd559
+      internalID: -1384558010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_139
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 265d33cf79acc8146a0e5cca8db4ddb8
+      internalID: 2018934203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_140
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a38c19b478dd50b43963f9710f2124e1
+      internalID: 726686602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_141
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ec0191d8c6714f4fa290173aa7876a8
+      internalID: 517545948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_142
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 266
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a1b19ee84656ae46a025de9f9d53d0c
+      internalID: -594239267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_143
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf4895a3dec310744aabaef41840dd09
+      internalID: -1963612873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_144
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aece2f55047e4414dab74a8d56582a92
+      internalID: 1277412430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_145
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9cfa06da590b96b428a4b6b9872f16c4
+      internalID: 1557007298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_146
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20d2b1d3d7850af4c92087adde83552c
+      internalID: -1208462954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_147
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e557f9eae4deac64bb4ade789ff0f2f7
+      internalID: -1696558514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_148
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5379ea4c9d8d74f4088d95f9b2e306a4
+      internalID: 381714819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_149
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d31f46a5ce5a3241854cc4d62ef435e
+      internalID: 12429005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_150
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b66639430d3fdfd4da3499fe8f067d7e
+      internalID: -1363482498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_151
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 225ab79207205aa46aa2f7c2422c4ba2
+      internalID: -2088692304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_152
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce00dce519c73e341bf057542432424f
+      internalID: 1603547418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_153
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44cd062fd6781904d978cad2a803d8c8
+      internalID: -509901838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_154
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08d2f5f06280b7d4bae4879b6ce783f5
+      internalID: 1962501447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_155
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 138
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8803842a106917f4dbfb702744e30709
+      internalID: 1922756492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_156
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59e6655188a7bc7489b2a549a022fd1d
+      internalID: 1615560627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_157
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 035d85389cc03b14bad6bdc83c265ee9
+      internalID: -118870475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_158
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68a53b16a9900c345b8f4b62595f6b75
+      internalID: 772540968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_159
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c5f3a124735e3a408250b0377120988
+      internalID: 1065071774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_160
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55b821d5d0e3f394fb2851b315ef2583
+      internalID: -486562650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_161
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97c9e5a8e03cfbf468e04873757a5974
+      internalID: -1235166654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_162
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e023ec4f7ed23ef4e9caf6c2855ee168
+      internalID: -335587585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_163
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03b875208a71a9243a5255594e3682c3
+      internalID: 231610875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_164
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19caa33c5362e814999527fdc936dae9
+      internalID: -1830445567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_165
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 616794024f9c7454ebec019dc41b0685
+      internalID: 1480882912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_166
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f9cc3b28583053143bec55839bec00ac
+      internalID: -698120208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_167
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 217f4a9b6c1208f4b98d8992796c023c
+      internalID: -1712891028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: level_1.2_bg_with_over_lay_168
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 10
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fe0b6dadecaf0a4e97d82933f594fb0
+      internalID: -870776494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 2fa7c14ae95c6724b98c1e4413a303d8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      level_1.2_bg_with_over_lay_0: 5405129658060809521
+      level_1.2_bg_with_over_lay_1: -1009432088
+      level_1.2_bg_with_over_lay_10: 1003082242
+      level_1.2_bg_with_over_lay_100: -132849721
+      level_1.2_bg_with_over_lay_101: 1703248875
+      level_1.2_bg_with_over_lay_102: -367734946
+      level_1.2_bg_with_over_lay_103: 2053065754
+      level_1.2_bg_with_over_lay_104: -3854513
+      level_1.2_bg_with_over_lay_105: 190436298
+      level_1.2_bg_with_over_lay_106: -704885419
+      level_1.2_bg_with_over_lay_107: -1579461745
+      level_1.2_bg_with_over_lay_108: 951509671
+      level_1.2_bg_with_over_lay_109: -983187414
+      level_1.2_bg_with_over_lay_11: 1793828828
+      level_1.2_bg_with_over_lay_110: -739680106
+      level_1.2_bg_with_over_lay_111: 1316293110
+      level_1.2_bg_with_over_lay_112: 1631459248
+      level_1.2_bg_with_over_lay_113: -258616793
+      level_1.2_bg_with_over_lay_114: -1136744428
+      level_1.2_bg_with_over_lay_115: 218600248
+      level_1.2_bg_with_over_lay_116: -583954275
+      level_1.2_bg_with_over_lay_117: 2024574747
+      level_1.2_bg_with_over_lay_118: -1304995812
+      level_1.2_bg_with_over_lay_119: 196787539
+      level_1.2_bg_with_over_lay_12: 1899972431
+      level_1.2_bg_with_over_lay_120: -1839174441
+      level_1.2_bg_with_over_lay_121: 459526838
+      level_1.2_bg_with_over_lay_122: -1697615588
+      level_1.2_bg_with_over_lay_123: -2014771362
+      level_1.2_bg_with_over_lay_124: 909116901
+      level_1.2_bg_with_over_lay_125: 435358625
+      level_1.2_bg_with_over_lay_126: -1853421369
+      level_1.2_bg_with_over_lay_127: -1438015693
+      level_1.2_bg_with_over_lay_128: 1730249574
+      level_1.2_bg_with_over_lay_129: -718606553
+      level_1.2_bg_with_over_lay_13: 1844749057
+      level_1.2_bg_with_over_lay_130: -914406885
+      level_1.2_bg_with_over_lay_131: -2036718901
+      level_1.2_bg_with_over_lay_132: -665641433
+      level_1.2_bg_with_over_lay_133: -1953333682
+      level_1.2_bg_with_over_lay_134: -974424740
+      level_1.2_bg_with_over_lay_135: -521512294
+      level_1.2_bg_with_over_lay_136: 1352040284
+      level_1.2_bg_with_over_lay_137: 1110313109
+      level_1.2_bg_with_over_lay_138: -1384558010
+      level_1.2_bg_with_over_lay_139: 2018934203
+      level_1.2_bg_with_over_lay_14: 1694757640
+      level_1.2_bg_with_over_lay_140: 726686602
+      level_1.2_bg_with_over_lay_141: 517545948
+      level_1.2_bg_with_over_lay_142: -594239267
+      level_1.2_bg_with_over_lay_143: -1963612873
+      level_1.2_bg_with_over_lay_144: 1277412430
+      level_1.2_bg_with_over_lay_145: 1557007298
+      level_1.2_bg_with_over_lay_146: -1208462954
+      level_1.2_bg_with_over_lay_147: -1696558514
+      level_1.2_bg_with_over_lay_148: 381714819
+      level_1.2_bg_with_over_lay_149: 12429005
+      level_1.2_bg_with_over_lay_15: -671581662
+      level_1.2_bg_with_over_lay_150: -1363482498
+      level_1.2_bg_with_over_lay_151: -2088692304
+      level_1.2_bg_with_over_lay_152: 1603547418
+      level_1.2_bg_with_over_lay_153: -509901838
+      level_1.2_bg_with_over_lay_154: 1962501447
+      level_1.2_bg_with_over_lay_155: 1922756492
+      level_1.2_bg_with_over_lay_156: 1615560627
+      level_1.2_bg_with_over_lay_157: -118870475
+      level_1.2_bg_with_over_lay_158: 772540968
+      level_1.2_bg_with_over_lay_159: 1065071774
+      level_1.2_bg_with_over_lay_16: -624465382
+      level_1.2_bg_with_over_lay_160: -486562650
+      level_1.2_bg_with_over_lay_161: -1235166654
+      level_1.2_bg_with_over_lay_162: -335587585
+      level_1.2_bg_with_over_lay_163: 231610875
+      level_1.2_bg_with_over_lay_164: -1830445567
+      level_1.2_bg_with_over_lay_165: 1480882912
+      level_1.2_bg_with_over_lay_166: -698120208
+      level_1.2_bg_with_over_lay_167: -1712891028
+      level_1.2_bg_with_over_lay_168: -870776494
+      level_1.2_bg_with_over_lay_17: -1653087664
+      level_1.2_bg_with_over_lay_18: -395759570
+      level_1.2_bg_with_over_lay_19: -301741786
+      level_1.2_bg_with_over_lay_2: 897220609
+      level_1.2_bg_with_over_lay_20: -951808624
+      level_1.2_bg_with_over_lay_21: -600670238
+      level_1.2_bg_with_over_lay_22: 1572070681
+      level_1.2_bg_with_over_lay_23: 1855405992
+      level_1.2_bg_with_over_lay_24: 706945607
+      level_1.2_bg_with_over_lay_25: -1758164632
+      level_1.2_bg_with_over_lay_26: 195303062
+      level_1.2_bg_with_over_lay_27: -1805499954
+      level_1.2_bg_with_over_lay_28: -998266603
+      level_1.2_bg_with_over_lay_29: 1622359481
+      level_1.2_bg_with_over_lay_3: 1730293705
+      level_1.2_bg_with_over_lay_30: -1753234438
+      level_1.2_bg_with_over_lay_31: 863681844
+      level_1.2_bg_with_over_lay_32: -257677118
+      level_1.2_bg_with_over_lay_33: 1660891683
+      level_1.2_bg_with_over_lay_34: -980581767
+      level_1.2_bg_with_over_lay_35: -1301405222
+      level_1.2_bg_with_over_lay_36: -686571684
+      level_1.2_bg_with_over_lay_37: -992295743
+      level_1.2_bg_with_over_lay_38: -1266679507
+      level_1.2_bg_with_over_lay_39: -936261534
+      level_1.2_bg_with_over_lay_4: -1584374406
+      level_1.2_bg_with_over_lay_40: -624861311
+      level_1.2_bg_with_over_lay_41: -2142862618
+      level_1.2_bg_with_over_lay_42: 233540290
+      level_1.2_bg_with_over_lay_43: -586380949
+      level_1.2_bg_with_over_lay_44: 1304825764
+      level_1.2_bg_with_over_lay_45: 76420215
+      level_1.2_bg_with_over_lay_46: -1409988653
+      level_1.2_bg_with_over_lay_47: 971384468
+      level_1.2_bg_with_over_lay_48: 1078587920
+      level_1.2_bg_with_over_lay_49: 727737015
+      level_1.2_bg_with_over_lay_5: -1983024056
+      level_1.2_bg_with_over_lay_50: -1885204665
+      level_1.2_bg_with_over_lay_51: 964645954
+      level_1.2_bg_with_over_lay_52: 1100373919
+      level_1.2_bg_with_over_lay_53: 936878651
+      level_1.2_bg_with_over_lay_54: -1054627437
+      level_1.2_bg_with_over_lay_55: 1079762785
+      level_1.2_bg_with_over_lay_56: -1594222919
+      level_1.2_bg_with_over_lay_57: -1299147483
+      level_1.2_bg_with_over_lay_58: 1284952007
+      level_1.2_bg_with_over_lay_59: 599170778
+      level_1.2_bg_with_over_lay_6: -241496061
+      level_1.2_bg_with_over_lay_60: -886792232
+      level_1.2_bg_with_over_lay_61: 1679948562
+      level_1.2_bg_with_over_lay_62: 1402339071
+      level_1.2_bg_with_over_lay_63: 1388575414
+      level_1.2_bg_with_over_lay_64: 1518471955
+      level_1.2_bg_with_over_lay_65: -103090726
+      level_1.2_bg_with_over_lay_66: -37166541
+      level_1.2_bg_with_over_lay_67: 1690643433
+      level_1.2_bg_with_over_lay_68: 570437148
+      level_1.2_bg_with_over_lay_69: -695467
+      level_1.2_bg_with_over_lay_7: 982229562
+      level_1.2_bg_with_over_lay_70: -1701150138
+      level_1.2_bg_with_over_lay_71: -1805260955
+      level_1.2_bg_with_over_lay_72: -346806680
+      level_1.2_bg_with_over_lay_73: 834907219
+      level_1.2_bg_with_over_lay_74: -195629173
+      level_1.2_bg_with_over_lay_75: 1486161260
+      level_1.2_bg_with_over_lay_76: 683026983
+      level_1.2_bg_with_over_lay_77: -1694370588
+      level_1.2_bg_with_over_lay_78: -2054247065
+      level_1.2_bg_with_over_lay_79: 1214613691
+      level_1.2_bg_with_over_lay_8: -100418433
+      level_1.2_bg_with_over_lay_80: -1387586767
+      level_1.2_bg_with_over_lay_81: -468684973
+      level_1.2_bg_with_over_lay_82: -1877569457
+      level_1.2_bg_with_over_lay_83: 2098499094
+      level_1.2_bg_with_over_lay_84: 1932633893
+      level_1.2_bg_with_over_lay_85: -117653672
+      level_1.2_bg_with_over_lay_86: 1422225074
+      level_1.2_bg_with_over_lay_87: 220128079
+      level_1.2_bg_with_over_lay_88: 541851049
+      level_1.2_bg_with_over_lay_89: 1947920719
+      level_1.2_bg_with_over_lay_9: -269570076
+      level_1.2_bg_with_over_lay_90: 1579663475
+      level_1.2_bg_with_over_lay_91: -22613489
+      level_1.2_bg_with_over_lay_92: 1421604905
+      level_1.2_bg_with_over_lay_93: 1629040887
+      level_1.2_bg_with_over_lay_94: -1248466970
+      level_1.2_bg_with_over_lay_95: -1933563300
+      level_1.2_bg_with_over_lay_96: 608746802
+      level_1.2_bg_with_over_lay_97: -556271169
+      level_1.2_bg_with_over_lay_98: 409642279
+      level_1.2_bg_with_over_lay_99: -734572566
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

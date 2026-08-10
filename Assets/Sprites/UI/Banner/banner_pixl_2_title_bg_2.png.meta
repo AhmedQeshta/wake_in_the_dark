@@ -1,0 +1,273 @@
+fileFormatVersion: 2
+guid: 81c37963bc2a1014abe1c418b48bcd3b
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5675388565680196233
+    second: banner_pixl_2_title_bg 1_0
+  - first:
+      213: 968302825998492065
+    second: banner_pixl_2_title_bg 1_1
+  - first:
+      213: 6994280536068842558
+    second: banner_pixl_2_title_bg 1_2
+  - first:
+      213: -7960604094391032003
+    second: banner_pixl_2_title_bg 1_3
+  - first:
+      213: 6805571084143600951
+    second: banner_pixl_2_title_bg 1_4
+  - first:
+      213: -2000741018897896248
+    second: banner_pixl_2_title_bg 1_5
+  - first:
+      213: -5186047424986470606
+    second: banner_pixl_2_title_bg 1_6
+  - first:
+      213: -72261047250368445
+    second: banner_pixl_2_title_bg 1_7
+  - first:
+      213: 5400874996105335630
+    second: banner_pixl_2_title_bg 1_8
+  - first:
+      213: -3194549496842270868
+    second: banner_pixl_2_title_bg 1_9
+  - first:
+      213: 371959663205802024
+    second: banner_pixl_2_title_bg 1_10
+  - first:
+      213: -5484802165874766726
+    second: banner_pixl_2_title_bg 1_11
+  - first:
+      213: 6837675080617465893
+    second: banner_pixl_2_title_bg 1_12
+  - first:
+      213: -8771251900731947081
+    second: banner_pixl_2_title_bg 1_13
+  - first:
+      213: 5653172118900440578
+    second: banner_pixl_2_title_bg 1_14
+  - first:
+      213: -5059048947266095775
+    second: banner_pixl_2_title_bg 1_15
+  - first:
+      213: 1922521302964460501
+    second: banner_pixl_2_title_bg 1_16
+  - first:
+      213: 5631559750464470549
+    second: banner_pixl_2_title_bg 1_17
+  - first:
+      213: -5782182029914426616
+    second: banner_pixl_2_title_bg 1_18
+  - first:
+      213: 2660740413996915947
+    second: banner_pixl_2_title_bg 1_19
+  - first:
+      213: 8797608843433580530
+    second: banner_pixl_2_title_bg 1_20
+  - first:
+      213: -2521523178798370020
+    second: banner_pixl_2_title_bg 1_21
+  - first:
+      213: 4181738130334164323
+    second: banner_pixl_2_title_bg 1_22
+  - first:
+      213: 6550761731012400183
+    second: banner_pixl_2_title_bg 1_23
+  - first:
+      213: -74305752676595575
+    second: banner_pixl_2_title_bg 1_24
+  - first:
+      213: 4333853258044207723
+    second: banner_pixl_2_title_bg 1_25
+  - first:
+      213: -1052234055916751265
+    second: banner_pixl_2_title_bg 1_26
+  - first:
+      213: -7382651528706276627
+    second: banner_pixl_2_title_bg 1_27
+  - first:
+      213: 5281472107013439276
+    second: banner_pixl_2_title_bg 1_28
+  - first:
+      213: -6323364304279035407
+    second: banner_pixl_2_title_bg 1_29
+  - first:
+      213: 5758557897563737495
+    second: banner_pixl_2_title_bg 1_30
+  - first:
+      213: 2431825902269734826
+    second: banner_pixl_2_title_bg 1_31
+  - first:
+      213: -5853608977654219948
+    second: banner_pixl_2_title_bg 1_32
+  - first:
+      213: -3779754038684274986
+    second: banner_pixl_2_title_bg 1_33
+  - first:
+      213: -937088446673980210
+    second: banner_pixl_2_title_bg 1_34
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: banner_pixl_2_title_bg_2_0
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 79
+        width: 528
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7efeb6cd78ccb6b4da6eb7048ce10894
+      internalID: -673999899
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 57788412fb377004eb970f5f6ce89a23
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":624.0,"y":285.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      banner_pixl_2_title_bg_2_0: -673999899
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

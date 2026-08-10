@@ -44,6 +44,9 @@ TagManager:
   - name: bg_1
     uniqueID: 4113232591
     locked: 0
+  - name: traps
+    uniqueID: 1533761491
+    locked: 0
   - name: map_under
     uniqueID: 2922798397
     locked: 0
@@ -52,6 +55,9 @@ TagManager:
     locked: 0
   - name: player
     uniqueID: 3706957103
+    locked: 0
+  - name: particle
+    uniqueID: 3951514807
     locked: 0
   - name: map_over
     uniqueID: 2427531695
