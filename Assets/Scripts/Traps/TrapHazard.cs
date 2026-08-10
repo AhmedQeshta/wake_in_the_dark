@@ -41,39 +41,41 @@ public class TrapHazard : MonoBehaviour
 
 
     // ==================================================
-    // STATE
-    // ==================================================
-
-    private bool triggered;
-
-
-    // ==================================================
     // AWAKE
     // ==================================================
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        audioSource =
+            GetComponent<AudioSource>();
 
-        audioSource.playOnAwake = false;
-        audioSource.loop = false;
+
+        audioSource.playOnAwake =
+            false;
+
+        audioSource.loop =
+            false;
 
         /*
-         * Trap sound is normal gameplay audio.
+         * Trap sound is gameplay audio.
+         * Therefore it should pause when
+         * the pause menu is opened.
          */
-        audioSource.ignoreListenerPause = false;
+        audioSource.ignoreListenerPause =
+            false;
     }
 
 
     // ==================================================
-    // PLAYER TOUCH
+    // TRIGGER
     // ==================================================
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(
+        Collider2D other)
     {
-        if (triggered)
-            return;
-
+        // ----------------------------------------------
+        // FIND PLAYER ROOT
+        // ----------------------------------------------
 
         GameObject playerObject =
             other.attachedRigidbody != null
@@ -81,9 +83,17 @@ public class TrapHazard : MonoBehaviour
                 : other.gameObject;
 
 
+        // ----------------------------------------------
+        // CHECK TAG
+        // ----------------------------------------------
+
         if (!playerObject.CompareTag(playerTag))
             return;
 
+
+        // ----------------------------------------------
+        // FIND PLAYER DEATH
+        // ----------------------------------------------
 
         PlayerDeath playerDeath =
             playerObject.GetComponent<PlayerDeath>();
@@ -99,7 +109,7 @@ public class TrapHazard : MonoBehaviour
         if (playerDeath == null)
         {
             Debug.LogWarning(
-                "Trap touched Player, but PlayerDeath was not found.",
+                "Trap touched Player but PlayerDeath was not found.",
                 this
             );
 
@@ -107,15 +117,26 @@ public class TrapHazard : MonoBehaviour
         }
 
 
+        // ----------------------------------------------
+        // IMPORTANT
+        // ----------------------------------------------
+
+        /*
+         * Prevent multiple death events while
+         * the player is ALREADY dying.
+         *
+         * After PlayerDeath respawns the player,
+         * IsDead becomes false again.
+         *
+         * Therefore this same trap can kill
+         * the player again.
+         */
         if (playerDeath.IsDead)
             return;
 
 
-        triggered = true;
-
-
         // ----------------------------------------------
-        // PLAY SOUND IMMEDIATELY
+        // SOUND
         // ----------------------------------------------
 
         float soundDuration =
@@ -155,7 +176,8 @@ public class TrapHazard : MonoBehaviour
         }
         else
         {
-            audioSource.pitch = 1f;
+            audioSource.pitch =
+                1f;
         }
 
 
@@ -166,12 +188,10 @@ public class TrapHazard : MonoBehaviour
 
 
         /*
-         * Pitch changes playback duration.
-         *
-         * Faster pitch = shorter sound.
-         * Slower pitch = longer sound.
+         * Calculate actual sound duration
+         * after pitch modification.
          */
-        float realDuration =
+        float soundDuration =
             trapHitSound.length /
             Mathf.Max(
                 Mathf.Abs(audioSource.pitch),
@@ -179,7 +199,7 @@ public class TrapHazard : MonoBehaviour
             );
 
 
-        return realDuration;
+        return soundDuration;
     }
 
 

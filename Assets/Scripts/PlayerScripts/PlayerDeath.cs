@@ -1,19 +1,49 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerDeath : MonoBehaviour
 {
+    // ==================================================
+    // LIVES
+    // ==================================================
+
+    [Header("Lives")]
+    [SerializeField, Min(1)]
+    private int maxLives = 3;
+
+    [SerializeField]
+    private PlayerLivesUI livesUI;
+
+    private int currentLives;
+
+
+    // ==================================================
+    // RESPAWN
+    // ==================================================
+
+    [Header("Respawn")]
+
+    [Tooltip("Only RespawnPoint objects on these layers can be used.")]
+    [SerializeField]
+    private LayerMask respawnPointLayer;
+
+    [Tooltip("Delay after death before the player starts respawning.")]
+    [SerializeField, Min(0f)]
+    private float respawnDelay = 0.25f;
+
+
     // ==================================================
     // DEATH SETTINGS
     // ==================================================
 
     [Header("Death Settings")]
 
-    [Tooltip("Minimum time before reloading the level.")]
+    [Tooltip("Minimum amount of time the death sequence lasts.")]
     [SerializeField, Min(0f)]
-    private float reloadDelay = 1f;
+    private float deathDelay = 0.8f;
 
-    [Tooltip("Small extra delay after the trap sound finishes.")]
+    [Tooltip("Small delay added after the trap sound.")]
     [SerializeField, Min(0f)]
     private float soundEndPadding = 0.1f;
 
@@ -24,11 +54,12 @@ public class PlayerDeath : MonoBehaviour
 
     [Header("Player Fade")]
 
-    [Tooltip("How long the player takes to fade away.")]
     [SerializeField, Min(0.01f)]
-    private float playerFadeDuration = 0.4f;
+    private float fadeOutDuration = 0.4f;
 
-    [Tooltip("Controls how smooth the fade looks.")]
+    [SerializeField, Min(0.01f)]
+    private float fadeInDuration = 0.35f;
+
     [SerializeField]
     private AnimationCurve fadeCurve =
         AnimationCurve.EaseInOut(
@@ -40,10 +71,11 @@ public class PlayerDeath : MonoBehaviour
 
 
     // ==================================================
-    // PARTICLES
+    // DEATH PARTICLES
     // ==================================================
 
     [Header("Death Effect")]
+
     [SerializeField]
     private ParticleSystem deathParticlePrefab;
 
@@ -71,7 +103,7 @@ public class PlayerDeath : MonoBehaviour
 
 
     // ==================================================
-    // UI MANAGER
+    // LEVEL MANAGER
     // ==================================================
 
     [Header("Level Manager")]
@@ -86,8 +118,20 @@ public class PlayerDeath : MonoBehaviour
 
     private bool isDead;
 
+    private Color[] originalRendererColors;
+
+    private Vector3 initialSpawnPosition;
+
+
+    // ==================================================
+    // PUBLIC VALUES
+    // ==================================================
 
     public bool IsDead => isDead;
+
+    public int CurrentLives => currentLives;
+
+    public int MaxLives => maxLives;
 
 
     // ==================================================
@@ -96,6 +140,14 @@ public class PlayerDeath : MonoBehaviour
 
     private void Awake()
     {
+        // ----------------------------------------------
+        // SAVE INITIAL POSITION
+        // ----------------------------------------------
+
+        initialSpawnPosition =
+            transform.position;
+
+
         // ----------------------------------------------
         // PLAYER MOVEMENT
         // ----------------------------------------------
@@ -158,14 +210,63 @@ public class PlayerDeath : MonoBehaviour
 
 
         // ----------------------------------------------
+        // SAVE ORIGINAL PLAYER COLORS
+        // ----------------------------------------------
+
+        originalRendererColors =
+            new Color[playerRenderers.Length];
+
+
+        for (int i = 0;
+             i < playerRenderers.Length;
+             i++)
+        {
+            if (playerRenderers[i] != null)
+            {
+                originalRendererColors[i] =
+                    playerRenderers[i].color;
+            }
+        }
+
+
+        // ----------------------------------------------
         // UI MANAGER
         // ----------------------------------------------
 
         if (uiManager == null)
         {
             uiManager =
-                FindFirstObjectByType<UIManager>();
+                FindAnyObjectByType<UIManager>();
         }
+
+
+        // ----------------------------------------------
+        // LIVES UI
+        // ----------------------------------------------
+
+        if (livesUI == null)
+        {
+            livesUI =
+                FindAnyObjectByType<PlayerLivesUI>();
+        }
+
+
+        // ----------------------------------------------
+        // STARTING LIVES
+        // ----------------------------------------------
+
+        currentLives =
+            maxLives;
+
+
+        UpdateLivesUI();
+
+
+        /*
+         * Player starts alive.
+         */
+        isDead =
+            false;
     }
 
 
@@ -177,14 +278,37 @@ public class PlayerDeath : MonoBehaviour
         float trapSoundDuration = 0f)
     {
         /*
-         * Don't kill the player twice.
+         * IMPORTANT:
+         *
+         * Prevent multiple trap events while
+         * the death sequence is already running.
          */
         if (isDead)
             return;
 
 
-        isDead = true;
+        // Player is now dying.
+        isDead =
+            true;
 
+
+        // ----------------------------------------------
+        // REMOVE ONE LIFE
+        // ----------------------------------------------
+
+        currentLives =
+            Mathf.Max(
+                0,
+                currentLives - 1
+            );
+
+
+        UpdateLivesUI();
+
+
+        // ----------------------------------------------
+        // START DEATH ROUTINE
+        // ----------------------------------------------
 
         StartCoroutine(
             DeathRoutine(
@@ -201,18 +325,29 @@ public class PlayerDeath : MonoBehaviour
     private IEnumerator DeathRoutine(
         float trapSoundDuration)
     {
+        /*
+         * Save the position where the player died.
+         *
+         * Nearest RespawnPoint is calculated
+         * from this position.
+         */
+        Vector3 deathPosition =
+            transform.position;
+
+
         // ----------------------------------------------
-        // STOP PLAYER MOVEMENT
+        // DISABLE PLAYER MOVEMENT
         // ----------------------------------------------
 
         if (playerMovement != null)
         {
-            playerMovement.enabled = false;
+            playerMovement.enabled =
+                false;
         }
 
 
         // ----------------------------------------------
-        // STOP PLAYER PHYSICS
+        // STOP PHYSICS
         // ----------------------------------------------
 
         if (playerRigidbody != null)
@@ -229,7 +364,7 @@ public class PlayerDeath : MonoBehaviour
 
 
         // ----------------------------------------------
-        // STOP PLAYER ANIMATION
+        // STOP ANIMATOR
         // ----------------------------------------------
 
         if (playerAnimator != null)
@@ -240,105 +375,433 @@ public class PlayerDeath : MonoBehaviour
 
 
         // ----------------------------------------------
-        // DISABLE COLLIDERS
+        // DISABLE PLAYER COLLIDERS
         // ----------------------------------------------
 
-        if (playerColliders != null)
-        {
-            foreach (
-                Collider2D playerCollider
-                in playerColliders
+        SetPlayerColliders(
+            false
+        );
+
+
+        // ----------------------------------------------
+        // SPAWN DEATH PARTICLES
+        // ----------------------------------------------
+
+        SpawnDeathParticles();
+
+
+        // ----------------------------------------------
+        // FADE PLAYER OUT
+        // ----------------------------------------------
+
+        yield return StartCoroutine(
+            FadePlayer(
+                1f,
+                0f,
+                fadeOutDuration
             )
+        );
+
+
+        // ----------------------------------------------
+        // WAIT FOR DEATH SOUND / EFFECT
+        // ----------------------------------------------
+
+        float requiredDeathTime =
+            Mathf.Max(
+                deathDelay,
+                trapSoundDuration +
+                soundEndPadding
+            );
+
+
+        float remainingWait =
+            Mathf.Max(
+                0f,
+                requiredDeathTime -
+                fadeOutDuration
+            );
+
+
+        if (remainingWait > 0f)
+        {
+            yield return new WaitForSecondsRealtime(
+                remainingWait
+            );
+        }
+
+
+        // ==================================================
+        // NO LIVES LEFT
+        // ==================================================
+
+        if (currentLives <= 0)
+        {
+            ReloadLevelAfterFinalDeath();
+
+            yield break;
+        }
+
+
+        // ==================================================
+        // FIND NEAREST RESPAWN
+        // ==================================================
+
+        RespawnPoint nearestPoint =
+            FindNearestRespawnPoint(
+                deathPosition
+            );
+
+
+        Vector3 respawnPosition;
+
+
+        if (nearestPoint != null)
+        {
+            respawnPosition =
+                nearestPoint.GetRespawnPosition();
+
+
+            Debug.Log(
+                "Respawning at nearest point: " +
+                nearestPoint.name,
+                nearestPoint
+            );
+        }
+        else
+        {
+            /*
+             * Safety fallback:
+             *
+             * If no respawn point is available,
+             * use the player's original position.
+             */
+            respawnPosition =
+                initialSpawnPosition;
+
+
+            Debug.LogWarning(
+                "No valid RespawnPoint found. " +
+                "Using initial player position.",
+                this
+            );
+        }
+
+
+        // ----------------------------------------------
+        // RESPAWN DELAY
+        // ----------------------------------------------
+
+        if (respawnDelay > 0f)
+        {
+            yield return new WaitForSecondsRealtime(
+                respawnDelay
+            );
+        }
+
+
+        // ----------------------------------------------
+        // RESPAWN PLAYER
+        // ----------------------------------------------
+
+        yield return StartCoroutine(
+            RespawnPlayer(
+                respawnPosition
+            )
+        );
+    }
+
+
+    // ==================================================
+    // RESPAWN PLAYER
+    // ==================================================
+
+    private IEnumerator RespawnPlayer(
+        Vector3 respawnPosition)
+    {
+        // ----------------------------------------------
+        // MOVE PLAYER
+        // ----------------------------------------------
+
+        transform.position =
+            respawnPosition;
+
+
+        // ----------------------------------------------
+        // RESET RIGIDBODY VALUES
+        // ----------------------------------------------
+
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.linearVelocity =
+                Vector2.zero;
+
+            playerRigidbody.angularVelocity =
+                0f;
+        }
+
+
+        // ----------------------------------------------
+        // PLAYER STARTS INVISIBLE
+        // ----------------------------------------------
+
+        SetPlayerOpacity(
+            0f
+        );
+
+
+        // ----------------------------------------------
+        // ENABLE ANIMATOR
+        // ----------------------------------------------
+
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled =
+                true;
+        }
+
+
+        // ----------------------------------------------
+        // FADE PLAYER BACK IN
+        // ----------------------------------------------
+
+        yield return StartCoroutine(
+            FadePlayer(
+                0f,
+                1f,
+                fadeInDuration
+            )
+        );
+
+
+        // ==================================================
+        // RESTORE PLAYER PHYSICS
+        // ==================================================
+
+        if (playerRigidbody != null)
+        {
+            /*
+             * VERY IMPORTANT:
+             *
+             * Rigidbody must become simulated again
+             * or triggers/collisions will not work.
+             */
+            playerRigidbody.simulated =
+                true;
+
+
+            playerRigidbody.linearVelocity =
+                Vector2.zero;
+
+            playerRigidbody.angularVelocity =
+                0f;
+        }
+
+
+        // ==================================================
+        // RESTORE COLLIDERS
+        // ==================================================
+
+        /*
+         * VERY IMPORTANT:
+         *
+         * The trap needs these colliders enabled
+         * to detect the player again.
+         */
+        SetPlayerColliders(
+            true
+        );
+
+
+        // ==================================================
+        // RESTORE MOVEMENT
+        // ==================================================
+
+        if (playerMovement != null)
+        {
+            playerMovement.enabled =
+                true;
+        }
+
+
+        // ==================================================
+        // PLAYER IS ALIVE AGAIN
+        // ==================================================
+
+        /*
+         * MOST IMPORTANT FIX:
+         *
+         * TrapHazard checks:
+         *
+         * if (playerDeath.IsDead)
+         *     return;
+         *
+         * Therefore we MUST reset this to false
+         * after every successful respawn.
+         */
+        isDead =
+            false;
+
+
+        Debug.Log(
+            "Player respawn complete. " +
+            "Player can die again. Lives remaining: " +
+            currentLives,
+            this
+        );
+    }
+
+
+    // ==================================================
+    // FIND NEAREST RESPAWN POINT
+    // ==================================================
+
+    private RespawnPoint FindNearestRespawnPoint(
+        Vector3 deathPosition)
+    {
+        RespawnPoint[] respawnPoints =
+            FindObjectsByType<RespawnPoint>(
+                FindObjectsSortMode.None
+            );
+
+
+        RespawnPoint nearestPoint =
+            null;
+
+
+        float nearestDistanceSquared =
+            float.PositiveInfinity;
+
+
+        foreach (
+            RespawnPoint point
+            in respawnPoints
+        )
+        {
+            if (point == null)
+                continue;
+
+
+            // ------------------------------------------
+            // CHECK RESPAWN LAYER
+            // ------------------------------------------
+
+            if (!IsRespawnLayerAllowed(
+                    point.gameObject.layer
+                ))
             {
-                if (playerCollider == null)
-                    continue;
+                continue;
+            }
 
 
-                playerCollider.enabled =
-                    false;
+            Vector3 pointPosition =
+                point.GetRespawnPosition();
+
+
+            float distanceSquared =
+                (
+                    pointPosition -
+                    deathPosition
+                ).sqrMagnitude;
+
+
+            if (distanceSquared <
+                nearestDistanceSquared)
+            {
+                nearestDistanceSquared =
+                    distanceSquared;
+
+                nearestPoint =
+                    point;
             }
         }
 
 
-        // ----------------------------------------------
-        // SPAWN PARTICLE EFFECT
-        // ----------------------------------------------
+        return nearestPoint;
+    }
 
-        if (deathParticlePrefab != null)
+
+    // ==================================================
+    // RESPAWN LAYER CHECK
+    // ==================================================
+
+    private bool IsRespawnLayerAllowed(
+        int objectLayer)
+    {
+        /*
+         * If no LayerMask is selected,
+         * allow every RespawnPoint.
+         */
+        if (respawnPointLayer.value == 0)
         {
-            ParticleSystem particles =
-                Instantiate(
-                    deathParticlePrefab,
-                    transform.position,
-                    Quaternion.identity
-                );
-
-
-            particles.Play();
-
-
-            Destroy(
-                particles.gameObject,
-                5f
-            );
+            return true;
         }
 
 
-        // ----------------------------------------------
-        // FADE PLAYER
-        // ----------------------------------------------
-
-        /*
-         * Start player fade at the same time
-         * as the particle effect.
-         */
-        StartCoroutine(
-            FadePlayer()
-        );
+        int objectLayerMask =
+            1 << objectLayer;
 
 
-        // ----------------------------------------------
-        // WAIT BEFORE RELOAD
-        // ----------------------------------------------
+        return (
+            respawnPointLayer.value &
+            objectLayerMask
+        ) != 0;
+    }
 
-        /*
-         * Wait long enough for:
-         *
-         * - minimum reload delay
-         * - trap sound
-         * - player fade
-         *
-         * whichever is longest.
-         */
 
-        float totalWaitTime =
-            Mathf.Max(
-                reloadDelay,
-                trapSoundDuration +
-                soundEndPadding,
-                playerFadeDuration
+    // ==================================================
+    // DEATH PARTICLES
+    // ==================================================
+
+    private void SpawnDeathParticles()
+    {
+        if (deathParticlePrefab == null)
+            return;
+
+
+        ParticleSystem particles =
+            Instantiate(
+                deathParticlePrefab,
+                transform.position,
+                Quaternion.identity
             );
 
 
-        yield return new WaitForSecondsRealtime(
-            totalWaitTime
+        particles.Play();
+
+
+        /*
+         * Cleanup temporary particle object.
+         */
+        Destroy(
+            particles.gameObject,
+            5f
         );
+    }
 
 
-        // ----------------------------------------------
-        // RELOAD LEVEL
-        // ----------------------------------------------
+    // ==================================================
+    // PLAYER COLLIDERS
+    // ==================================================
 
-        if (uiManager != null)
+    private void SetPlayerColliders(
+        bool enabledState)
+    {
+        if (playerColliders == null)
+            return;
+
+
+        foreach (
+            Collider2D playerCollider
+            in playerColliders
+        )
         {
-            uiManager.ReloadAfterPlayerDeath();
-        }
-        else
-        {
-            Debug.LogError(
-                "PlayerDeath: UIManager was not found.",
-                this
-            );
+            if (playerCollider == null)
+                continue;
+
+
+            playerCollider.enabled =
+                enabledState;
         }
     }
 
@@ -347,7 +810,10 @@ public class PlayerDeath : MonoBehaviour
     // PLAYER FADE
     // ==================================================
 
-    private IEnumerator FadePlayer()
+    private IEnumerator FadePlayer(
+        float startOpacity,
+        float targetOpacity,
+        float duration)
     {
         if (playerRenderers == null ||
             playerRenderers.Length == 0)
@@ -356,32 +822,21 @@ public class PlayerDeath : MonoBehaviour
         }
 
 
-        /*
-         * Save each renderer's original color.
-         *
-         * This lets us keep its RGB color
-         * while only changing alpha.
-         */
-        Color[] startingColors =
-            new Color[playerRenderers.Length];
-
-
-        for (int i = 0;
-             i < playerRenderers.Length;
-             i++)
+        if (duration <= 0f)
         {
-            if (playerRenderers[i] != null)
-            {
-                startingColors[i] =
-                    playerRenderers[i].color;
-            }
+            SetPlayerOpacity(
+                targetOpacity
+            );
+
+            yield break;
         }
 
 
-        float elapsed = 0f;
+        float elapsed =
+            0f;
 
 
-        while (elapsed < playerFadeDuration)
+        while (elapsed < duration)
         {
             elapsed +=
                 Time.unscaledDeltaTime;
@@ -390,61 +845,67 @@ public class PlayerDeath : MonoBehaviour
             float normalizedTime =
                 Mathf.Clamp01(
                     elapsed /
-                    playerFadeDuration
+                    duration
                 );
 
 
-            float curveValue =
-                fadeCurve != null
-                ? fadeCurve.Evaluate(
-                    normalizedTime
-                )
-                : normalizedTime;
+            float curveValue;
 
 
-            /*
-             * 1 → 0
-             */
-            float alpha =
-                1f - curveValue;
-
-
-            for (int i = 0;
-                 i < playerRenderers.Length;
-                 i++)
+            if (fadeCurve != null &&
+                fadeCurve.length > 0)
             {
-                SpriteRenderer renderer =
-                    playerRenderers[i];
-
-
-                if (renderer == null)
-                    continue;
-
-
-                Color color =
-                    startingColors[i];
-
-
-                /*
-                 * Preserve original alpha too.
-                 */
-                color.a =
-                    startingColors[i].a *
-                    alpha;
-
-
-                renderer.color =
-                    color;
+                curveValue =
+                    fadeCurve.Evaluate(
+                        normalizedTime
+                    );
             }
+            else
+            {
+                curveValue =
+                    normalizedTime;
+            }
+
+
+            float opacity =
+                Mathf.Lerp(
+                    startOpacity,
+                    targetOpacity,
+                    curveValue
+                );
+
+
+            SetPlayerOpacity(
+                opacity
+            );
 
 
             yield return null;
         }
 
 
-        // ----------------------------------------------
-        // FORCE FULL TRANSPARENCY
-        // ----------------------------------------------
+        SetPlayerOpacity(
+            targetOpacity
+        );
+    }
+
+
+    // ==================================================
+    // SET PLAYER OPACITY
+    // ==================================================
+
+    private void SetPlayerOpacity(
+        float opacity)
+    {
+        if (playerRenderers == null)
+            return;
+
+
+        opacity =
+            Mathf.Clamp01(
+                opacity
+            );
+
 
         for (int i = 0;
              i < playerRenderers.Length;
@@ -458,16 +919,85 @@ public class PlayerDeath : MonoBehaviour
                 continue;
 
 
-            Color color =
-                renderer.color;
+            Color originalColor;
 
 
-            color.a = 0f;
+            if (originalRendererColors != null &&
+                i <
+                originalRendererColors.Length)
+            {
+                originalColor =
+                    originalRendererColors[i];
+            }
+            else
+            {
+                originalColor =
+                    renderer.color;
+            }
+
+
+            originalColor.a *=
+                opacity;
 
 
             renderer.color =
-                color;
+                originalColor;
         }
+    }
+
+
+    // ==================================================
+    // FINAL DEATH
+    // ==================================================
+
+    private void ReloadLevelAfterFinalDeath()
+    {
+        /*
+         * Preferred reload method.
+         */
+        if (uiManager != null)
+        {
+            uiManager.ReloadAfterPlayerDeath();
+
+            return;
+        }
+
+
+        /*
+         * Safety fallback if UIManager
+         * was not found.
+         */
+        Time.timeScale =
+            1f;
+
+
+        AudioListener.pause =
+            false;
+
+
+        Scene currentScene =
+            SceneManager.GetActiveScene();
+
+
+        SceneManager.LoadScene(
+            currentScene.buildIndex
+        );
+    }
+
+
+    // ==================================================
+    // LIVES UI
+    // ==================================================
+
+    private void UpdateLivesUI()
+    {
+        if (livesUI == null)
+            return;
+
+
+        livesUI.UpdateLives(
+            currentLives
+        );
     }
 
 
@@ -477,10 +1007,24 @@ public class PlayerDeath : MonoBehaviour
 
     private void OnValidate()
     {
-        reloadDelay =
+        maxLives =
+            Mathf.Max(
+                1,
+                maxLives
+            );
+
+
+        respawnDelay =
             Mathf.Max(
                 0f,
-                reloadDelay
+                respawnDelay
+            );
+
+
+        deathDelay =
+            Mathf.Max(
+                0f,
+                deathDelay
             );
 
 
@@ -491,10 +1035,17 @@ public class PlayerDeath : MonoBehaviour
             );
 
 
-        playerFadeDuration =
+        fadeOutDuration =
             Mathf.Max(
                 0.01f,
-                playerFadeDuration
+                fadeOutDuration
+            );
+
+
+        fadeInDuration =
+            Mathf.Max(
+                0.01f,
+                fadeInDuration
             );
 
 
