@@ -11,9 +11,6 @@ public class LevelSelectButton : MonoBehaviour
 
     [Header("Level")]
 
-    [Tooltip(
-        "Exact Scene name, for example Level_01."
-    )]
     [SerializeField]
     private string sceneName;
 
@@ -24,12 +21,13 @@ public class LevelSelectButton : MonoBehaviour
 
     [Header("Options")]
 
-    [Tooltip(
-        "Disable this button when its level " +
-        "is already the active scene."
-    )]
     [SerializeField]
-    private bool disableIfCurrentLevel = true;
+    private bool disableIfCurrentLevel =
+        true;
+
+    [SerializeField]
+    private bool disableIfSceneMissing =
+        true;
 
 
     // ==================================================
@@ -48,6 +46,8 @@ public class LevelSelectButton : MonoBehaviour
 
     private Button button;
 
+    private bool subscribed;
+
 
     // ==================================================
     // AWAKE
@@ -57,13 +57,6 @@ public class LevelSelectButton : MonoBehaviour
     {
         button =
             GetComponent<Button>();
-
-
-        if (levelLoader == null)
-        {
-            levelLoader =
-                FindAnyObjectByType<LevelLoader>();
-        }
 
 
         button.onClick.AddListener(
@@ -78,44 +71,106 @@ public class LevelSelectButton : MonoBehaviour
 
     private void Start()
     {
+        ResolveLoader();
+
+
+        Subscribe();
+
+
         UpdateButtonState();
     }
 
 
     // ==================================================
-    // ENABLE
+    // LOADER
     // ==================================================
 
-    private void OnEnable()
+    private void ResolveLoader()
     {
-        /*
-         * Awake may not have run yet in some
-         * editor setup situations.
-         */
-        if (button == null)
+        if (levelLoader != null)
+            return;
+
+
+        levelLoader =
+            LevelLoader.Instance;
+
+
+        if (levelLoader == null)
         {
-            button =
-                GetComponent<Button>();
+            levelLoader =
+                FindAnyObjectByType<LevelLoader>();
         }
+    }
 
 
+    // ==================================================
+    // SUBSCRIBE
+    // ==================================================
+
+    private void Subscribe()
+    {
+        if (subscribed)
+            return;
+
+
+        if (levelLoader == null)
+            return;
+
+
+        levelLoader.LevelLoaded +=
+            HandleLevelLoaded;
+
+
+        subscribed =
+            true;
+    }
+
+
+    // ==================================================
+    // LEVEL LOADED
+    // ==================================================
+
+    private void HandleLevelLoaded(
+        string loadedSceneName)
+    {
         UpdateButtonState();
     }
 
 
     // ==================================================
-    // UPDATE BUTTON
+    // BUTTON STATE
     // ==================================================
 
-    private void UpdateButtonState()
+    public void UpdateButtonState()
     {
         if (button == null)
             return;
 
 
-        if (string.IsNullOrWhiteSpace(sceneName))
+        // ----------------------------------------------
+        // INVALID NAME
+        // ----------------------------------------------
+
+        if (string.IsNullOrWhiteSpace(
+                sceneName))
         {
-            button.interactable = false;
+            button.interactable =
+                false;
+
+            return;
+        }
+
+
+        // ----------------------------------------------
+        // SCENE DOESN'T EXIST
+        // ----------------------------------------------
+
+        if (disableIfSceneMissing &&
+            !Application.CanStreamedLevelBeLoaded(
+                sceneName))
+        {
+            button.interactable =
+                false;
 
             return;
         }
@@ -123,37 +178,59 @@ public class LevelSelectButton : MonoBehaviour
 
         if (!disableIfCurrentLevel)
         {
-            button.interactable = true;
+            button.interactable =
+                true;
 
             return;
         }
 
 
+        // ----------------------------------------------
+        // FIND CURRENT LEVEL
+        // ----------------------------------------------
+
+        string currentSceneName =
+            string.Empty;
+
+
+        ResolveLoader();
+
+
+        if (levelLoader != null)
+        {
+            currentSceneName =
+                levelLoader.CurrentLevelSceneName;
+        }
+
+
         /*
-         * Get the currently playing scene.
+         * Safety fallback.
          */
-        Scene currentScene =
-            SceneManager.GetActiveScene();
+        if (string.IsNullOrWhiteSpace(
+                currentSceneName))
+        {
+            currentSceneName =
+                SceneManager
+                    .GetActiveScene()
+                    .name;
+        }
 
 
-        bool isCurrentLevel =
+        bool isCurrent =
             string.Equals(
-                currentScene.name,
+                currentSceneName,
                 sceneName,
                 System.StringComparison.OrdinalIgnoreCase
             );
 
 
-        /*
-         * Current level cannot be selected.
-         */
         button.interactable =
-            !isCurrentLevel;
+            !isCurrent;
     }
 
 
     // ==================================================
-    // LOAD
+    // LOAD LEVEL
     // ==================================================
 
     private void LoadSelectedLevel()
@@ -165,22 +242,7 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        if (string.IsNullOrWhiteSpace(sceneName))
-        {
-            Debug.LogError(
-                "LevelSelectButton: Scene Name is empty.",
-                this
-            );
-
-            return;
-        }
-
-
-        if (levelLoader == null)
-        {
-            levelLoader =
-                FindAnyObjectByType<LevelLoader>();
-        }
+        ResolveLoader();
 
 
         if (levelLoader == null)
@@ -194,21 +256,23 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        Debug.Log(
-            "Level menu selected: " +
-            sceneName,
-            this
-        );
+        if (string.IsNullOrWhiteSpace(
+                sceneName))
+        {
+            Debug.LogError(
+                "LevelSelectButton: Scene name is empty.",
+                this
+            );
+
+            return;
+        }
 
 
         /*
-         * LevelLoader marks gameplay as started
-         * BEFORE changing scenes.
-         *
-         * Therefore the target scene does not
-         * show Start_Menu.
+         * FAST transition specifically for
+         * the Levels menu.
          */
-        levelLoader.LoadLevel(
+        levelLoader.LoadLevelFromMenu(
             sceneName
         );
     }
@@ -226,5 +290,17 @@ public class LevelSelectButton : MonoBehaviour
                 LoadSelectedLevel
             );
         }
+
+
+        if (subscribed &&
+            levelLoader != null)
+        {
+            levelLoader.LevelLoaded -=
+                HandleLevelLoaded;
+        }
+
+
+        subscribed =
+            false;
     }
 }

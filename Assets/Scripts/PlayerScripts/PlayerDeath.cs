@@ -952,9 +952,10 @@ public class PlayerDeath : MonoBehaviour
 
     private void ReloadLevelAfterFinalDeath()
     {
-        /*
-         * Preferred reload method.
-         */
+        // ----------------------------------------------
+        // UI MANAGER
+        // ----------------------------------------------
+
         if (uiManager != null)
         {
             uiManager.ReloadAfterPlayerDeath();
@@ -963,24 +964,39 @@ public class PlayerDeath : MonoBehaviour
         }
 
 
-        /*
-         * Safety fallback if UIManager
-         * was not found.
-         */
-        Time.timeScale =
-            1f;
+        // ----------------------------------------------
+        // PERSISTENT UI FALLBACK
+        // ----------------------------------------------
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance
+                .ReloadAfterPlayerDeath();
+
+            return;
+        }
 
 
-        AudioListener.pause =
-            false;
+        // ----------------------------------------------
+        // DIRECT LEVEL LOADER FALLBACK
+        // ----------------------------------------------
+
+        if (LevelLoader.Instance != null)
+        {
+            UIManager.MarkGameplayStarted();
 
 
-        Scene currentScene =
-            SceneManager.GetActiveScene();
+            LevelLoader.Instance
+                .ReloadCurrentLevel();
+
+            return;
+        }
 
 
-        SceneManager.LoadScene(
-            currentScene.buildIndex
+        Debug.LogError(
+            "PlayerDeath: Could not reload level. " +
+            "UIManager and LevelLoader are missing.",
+            this
         );
     }
 
