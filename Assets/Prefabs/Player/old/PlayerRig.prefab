@@ -215,10 +215,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 60
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.4
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -279,9 +279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2099e461adbafd14bab792ae6066bed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 4
-  jumpForce: 8
-  jumpCutMultiplier: 0.4
+  speed: 5
+  jumpForce: 10
+  jumpCutMultiplier: 0.5
   groundCheck: {fileID: 8526869610976091277}
   groundCheckRadius: 0.13
   groundLayer:
@@ -494,7 +494,7 @@ Transform:
   m_GameObject: {fileID: 9143136420436067110}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.4654794, y: 5.5225096, z: -10}
+  m_LocalPosition: {x: 5.2254796, y: 5.60251, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -535,7 +535,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 1.0778688
+  orthographic size: 1.0273438
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -616,11 +616,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.PixelPerfectCamera
   m_ComponentVersion: 1
-  m_AssetsPPU: 61
-  m_RefResolutionX: 1260
-  m_RefResolutionY: 690
+  m_AssetsPPU: 128
+  m_RefResolutionX: 1280
+  m_RefResolutionY: 720
   m_CropFrame: 0
-  m_GridSnapping: 2
+  m_GridSnapping: 1
   m_FilterMode: 0
   m_UpscaleRT: 0
   m_PixelSnapping: 0
@@ -647,8 +647,8 @@ MonoBehaviour:
   UpdateMethod: 2
   BlendUpdateMethod: 1
   LensModeOverride:
-    Enabled: 0
-    DefaultMode: 2
+    Enabled: 1
+    DefaultMode: 1
   DefaultBlend:
     Style: 1
     Time: 0.8
@@ -723,7 +723,7 @@ MonoBehaviour:
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
-    ModeOverride: 0
+    ModeOverride: 1
     PhysicalProperties:
       GateFit: 2
       SensorSize: {x: 21.946, y: 16.002}

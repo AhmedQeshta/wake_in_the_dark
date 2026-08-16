@@ -325,14 +325,30 @@ public class LevelLoader : MonoBehaviour
 
     public void PlayCurrentLevelIntro()
     {
-        if (isLoading)
-            return;
+        StartCoroutine(
+            PlayCurrentLevelIntroWhenReady()
+        );
+    }
+
+
+    private IEnumerator PlayCurrentLevelIntroWhenReady()
+    {
+        /*
+         * Bootstrap may still be loading Level_01
+         * when the player presses Start.
+         *
+         * Wait instead of discarding the intro request.
+         */
+        while (isLoading)
+        {
+            yield return null;
+        }
 
 
         if (string.IsNullOrWhiteSpace(
                 currentLevelSceneName))
         {
-            return;
+            yield break;
         }
 
 
@@ -345,7 +361,7 @@ public class LevelLoader : MonoBehaviour
         if (!scene.IsValid() ||
             !scene.isLoaded)
         {
-            return;
+            yield break;
         }
 
 
@@ -358,11 +374,11 @@ public class LevelLoader : MonoBehaviour
         if (director == null ||
             !director.PlayOnLevelEnter)
         {
-            return;
+            yield break;
         }
 
 
-        StartCoroutine(
+        yield return StartCoroutine(
             director.PlayIntroRoutine()
         );
     }
@@ -876,36 +892,51 @@ public class LevelLoader : MonoBehaviour
     // ==================================================
     // PREPARE LEVEL
     // ==================================================
-
     private IEnumerator PrepareLoadedLevel(
         Scene scene,
         bool prepareIntro)
     {
         /*
-         * Let Awake / OnEnable run.
+         * Allow Awake / OnEnable to finish.
+         *
+         * This is important because level scenes are
+         * loaded additively from Bootstrap.
          */
         yield return null;
 
 
-        PlayerCameraBinder binder =
-            FindComponentInScene<PlayerCameraBinder>(
+        // ==================================================
+        // OPTIONAL LEVEL CAMERA SETUP
+        // ==================================================
+
+        /*
+         * Levels 1-3 have LevelCameraSetup because they use:
+         *
+         * Door -> Whole Map -> Gameplay.
+         *
+         * Levels 4-5 intentionally do not require it because
+         * they use:
+         *
+         * Door -> Gameplay
+         *
+         * with Pixel Perfect Camera + Parallax.
+         */
+
+        LevelCameraSetup cameraSetup =
+            FindComponentInScene<LevelCameraSetup>(
                 scene
             );
 
 
-        if (binder != null)
+        if (cameraSetup != null)
         {
-            binder.BindNow();
-        }
-        else
-        {
-            Debug.LogError(
-                "No PlayerCameraBinder in " +
-                scene.name,
-                this
-            );
+            cameraSetup.BindScene();
         }
 
+
+        // ==================================================
+        // CAMERA DIRECTOR
+        // ==================================================
 
         LevelCameraDirector director =
             FindComponentInScene<LevelCameraDirector>(
@@ -925,10 +956,27 @@ public class LevelLoader : MonoBehaviour
                 director.SkipToGameplayImmediate();
             }
         }
+        else if (cameraSetup == null)
+        {
+            /*
+             * No custom camera system at all.
+             *
+             * This is not fatal because a level may simply
+             * use a normal Unity Camera.
+             */
+            Debug.LogWarning(
+                "LevelLoader: No LevelCameraDirector or " +
+                "LevelCameraSetup found in " +
+                scene.name +
+                ". Using the level camera as-is.",
+                this
+            );
+        }
 
 
         /*
-         * Let Cinemachine update once.
+         * Allow Cinemachine one frame
+         * to apply priorities and tracking.
          */
         yield return null;
     }
@@ -1124,8 +1172,26 @@ public class LevelLoader : MonoBehaviour
             return;
 
 
+        // Enable/disable the Bootstrap Camera itself.
         bootstrapCamera.enabled =
             state;
+
+
+        // Keep exactly one AudioListener active.
+        //
+        // When the Bootstrap camera is disabled because a
+        // level camera has taken over, its AudioListener must
+        // also be disabled. Otherwise Unity reports:
+        // "There are 2 audio listeners in the scene."
+        AudioListener listener =
+            bootstrapCamera.GetComponent<AudioListener>();
+
+
+        if (listener != null)
+        {
+            listener.enabled =
+                state;
+        }
 
 
         bootstrapCamera.rect =
