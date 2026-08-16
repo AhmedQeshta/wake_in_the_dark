@@ -411,6 +411,17 @@ public class UIManager : MonoBehaviour
 
     private void ShowInitialMenu()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .ShowMenuCursor();
+        }
+
         // ----------------------------------------------
         // STATE
         // ----------------------------------------------
@@ -517,6 +528,17 @@ public class UIManager : MonoBehaviour
 
     private void StartGame()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .HideGameplayCursor();
+        }
+
         if (gameStarted ||
             isTransitioning)
         {
@@ -650,6 +672,17 @@ public class UIManager : MonoBehaviour
 
     private void PauseGame()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .ShowMenuCursor();
+        }
+
         if (!gameStarted ||
             isTransitioning)
         {
@@ -747,6 +780,17 @@ public class UIManager : MonoBehaviour
 
     private void ResumeGame()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .HideGameplayCursor();
+        }
+
         if (!gameStarted ||
             isTransitioning)
         {
@@ -1144,6 +1188,17 @@ public class UIManager : MonoBehaviour
      */
     public void PrepareForLevelChange()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .HideGameplayCursor();
+        }
+
         // ----------------------------------------------
         // SESSION
         // ----------------------------------------------
@@ -1243,6 +1298,17 @@ public class UIManager : MonoBehaviour
      */
     public void OnLevelLoadFinished()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .HideGameplayCursor();
+        }
+
         // ----------------------------------------------
         // SESSION
         // ----------------------------------------------
@@ -1350,6 +1416,17 @@ public class UIManager : MonoBehaviour
      */
     private void StartGameplayStateImmediate()
     {
+
+        // ----------------------------------------------
+        // CURSOR
+        // ----------------------------------------------
+
+        if (GameCursorManager.Instance != null)
+        {
+            GameCursorManager.Instance
+                .HideGameplayCursor();
+        }
+
         gameStarted = true;
 
         menuOpen = false;
