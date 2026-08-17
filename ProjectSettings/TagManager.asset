@@ -62,6 +62,9 @@ TagManager:
   - name: map_over
     uniqueID: 2427531695
     locked: 0
+  - name: trap_over_map
+    uniqueID: 3659613273
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []

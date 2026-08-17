@@ -162,8 +162,24 @@ public class LevelCameraDirector : MonoBehaviour
 
     private Coroutine doorFocusRoutine;
 
+    /*
+     * Used when a level is reloaded without replaying
+     * the camera intro.
+     *
+     * Cinemachine needs a frame to move the physical
+     * Main Camera onto GameplayCamera before parallax
+     * captures its new origin.
+     */
+    private Coroutine delayedParallaxResumeRoutine;
+
 
     private BackGroundParallax backgroundParallax;
+
+    /*
+     * Cached brain from this level's Main Camera.
+     * Used to make Reset Level force a clean cut to GameplayCamera.
+     */
+    private CinemachineBrain cinemachineBrain;
 
 
     // ==================================================
@@ -464,6 +480,21 @@ public class LevelCameraDirector : MonoBehaviour
         ResolveReferences();
 
 
+        /*
+         * Reset Level can deactivate IntroCamera so it can
+         * never steal control from GameplayCamera.
+         * Re-enable it whenever we intentionally need the
+         * door camera again.
+         */
+        if (introCamera != null &&
+            !introCamera.gameObject.activeSelf)
+        {
+            introCamera.gameObject.SetActive(
+                true
+            );
+        }
+
+
         SetPriority(
             gameplayCamera,
             inactivePriority
@@ -542,6 +573,15 @@ public class LevelCameraDirector : MonoBehaviour
     private void SetGameplayLive()
     {
         ResolveReferences();
+
+
+        if (gameplayCamera != null &&
+            !gameplayCamera.gameObject.activeSelf)
+        {
+            gameplayCamera.gameObject.SetActive(
+                true
+            );
+        }
 
 
         if (gameplayCamera == null)
@@ -663,28 +703,7 @@ public class LevelCameraDirector : MonoBehaviour
         // GAMEPLAY -> DOOR
         // --------------------------------------------------
 
-        SetPriority(
-            gameplayCamera,
-            gameplayPriority
-        );
-
-
-        if (cameraSetup != null)
-        {
-            SetPriority(
-                cameraSetup.LongShotCamera,
-                inactivePriority
-            );
-        }
-
-
-        SetPriority(
-            introCamera,
-            introPriority
-        );
-
-
-        introCamera.Prioritize();
+        SetIntroLive();
 
 
         if (duration > 0f)
@@ -755,18 +774,211 @@ public class LevelCameraDirector : MonoBehaviour
         }
 
 
+        // ==================================================
+        // RESET / RELOAD SAFETY
+        // ==================================================
+
         /*
-         * Levels 4-5 intentionally do NOT call
-         * FitGameplayToMap().
+         * Your Level_05 scene is saved with Main Camera at
+         * the IntroCamera position.
          *
-         * Their Pixel Perfect Camera owns the gameplay
-         * camera size.
+         * On Reset Level, PlayOnReload is OFF, so we must NOT
+         * allow IntroCamera to remain Live for even one visible
+         * gameplay frame.
+         *
+         * We force a CUT to GameplayCamera:
+         *
+         * 1. pause parallax
+         * 2. freeze player
+         * 3. temporarily make the Brain's default blend a Cut
+         * 4. deactivate IntroCamera so it cannot stay Live
+         * 5. make GameplayCamera highest priority
+         * 6. wait until the Brain reports GameplayCamera live
+         * 7. reset parallax origin
+         * 8. restore the normal blend setting
          */
+
+        FreezePlayer(
+            true
+        );
+
+
+        PauseBackgroundParallax();
+
+
         BindGameplayTarget();
+
+
+        ResolveBrain();
+
+
+        if (delayedParallaxResumeRoutine != null)
+        {
+            StopCoroutine(
+                delayedParallaxResumeRoutine
+            );
+
+
+            delayedParallaxResumeRoutine =
+                null;
+        }
+
+
+        CinemachineBlendDefinition previousBlend =
+            default;
+
+
+        bool restoreBlend =
+            false;
+
+
+        if (cinemachineBrain != null)
+        {
+            previousBlend =
+                cinemachineBrain.DefaultBlend;
+
+
+            cinemachineBrain.DefaultBlend =
+                new CinemachineBlendDefinition(
+                    CinemachineBlendDefinition
+                        .Styles
+                        .Cut,
+                    0f
+                );
+
+
+            restoreBlend =
+                true;
+        }
+
+
+        /*
+         * This is the key reload fix.
+         *
+         * Cinemachine documentation defines an inactive
+         * CinemachineCamera GameObject as Disabled, so it
+         * cannot win normal priority selection.
+         */
+        if (introCamera != null)
+        {
+            SetPriority(
+                introCamera,
+                inactivePriority
+            );
+
+
+            introCamera
+                .gameObject
+                .SetActive(
+                    false
+                );
+        }
 
 
         SetGameplayLive();
 
+
+        delayedParallaxResumeRoutine =
+            StartCoroutine(
+                ResumeParallaxAfterImmediateCameraSwitch(
+                    previousBlend,
+                    restoreBlend
+                )
+            );
+
+
+        introPrepared =
+            false;
+
+
+        introPlaying =
+            false;
+    }
+
+
+    // ==================================================
+    // DELAYED PARALLAX RESUME
+    // ==================================================
+
+    private IEnumerator
+        ResumeParallaxAfterImmediateCameraSwitch(
+            CinemachineBlendDefinition previousBlend,
+            bool restoreBlend)
+    {
+        /*
+         * Give Cinemachine at least one frame to rebuild its
+         * active-camera queue after IntroCamera was disabled.
+         */
+        yield return null;
+
+
+        ResolveBrain();
+
+
+        // --------------------------------------------------
+        // WAIT FOR GAMEPLAY CAMERA TO BECOME LIVE
+        // --------------------------------------------------
+
+        const int maxFrames =
+            30;
+
+
+        int frame =
+            0;
+
+
+        while (frame <
+               maxFrames)
+        {
+            bool gameplayIsLive =
+                cinemachineBrain == null ||
+                cinemachineBrain
+                    .ActiveVirtualCamera ==
+                gameplayCamera;
+
+
+            if (gameplayIsLive)
+            {
+                break;
+            }
+
+
+            /*
+             * Re-assert the desired state if another camera
+             * tried to take control during scene startup.
+             */
+            if (introCamera != null &&
+                introCamera.gameObject.activeSelf)
+            {
+                introCamera
+                    .gameObject
+                    .SetActive(
+                        false
+                    );
+            }
+
+
+            SetGameplayLive();
+
+
+            frame++;
+
+
+            yield return null;
+        }
+
+
+        /*
+         * Let LateUpdate apply the selected camera to the
+         * physical Main Camera before parallax captures origin.
+         */
+        yield return
+            new WaitForEndOfFrame();
+
+
+        // --------------------------------------------------
+        // PARALLAX ORIGIN
+        // --------------------------------------------------
 
         ResumeBackgroundParallax();
 
@@ -774,11 +986,34 @@ public class LevelCameraDirector : MonoBehaviour
         RestorePlayer();
 
 
-        introPrepared =
-            false;
+        // --------------------------------------------------
+        // RESTORE NORMAL CAMERA BLEND
+        // --------------------------------------------------
 
-        introPlaying =
-            false;
+        if (restoreBlend &&
+            cinemachineBrain != null)
+        {
+            cinemachineBrain.DefaultBlend =
+                previousBlend;
+        }
+
+
+        Debug.Log(
+            "Reload camera ready. Live Camera: " +
+            (
+                cinemachineBrain != null &&
+                cinemachineBrain.ActiveVirtualCamera != null
+                    ? cinemachineBrain
+                        .ActiveVirtualCamera
+                        .Name
+                    : "Unknown"
+            ),
+            this
+        );
+
+
+        delayedParallaxResumeRoutine =
+            null;
     }
 
 
@@ -919,8 +1154,25 @@ public class LevelCameraDirector : MonoBehaviour
             return;
 
 
-        camera.Priority =
+        /*
+         * Cinemachine 3 Priority is a PrioritySettings struct.
+         * Explicitly enable the custom priority instead of
+         * relying on the default-priority state.
+         */
+        PrioritySettings settings =
+            camera.Priority;
+
+
+        settings.Enabled =
+            true;
+
+
+        settings.Value =
             priority;
+
+
+        camera.Priority =
+            settings;
     }
 
 
@@ -1125,6 +1377,59 @@ public class LevelCameraDirector : MonoBehaviour
                     );
             }
         }
+
+
+        ResolveBrain();
+    }
+
+
+    // ==================================================
+    // RESOLVE CINEMACHINE BRAIN
+    // ==================================================
+
+    private void ResolveBrain()
+    {
+        if (cinemachineBrain != null)
+            return;
+
+
+        Scene scene =
+            gameObject.scene;
+
+
+        if (!scene.IsValid() ||
+            !scene.isLoaded)
+        {
+            return;
+        }
+
+
+        GameObject[] roots =
+            scene.GetRootGameObjects();
+
+
+        foreach (GameObject root in roots)
+        {
+            if (root == null)
+                continue;
+
+
+            CinemachineBrain result =
+                root.GetComponentInChildren
+                    <CinemachineBrain>(
+                        true
+                    );
+
+
+            if (result != null)
+            {
+                cinemachineBrain =
+                    result;
+
+
+                return;
+            }
+        }
     }
 
 
@@ -1279,6 +1584,18 @@ public class LevelCameraDirector : MonoBehaviour
 
 
             doorFocusRoutine =
+                null;
+        }
+
+
+        if (delayedParallaxResumeRoutine != null)
+        {
+            StopCoroutine(
+                delayedParallaxResumeRoutine
+            );
+
+
+            delayedParallaxResumeRoutine =
                 null;
         }
 

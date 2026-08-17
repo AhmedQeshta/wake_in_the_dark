@@ -81,6 +81,26 @@ public class BackGroundParallax : MonoBehaviour
     private ParallaxLayer[] layers;
 
 
+    [Tooltip(
+        "If the scene has no serialized layer list, automatically build it " +
+        "from the Background object's children. This fixes old Level_05 " +
+        "scene data after script changes/reloads."
+    )]
+    [SerializeField]
+    private bool autoBuildLayersFromChildren = true;
+
+
+    [Header("Reload Safety")]
+
+    [Tooltip(
+        "Keep parallax frozen from Awake until LevelCameraDirector says " +
+        "the GameplayCamera has finished moving into place. " +
+        "Keep this ON for Level_04 and Level_05."
+    )]
+    [SerializeField]
+    private bool startPausedUntilGameplayCameraReady = true;
+
+
     // ==================================================
     // STATE
     // ==================================================
@@ -106,12 +126,58 @@ public class BackGroundParallax : MonoBehaviour
 
 
     // ==================================================
+    // AWAKE
+    // ==================================================
+
+    private void Awake()
+    {
+        /*
+         * CRITICAL RELOAD FIX
+         * -------------------
+         *
+         * On Reset Level, Cinemachine can move the physical
+         * Main Camera a very large distance during the first
+         * LateUpdate of the newly-loaded scene.
+         *
+         * BackGroundParallax runs late (execution order 1000),
+         * so without this guard it sees that Cinemachine jump
+         * as normal gameplay movement and moves every background
+         * plane far off-screen BEFORE LevelCameraDirector gets
+         * a chance to pause it.
+         *
+         * Start paused immediately, before any LateUpdate.
+         * LevelCameraDirector will call
+         * ResumeParallaxFromCurrentCamera() after GameplayCamera
+         * has settled.
+         */
+        parallaxPaused =
+            startPausedUntilGameplayCameraReady;
+    }
+
+
+    // ==================================================
     // START
     // ==================================================
 
     private void Start()
     {
         Initialize();
+
+
+        /*
+         * Normal Level_04 / Level_05:
+         * LevelCameraDirector exists and will resume parallax
+         * when GameplayCamera is ready.
+         *
+         * Fallback:
+         * if this script is used in a scene with no director,
+         * allow it to work normally.
+         */
+        if (parallaxPaused &&
+            !HasCameraDirectorInThisScene())
+        {
+            ResumeParallaxFromCurrentCamera();
+        }
     }
 
 
@@ -146,11 +212,23 @@ public class BackGroundParallax : MonoBehaviour
         }
 
 
+        /*
+         * Level_05 was saved with the old field:
+         *
+         *     parallaxSpeed: []
+         *
+         * so its new 'layers' array can deserialize empty.
+         * Rebuild it from Background children when needed.
+         */
+        EnsureLayersConfigured();
+
+
         if (layers == null ||
             layers.Length == 0)
         {
             Debug.LogWarning(
-                "BackGroundParallax: No layers configured.",
+                "BackGroundParallax: No layers configured and no " +
+                "background children could be auto-detected.",
                 this
             );
 
@@ -178,6 +256,201 @@ public class BackGroundParallax : MonoBehaviour
             layers.Length,
             this
         );
+    }
+
+
+    // ==================================================
+    // AUTO BUILD LAYERS
+    // ==================================================
+
+    private void EnsureLayersConfigured()
+    {
+        /*
+         * Never replace a valid Inspector setup.
+         *
+         * Level_04 already has its 5 serialized layers,
+         * so this method leaves Level_04 untouched.
+         */
+        if (layers != null &&
+            layers.Length > 0)
+        {
+            return;
+        }
+
+
+        if (!autoBuildLayersFromChildren)
+            return;
+
+
+        int childCount =
+            transform.childCount;
+
+
+        if (childCount <= 0)
+            return;
+
+
+        ParallaxLayer[] detected =
+            new ParallaxLayer[childCount];
+
+
+        int validCount =
+            0;
+
+
+        for (int i = 0;
+             i < childCount;
+             i++)
+        {
+            Transform child =
+                transform.GetChild(i);
+
+
+            if (child == null)
+                continue;
+
+
+            ParallaxLayer layer =
+                CreateDefaultLayer(
+                    child
+                );
+
+
+            detected[validCount] =
+                layer;
+
+
+            validCount++;
+        }
+
+
+        if (validCount <= 0)
+            return;
+
+
+        if (validCount !=
+            detected.Length)
+        {
+            Array.Resize(
+                ref detected,
+                validCount
+            );
+        }
+
+
+        layers =
+            detected;
+
+
+        Debug.Log(
+            "BackGroundParallax: Auto-built " +
+            layers.Length +
+            " layer(s) from Background children in " +
+            gameObject.scene.name +
+            ".",
+            this
+        );
+    }
+
+
+    // ==================================================
+    // DEFAULT LAYER PROFILE
+    // ==================================================
+
+    private ParallaxLayer CreateDefaultLayer(
+        Transform child)
+    {
+        ParallaxLayer layer =
+            new ParallaxLayer();
+
+
+        layer.target =
+            child;
+
+
+        /*
+         * These values match the working Level_04 setup.
+         *
+         * Plane_1 / Plane_1_other:
+         * very far background.
+         *
+         * Plane_4:
+         * closest / strongest parallax.
+         */
+        switch (child.name)
+        {
+            case "Plane_1_other":
+            case "Plane_1":
+
+                layer.horizontalStrength =
+                    0.005f;
+
+                layer.verticalStrength =
+                    0.002f;
+
+                break;
+
+
+            case "Plane_2":
+
+                layer.horizontalStrength =
+                    0.08f;
+
+                layer.verticalStrength =
+                    0.025f;
+
+                break;
+
+
+            case "Plane_3":
+
+                layer.horizontalStrength =
+                    0.14f;
+
+                layer.verticalStrength =
+                    0.04f;
+
+                break;
+
+
+            case "Plane_4":
+
+                layer.horizontalStrength =
+                    0.22f;
+
+                layer.verticalStrength =
+                    0.06f;
+
+                break;
+
+
+            default:
+
+                /*
+                 * Safe fallback for any extra background child.
+                 */
+                layer.horizontalStrength =
+                    0.1f;
+
+                layer.verticalStrength =
+                    0.03f;
+
+                break;
+        }
+
+
+        layer.useVerticalParallax =
+            true;
+
+
+        /*
+         * Pixel Perfect Camera already handles snapping.
+         */
+        layer.snapTransformToPixelGrid =
+            false;
+
+
+        return layer;
     }
 
 
@@ -435,6 +708,51 @@ public class BackGroundParallax : MonoBehaviour
             layerStartPositions[i] =
                 layer.target.position;
         }
+    }
+
+
+    // ==================================================
+    // CAMERA DIRECTOR CHECK
+    // ==================================================
+
+    private bool HasCameraDirectorInThisScene()
+    {
+        Scene scene =
+            gameObject.scene;
+
+
+        if (!scene.IsValid() ||
+            !scene.isLoaded)
+        {
+            return false;
+        }
+
+
+        GameObject[] roots =
+            scene.GetRootGameObjects();
+
+
+        foreach (GameObject root in roots)
+        {
+            if (root == null)
+                continue;
+
+
+            LevelCameraDirector director =
+                root.GetComponentInChildren
+                    <LevelCameraDirector>(
+                        true
+                    );
+
+
+            if (director != null)
+            {
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
 
