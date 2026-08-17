@@ -54,6 +54,26 @@ public class AudioManager : MonoBehaviour
 
 
     // ==================================================
+    // USER MUSIC VOLUME
+    // ==================================================
+
+    [Header("User Music Volume")]
+
+    [Tooltip(
+        "Global user multiplier for level music. " +
+        "1 = use the level's configured volume, 0 = mute."
+    )]
+    [SerializeField, Range(0f, 1f)]
+    private float levelMusicVolume =
+        1f;
+
+
+    private const string
+        LevelMusicVolumeKey =
+            "Settings.LevelMusicVolume";
+
+
+    // ==================================================
     // STATE
     // ==================================================
 
@@ -85,6 +105,10 @@ public class AudioManager : MonoBehaviour
             : null;
 
 
+    public float LevelMusicVolume =>
+        levelMusicVolume;
+
+
     // ==================================================
     // AWAKE
     // ==================================================
@@ -112,6 +136,19 @@ public class AudioManager : MonoBehaviour
 
         Instance =
             this;
+
+
+        // ----------------------------------------------
+        // USER MUSIC VOLUME
+        // ----------------------------------------------
+
+        levelMusicVolume =
+            Mathf.Clamp01(
+                PlayerPrefs.GetFloat(
+                    LevelMusicVolumeKey,
+                    levelMusicVolume
+                )
+            );
 
 
         /*
@@ -289,6 +326,83 @@ public class AudioManager : MonoBehaviour
 
 
     // ==================================================
+    // USER LEVEL MUSIC VOLUME
+    // ==================================================
+
+    public void SetLevelMusicVolume(
+        float volume)
+    {
+        levelMusicVolume =
+            Mathf.Clamp01(
+                volume
+            );
+
+
+        PlayerPrefs.SetFloat(
+            LevelMusicVolumeKey,
+            levelMusicVolume
+        );
+
+
+        PlayerPrefs.Save();
+
+
+        ApplyLevelMusicVolumeImmediately();
+    }
+
+
+    private void
+        ApplyLevelMusicVolumeImmediately()
+    {
+        /*
+         * LevelMusicSettings contains the artistic/base
+         * volume for each level.
+         *
+         * The user's setting is a multiplier on top.
+         *
+         * Example:
+         * Level volume = 0.7
+         * User slider  = 0.5
+         * Final volume = 0.35
+         */
+        float baseVolume =
+            currentLevelSettings != null
+                ? currentLevelSettings.MusicVolume
+                : defaultMusicVolume;
+
+
+        float finalVolume =
+            baseVolume *
+            levelMusicVolume;
+
+
+        if (activeMusicSource != null &&
+            activeMusicSource.clip != null)
+        {
+            activeMusicSource.volume =
+                finalVolume;
+        }
+
+
+        /*
+         * Usually the inactive source is silent.
+         * If a crossfade happens to be running while
+         * the setting changes, keep it inside the new
+         * user volume limit too.
+         */
+        if (inactiveMusicSource != null &&
+            inactiveMusicSource.isPlaying)
+        {
+            inactiveMusicSource.volume =
+                Mathf.Min(
+                    inactiveMusicSource.volume,
+                    finalVolume
+                );
+        }
+    }
+
+
+    // ==================================================
     // START GAMEPLAY MUSIC
     // ==================================================
 
@@ -399,7 +513,8 @@ public class AudioManager : MonoBehaviour
 
 
         float targetVolume =
-            currentLevelSettings.MusicVolume;
+            currentLevelSettings.MusicVolume *
+            levelMusicVolume;
 
 
         float transitionDuration =
@@ -1065,6 +1180,12 @@ public class AudioManager : MonoBehaviour
             Mathf.Max(
                 0f,
                 defaultCrossfadeDuration
+            );
+
+
+        levelMusicVolume =
+            Mathf.Clamp01(
+                levelMusicVolume
             );
 
 
