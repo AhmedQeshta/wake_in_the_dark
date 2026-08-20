@@ -6,57 +6,21 @@ using UnityEngine.SceneManagement;
 public class BackGroundParallax : MonoBehaviour
 {
     // ==================================================
-    // PARALLAX LAYER
-    // ==================================================
-
-    [Serializable]
-    public class ParallaxLayer
-    {
-        [Header("Layer")]
-        public Transform target;
-
-
-        [Header("Horizontal Parallax")]
-
-        [Tooltip(
-            "0 = very far away / almost follows the camera.\n" +
-            "1 = much stronger parallax movement."
-        )]
-        [Range(0f, 1f)]
-        public float horizontalStrength = 0.1f;
-
-
-        [Header("Vertical Parallax")]
-
-        public bool useVerticalParallax = true;
-
-
-        [Range(0f, 1f)]
-        public float verticalStrength = 0.03f;
-
-
-        [Header("Optional Pixel Snap")]
-
-        [Tooltip(
-            "Leave OFF when Pixel Perfect Camera is enabled."
-        )]
-        public bool snapTransformToPixelGrid = false;
-    }
-
-
-    // ==================================================
     // CAMERA
     // ==================================================
 
     [Header("Camera")]
 
     [Tooltip(
-        "Normally leave assigned to this level's Main Camera."
+        "Normally assign this level's Main Camera."
     )]
     [SerializeField]
     private Camera mainCamera;
 
 
+    [Tooltip(
+        "If Main Camera is not assigned, try to find it automatically."
+    )]
     [SerializeField]
     private bool autoFindCamera = true;
 
@@ -67,12 +31,15 @@ public class BackGroundParallax : MonoBehaviour
 
     [Header("Pixel Art")]
 
+    [Tooltip(
+        "Pixels Per Unit used only when manual pixel snapping is enabled."
+    )]
     [SerializeField, Min(1)]
     private int pixelsPerUnit = 128;
 
 
     // ==================================================
-    // LAYERS
+    // PARALLAX LAYERS
     // ==================================================
 
     [Header("Parallax Layers")]
@@ -82,20 +49,23 @@ public class BackGroundParallax : MonoBehaviour
 
 
     [Tooltip(
-        "If the scene has no serialized layer list, automatically build it " +
-        "from the Background object's children. This fixes old Level_05 " +
-        "scene data after script changes/reloads."
+        "If Layers is empty, automatically create the layer list " +
+        "from this GameObject's children."
     )]
     [SerializeField]
     private bool autoBuildLayersFromChildren = true;
 
 
+    // ==================================================
+    // RELOAD / CINEMATIC SAFETY
+    // ==================================================
+
     [Header("Reload Safety")]
 
     [Tooltip(
-        "Keep parallax frozen from Awake until LevelCameraDirector says " +
-        "the GameplayCamera has finished moving into place. " +
-        "Keep this ON for Level_04 and Level_05."
+        "Start with parallax paused until the Gameplay Camera " +
+        "has finished moving into position. " +
+        "Recommended for levels with IntroCamera."
     )]
     [SerializeField]
     private bool startPausedUntilGameplayCameraReady = true;
@@ -113,15 +83,6 @@ public class BackGroundParallax : MonoBehaviour
 
     private bool initialized;
 
-    /*
-     * IMPORTANT:
-     *
-     * Levels 4-5 use an IntroCamera before GameplayCamera.
-     * While the cinematic camera is moving, parallax must
-     * be paused. Otherwise the large camera move is treated
-     * like player movement and can push the backgrounds out
-     * of the visible area.
-     */
     private bool parallaxPaused;
 
 
@@ -132,23 +93,12 @@ public class BackGroundParallax : MonoBehaviour
     private void Awake()
     {
         /*
-         * CRITICAL RELOAD FIX
-         * -------------------
+         * Cinemachine may move the physical Main Camera
+         * significantly during the first frames after
+         * loading or reloading a level.
          *
-         * On Reset Level, Cinemachine can move the physical
-         * Main Camera a very large distance during the first
-         * LateUpdate of the newly-loaded scene.
-         *
-         * BackGroundParallax runs late (execution order 1000),
-         * so without this guard it sees that Cinemachine jump
-         * as normal gameplay movement and moves every background
-         * plane far off-screen BEFORE LevelCameraDirector gets
-         * a chance to pause it.
-         *
-         * Start paused immediately, before any LateUpdate.
-         * LevelCameraDirector will call
-         * ResumeParallaxFromCurrentCamera() after GameplayCamera
-         * has settled.
+         * Starting paused prevents that movement from
+         * being interpreted as normal gameplay parallax.
          */
         parallaxPaused =
             startPausedUntilGameplayCameraReady;
@@ -165,13 +115,10 @@ public class BackGroundParallax : MonoBehaviour
 
 
         /*
-         * Normal Level_04 / Level_05:
-         * LevelCameraDirector exists and will resume parallax
-         * when GameplayCamera is ready.
+         * If this scene has no LevelCameraDirector,
+         * there is nobody else to resume the parallax.
          *
-         * Fallback:
-         * if this script is used in a scene with no director,
-         * allow it to work normally.
+         * In that case start it immediately.
          */
         if (parallaxPaused &&
             !HasCameraDirectorInThisScene())
@@ -191,12 +138,7 @@ public class BackGroundParallax : MonoBehaviour
             return;
 
 
-        if (mainCamera == null &&
-            autoFindCamera)
-        {
-            mainCamera =
-                FindMainCameraInThisScene();
-        }
+        ResolveCamera();
 
 
         if (mainCamera == null)
@@ -212,14 +154,6 @@ public class BackGroundParallax : MonoBehaviour
         }
 
 
-        /*
-         * Level_05 was saved with the old field:
-         *
-         *     parallaxSpeed: []
-         *
-         * so its new 'layers' array can deserialize empty.
-         * Rebuild it from Background children when needed.
-         */
         EnsureLayersConfigured();
 
 
@@ -227,8 +161,7 @@ public class BackGroundParallax : MonoBehaviour
             layers.Length == 0)
         {
             Debug.LogWarning(
-                "BackGroundParallax: No layers configured and no " +
-                "background children could be auto-detected.",
+                "BackGroundParallax: No parallax layers are configured.",
                 this
             );
 
@@ -248,14 +181,34 @@ public class BackGroundParallax : MonoBehaviour
 
 
         Debug.Log(
-            "Parallax initialized. Scene: " +
+            "BackGroundParallax initialized." +
+            "\nScene: " +
             gameObject.scene.name +
-            " | Camera: " +
+            "\nCamera: " +
             mainCamera.name +
-            " | Layers: " +
+            "\nLayers: " +
             layers.Length,
             this
         );
+    }
+
+
+    // ==================================================
+    // RESOLVE CAMERA
+    // ==================================================
+
+    private void ResolveCamera()
+    {
+        if (mainCamera != null)
+            return;
+
+
+        if (!autoFindCamera)
+            return;
+
+
+        mainCamera =
+            FindMainCameraInThisScene();
     }
 
 
@@ -266,10 +219,7 @@ public class BackGroundParallax : MonoBehaviour
     private void EnsureLayersConfigured()
     {
         /*
-         * Never replace a valid Inspector setup.
-         *
-         * Level_04 already has its 5 serialized layers,
-         * so this method leaves Level_04 untouched.
+         * Never overwrite a valid Inspector setup.
          */
         if (layers != null &&
             layers.Length > 0)
@@ -290,8 +240,10 @@ public class BackGroundParallax : MonoBehaviour
             return;
 
 
-        ParallaxLayer[] detected =
-            new ParallaxLayer[childCount];
+        ParallaxLayer[] detectedLayers =
+            new ParallaxLayer[
+                childCount
+            ];
 
 
         int validCount =
@@ -310,14 +262,10 @@ public class BackGroundParallax : MonoBehaviour
                 continue;
 
 
-            ParallaxLayer layer =
-                CreateDefaultLayer(
+            detectedLayers[validCount] =
+                ParallaxLayerDefaults.Create(
                     child
                 );
-
-
-            detected[validCount] =
-                layer;
 
 
             validCount++;
@@ -328,129 +276,31 @@ public class BackGroundParallax : MonoBehaviour
             return;
 
 
+        /*
+         * If for some reason a child was skipped,
+         * resize the array so it contains only
+         * valid entries.
+         */
         if (validCount !=
-            detected.Length)
+            detectedLayers.Length)
         {
             Array.Resize(
-                ref detected,
+                ref detectedLayers,
                 validCount
             );
         }
 
 
         layers =
-            detected;
+            detectedLayers;
 
 
         Debug.Log(
             "BackGroundParallax: Auto-built " +
             layers.Length +
-            " layer(s) from Background children in " +
-            gameObject.scene.name +
-            ".",
+            " layer(s) from Background children.",
             this
         );
-    }
-
-
-    // ==================================================
-    // DEFAULT LAYER PROFILE
-    // ==================================================
-
-    private ParallaxLayer CreateDefaultLayer(
-        Transform child)
-    {
-        ParallaxLayer layer =
-            new ParallaxLayer();
-
-
-        layer.target =
-            child;
-
-
-        /*
-         * These values match the working Level_04 setup.
-         *
-         * Plane_1 / Plane_1_other:
-         * very far background.
-         *
-         * Plane_4:
-         * closest / strongest parallax.
-         */
-        switch (child.name)
-        {
-            case "Plane_1_other":
-            case "Plane_1":
-
-                layer.horizontalStrength =
-                    0.005f;
-
-                layer.verticalStrength =
-                    0.002f;
-
-                break;
-
-
-            case "Plane_2":
-
-                layer.horizontalStrength =
-                    0.08f;
-
-                layer.verticalStrength =
-                    0.025f;
-
-                break;
-
-
-            case "Plane_3":
-
-                layer.horizontalStrength =
-                    0.14f;
-
-                layer.verticalStrength =
-                    0.04f;
-
-                break;
-
-
-            case "Plane_4":
-
-                layer.horizontalStrength =
-                    0.22f;
-
-                layer.verticalStrength =
-                    0.06f;
-
-                break;
-
-
-            default:
-
-                /*
-                 * Safe fallback for any extra background child.
-                 */
-                layer.horizontalStrength =
-                    0.1f;
-
-                layer.verticalStrength =
-                    0.03f;
-
-                break;
-        }
-
-
-        layer.useVerticalParallax =
-            true;
-
-
-        /*
-         * Pixel Perfect Camera already handles snapping.
-         */
-        layer.snapTransformToPixelGrid =
-            false;
-
-
-        return layer;
     }
 
 
@@ -460,18 +310,23 @@ public class BackGroundParallax : MonoBehaviour
 
     private void LateUpdate()
     {
+        // ----------------------------------------------
+        // INITIALIZATION
+        // ----------------------------------------------
+
         if (!initialized)
         {
             Initialize();
+
 
             if (!initialized)
                 return;
         }
 
 
-        // --------------------------------------------------
+        // ----------------------------------------------
         // CAMERA VALIDATION
-        // --------------------------------------------------
+        // ----------------------------------------------
 
         if (mainCamera == null ||
             mainCamera.gameObject.scene !=
@@ -485,25 +340,56 @@ public class BackGroundParallax : MonoBehaviour
             return;
 
 
-        // --------------------------------------------------
-        // CINEMATIC CAMERA MOVEMENT IS IGNORED
-        // --------------------------------------------------
+        // ----------------------------------------------
+        // PAUSED
+        // ----------------------------------------------
 
         if (parallaxPaused)
             return;
 
+
+        // ----------------------------------------------
+        // CAMERA MOVEMENT
+        // ----------------------------------------------
 
         Vector3 cameraDelta =
             mainCamera.transform.position -
             cameraStartPosition;
 
 
-        // --------------------------------------------------
-        // MOVE LAYERS
-        // --------------------------------------------------
+        // ----------------------------------------------
+        // UPDATE LAYERS
+        // ----------------------------------------------
+
+        UpdateLayers(
+            cameraDelta
+        );
+    }
+
+
+    // ==================================================
+    // UPDATE LAYERS
+    // ==================================================
+
+    private void UpdateLayers(
+        Vector3 cameraDelta)
+    {
+        if (layers == null ||
+            layerStartPositions == null)
+        {
+            return;
+        }
+
+
+        int count =
+            Mathf.Min(
+                layers.Length,
+                layerStartPositions.Length
+            );
+
 
         for (int i = 0;
-             i < layers.Length;
+             i < count;
              i++)
         {
             ParallaxLayer layer =
@@ -522,69 +408,11 @@ public class BackGroundParallax : MonoBehaviour
 
 
             Vector3 newPosition =
-                startPosition;
-
-
-            /*
-             * A far background should follow most of the
-             * camera movement, so it appears to move slowly
-             * on screen.
-             */
-            float horizontalFollow =
-                1f -
-                Mathf.Clamp01(
-                    layer.horizontalStrength
+                CalculateLayerPosition(
+                    layer,
+                    startPosition,
+                    cameraDelta
                 );
-
-
-            newPosition.x =
-                startPosition.x +
-                (
-                    cameraDelta.x *
-                    horizontalFollow
-                );
-
-
-            if (layer.useVerticalParallax)
-            {
-                float verticalFollow =
-                    1f -
-                    Mathf.Clamp01(
-                        layer.verticalStrength
-                    );
-
-
-                newPosition.y =
-                    startPosition.y +
-                    (
-                        cameraDelta.y *
-                        verticalFollow
-                    );
-            }
-            else
-            {
-                newPosition.y =
-                    startPosition.y;
-            }
-
-
-            newPosition.z =
-                startPosition.z;
-
-
-            if (layer.snapTransformToPixelGrid)
-            {
-                newPosition.x =
-                    SnapToPixelGrid(
-                        newPosition.x
-                    );
-
-
-                newPosition.y =
-                    SnapToPixelGrid(
-                        newPosition.y
-                    );
-            }
 
 
             layer.target.position =
@@ -594,21 +422,111 @@ public class BackGroundParallax : MonoBehaviour
 
 
     // ==================================================
+    // CALCULATE LAYER POSITION
+    // ==================================================
+
+    private Vector3 CalculateLayerPosition(
+        ParallaxLayer layer,
+        Vector3 startPosition,
+        Vector3 cameraDelta)
+    {
+        Vector3 newPosition =
+            startPosition;
+
+
+        // ----------------------------------------------
+        // HORIZONTAL
+        // ----------------------------------------------
+
+        float horizontalFollow =
+            1f -
+            Mathf.Clamp01(
+                layer.horizontalStrength
+            );
+
+
+        newPosition.x =
+            startPosition.x +
+            (
+                cameraDelta.x *
+                horizontalFollow
+            );
+
+
+        // ----------------------------------------------
+        // VERTICAL
+        // ----------------------------------------------
+
+        if (layer.useVerticalParallax)
+        {
+            float verticalFollow =
+                1f -
+                Mathf.Clamp01(
+                    layer.verticalStrength
+                );
+
+
+            newPosition.y =
+                startPosition.y +
+                (
+                    cameraDelta.y *
+                    verticalFollow
+                );
+        }
+        else
+        {
+            newPosition.y =
+                startPosition.y;
+        }
+
+
+        // ----------------------------------------------
+        // KEEP ORIGINAL Z
+        // ----------------------------------------------
+
+        newPosition.z =
+            startPosition.z;
+
+
+        // ----------------------------------------------
+        // OPTIONAL PIXEL SNAP
+        // ----------------------------------------------
+
+        if (layer.snapTransformToPixelGrid)
+        {
+            newPosition.x =
+                SnapToPixelGrid(
+                    newPosition.x
+                );
+
+
+            newPosition.y =
+                SnapToPixelGrid(
+                    newPosition.y
+                );
+        }
+
+
+        return newPosition;
+    }
+
+
+    // ==================================================
     // PAUSE PARALLAX
     // ==================================================
 
     public void PauseParallax()
     {
+        /*
+         * The LevelCameraDirector can call this during
+         * IntroCamera / cinematic movement.
+         */
         if (!initialized)
         {
             Initialize();
         }
 
 
-        /*
-         * Do not move layers while IntroCamera or a
-         * door-focus camera is controlling Main Camera.
-         */
         parallaxPaused =
             true;
     }
@@ -634,13 +552,11 @@ public class BackGroundParallax : MonoBehaviour
 
 
         /*
-         * The GameplayCamera is now settled on the Player.
+         * Treat the current camera position and current
+         * background positions as the new starting origin.
          *
-         * Use the current camera position and current
-         * background positions as the new parallax origin.
-         *
-         * This prevents the previous IntroCamera movement
-         * from pushing the layers away.
+         * This prevents IntroCamera movement from affecting
+         * the gameplay parallax.
          */
         CaptureCurrentPositionsAsNewOrigin();
 
@@ -650,7 +566,8 @@ public class BackGroundParallax : MonoBehaviour
 
 
         Debug.Log(
-            "Parallax resumed from gameplay camera. Scene: " +
+            "BackGroundParallax resumed." +
+            "\nScene: " +
             gameObject.scene.name,
             this
         );
@@ -658,7 +575,7 @@ public class BackGroundParallax : MonoBehaviour
 
 
     // ==================================================
-    // PUBLIC RESET
+    // RESET ORIGIN
     // ==================================================
 
     public void ResetParallaxOrigin()
@@ -673,8 +590,11 @@ public class BackGroundParallax : MonoBehaviour
 
     private void CaptureCurrentPositionsAsNewOrigin()
     {
-        if (mainCamera == null)
+        if (mainCamera == null ||
+            layers == null)
+        {
             return;
+        }
 
 
         cameraStartPosition =
@@ -686,7 +606,9 @@ public class BackGroundParallax : MonoBehaviour
             layers.Length)
         {
             layerStartPositions =
-                new Vector3[layers.Length];
+                new Vector3[
+                    layers.Length
+                ];
         }
 
 
@@ -708,6 +630,127 @@ public class BackGroundParallax : MonoBehaviour
             layerStartPositions[i] =
                 layer.target.position;
         }
+    }
+
+
+    // ==================================================
+    // CAMERA REBIND
+    // ==================================================
+
+    private void TryRebindCamera()
+    {
+        if (!autoFindCamera)
+            return;
+
+
+        Camera newCamera =
+            FindMainCameraInThisScene();
+
+
+        if (newCamera == null)
+            return;
+
+
+        mainCamera =
+            newCamera;
+
+
+        /*
+         * Same camera as before.
+         */
+        if (newCamera ==
+            currentlyBoundCamera)
+        {
+            return;
+        }
+
+
+        currentlyBoundCamera =
+            newCamera;
+
+
+        /*
+         * A newly-bound camera must become
+         * the new parallax origin.
+         */
+        CaptureCurrentPositionsAsNewOrigin();
+
+
+        Debug.Log(
+            "BackGroundParallax rebound to Main Camera: " +
+            newCamera.name,
+            this
+        );
+    }
+
+
+    // ==================================================
+    // FIND MAIN CAMERA
+    // ==================================================
+
+    private Camera FindMainCameraInThisScene()
+    {
+        Scene scene =
+            gameObject.scene;
+
+
+        if (!scene.IsValid() ||
+            !scene.isLoaded)
+        {
+            return null;
+        }
+
+
+        GameObject[] roots =
+            scene.GetRootGameObjects();
+
+
+        Camera firstCamera =
+            null;
+
+
+        foreach (GameObject root in roots)
+        {
+            if (root == null)
+                continue;
+
+
+            Camera[] cameras =
+                root.GetComponentsInChildren
+                    <Camera>(
+                        true
+                    );
+
+
+            foreach (Camera camera in cameras)
+            {
+                if (camera == null)
+                    continue;
+
+
+                /*
+                 * Keep the first camera as a fallback.
+                 */
+                if (firstCamera == null)
+                {
+                    firstCamera =
+                        camera;
+                }
+
+
+                /*
+                 * Prefer a camera tagged MainCamera.
+                 */
+                if (camera.CompareTag(
+                        "MainCamera"))
+                {
+                    return camera;
+                }
+            }
+        }
+
+
+        return firstCamera;
     }
 
 
@@ -757,116 +800,6 @@ public class BackGroundParallax : MonoBehaviour
 
 
     // ==================================================
-    // CAMERA REBIND
-    // ==================================================
-
-    private void TryRebindCamera()
-    {
-        if (!autoFindCamera)
-            return;
-
-
-        Camera newCamera =
-            FindMainCameraInThisScene();
-
-
-        if (newCamera == null)
-            return;
-
-
-        if (newCamera ==
-            currentlyBoundCamera)
-        {
-            mainCamera =
-                newCamera;
-
-            return;
-        }
-
-
-        mainCamera =
-            newCamera;
-
-
-        currentlyBoundCamera =
-            newCamera;
-
-
-        CaptureCurrentPositionsAsNewOrigin();
-
-
-        Debug.Log(
-            "Parallax rebound to Main Camera: " +
-            newCamera.name,
-            this
-        );
-    }
-
-
-    // ==================================================
-    // FIND MAIN CAMERA
-    // ==================================================
-
-    private Camera FindMainCameraInThisScene()
-    {
-        Scene scene =
-            gameObject.scene;
-
-
-        if (!scene.IsValid() ||
-            !scene.isLoaded)
-        {
-            return null;
-        }
-
-
-        GameObject[] roots =
-            scene.GetRootGameObjects();
-
-
-        Camera firstCamera =
-            null;
-
-
-        foreach (GameObject root in roots)
-        {
-            if (root == null)
-                continue;
-
-
-            Camera[] cameras =
-                root.GetComponentsInChildren<Camera>(
-                    true
-                );
-
-
-            foreach (Camera camera in cameras)
-            {
-                if (camera == null)
-                    continue;
-
-
-                if (firstCamera == null)
-                {
-                    firstCamera =
-                        camera;
-                }
-
-
-                if (camera.CompareTag(
-                        "MainCamera"))
-                {
-                    return camera;
-                }
-            }
-        }
-
-
-        return firstCamera;
-    }
-
-
-    // ==================================================
     // PIXEL GRID
     // ==================================================
 
@@ -891,16 +824,16 @@ public class BackGroundParallax : MonoBehaviour
 
 
     // ==================================================
-    // VALIDATE
+    // VALIDATION
     // ==================================================
 
     private void OnValidate()
     {
-        /*
-         * Your current project assets use 128 PPU.
-         */
         pixelsPerUnit =
-            128;
+            Mathf.Max(
+                1,
+                pixelsPerUnit
+            );
 
 
         if (layers == null)
@@ -909,20 +842,9 @@ public class BackGroundParallax : MonoBehaviour
 
         foreach (ParallaxLayer layer in layers)
         {
-            if (layer == null)
-                continue;
-
-
-            layer.horizontalStrength =
-                Mathf.Clamp01(
-                    layer.horizontalStrength
-                );
-
-
-            layer.verticalStrength =
-                Mathf.Clamp01(
-                    layer.verticalStrength
-                );
+            ParallaxLayerDefaults.Clamp(
+                layer
+            );
         }
     }
 }
