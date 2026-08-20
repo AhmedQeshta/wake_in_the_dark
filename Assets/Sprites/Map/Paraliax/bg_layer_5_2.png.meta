@@ -1,0 +1,261 @@
+fileFormatVersion: 2
+guid: fd39ab06c5695934bb14652d7ff51179
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6979202116359967121
+    second: bg_layer_5_2_0
+  - first:
+      213: 93853056884484532
+    second: bg_layer_5_2_1
+  - first:
+      213: -8020590933313317458
+    second: bg_layer_5_2_2
+  - first:
+      213: 2550214606357539854
+    second: bg_layer_5_2_3
+  - first:
+      213: 7764944384661248518
+    second: bg_layer_5_2_4
+  - first:
+      213: -6318723034885495129
+    second: bg_layer_5_2_5
+  - first:
+      213: 8520419218370741842
+    second: bg_layer_5_2_6
+  - first:
+      213: 2587335772412286284
+    second: bg_layer_5_2_7
+  - first:
+      213: 8657590659477040845
+    second: bg_layer_5_2_8
+  - first:
+      213: 5909907588987646630
+    second: bg_layer_5_2_9
+  - first:
+      213: -3589040415370417272
+    second: bg_layer_5_2_10
+  - first:
+      213: -7288438058534277658
+    second: bg_layer_5_2_11
+  - first:
+      213: -7882882293446620720
+    second: bg_layer_5_2_12
+  - first:
+      213: 3293829549930117915
+    second: bg_layer_5_2_13
+  - first:
+      213: -6549879146111783260
+    second: bg_layer_5_2_14
+  - first:
+      213: 8628585760180232201
+    second: bg_layer_5_2_15
+  - first:
+      213: 2300794077246464349
+    second: bg_layer_5_2_16
+  - first:
+      213: 3841231951522457550
+    second: bg_layer_5_2_17
+  - first:
+      213: -8290623861003160374
+    second: bg_layer_5_2_18
+  - first:
+      213: -5990891356336980218
+    second: bg_layer_5_2_19
+  - first:
+      213: 3888198083266721720
+    second: bg_layer_5_2_20
+  - first:
+      213: -8640647184438017254
+    second: bg_layer_5_2_21
+  - first:
+      213: 8607056788032342043
+    second: bg_layer_5_2_22
+  - first:
+      213: -5765248673941623893
+    second: bg_layer_5_2_23
+  - first:
+      213: 7058961335863722495
+    second: bg_layer_5_2_24
+  - first:
+      213: 5005788174111413046
+    second: bg_layer_5_2_25
+  - first:
+      213: -4599206428089333191
+    second: bg_layer_5_2_26
+  - first:
+      213: 114264774624732569
+    second: bg_layer_5_2_27
+  - first:
+      213: -4195913657194209262
+    second: bg_layer_5_2_28
+  - first:
+      213: -5646235211613281035
+    second: bg_layer_5_2_29
+  - first:
+      213: -6410621830458852629
+    second: bg_layer_5_2_30
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 4
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: bg_layer_5_2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2698
+        height: 684
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1915a41f85b1bd060800000000000000
+      internalID: 6979202116359967121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: f65cf5de51ab65149a8bd494ebf2721a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":2698.0,"y":684.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      bg_layer_5_2_0: 6979202116359967121
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

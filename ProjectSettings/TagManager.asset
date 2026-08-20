@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - wife
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - map
   - land
   - RespawnPoint
-  - 
+  - wife
   - 
   - 
   - 
@@ -44,14 +45,26 @@ TagManager:
   - name: bg_1
     uniqueID: 4113232591
     locked: 0
+  - name: decoration_under
+    uniqueID: 4079931025
+    locked: 0
   - name: traps
     uniqueID: 1533761491
+    locked: 0
+  - name: map_under_fly
+    uniqueID: 2205332413
     locked: 0
   - name: map_under
     uniqueID: 2922798397
     locked: 0
+  - name: map_under_top
+    uniqueID: 1503236199
+    locked: 0
   - name: Interactables
     uniqueID: 3440996029
+    locked: 0
+  - name: wife
+    uniqueID: 54791565
     locked: 0
   - name: player
     uniqueID: 3706957103
@@ -64,6 +77,9 @@ TagManager:
     locked: 0
   - name: trap_over_map
     uniqueID: 3659613273
+    locked: 0
+  - name: decoration_over
+    uniqueID: 2210506883
     locked: 0
   m_RenderingLayers:
   - Default

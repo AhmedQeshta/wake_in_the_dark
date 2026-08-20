@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: fire_decoration_1.3
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: -794148773556759909, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: 5432176656094918106, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: 1956905676, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: 1263363324, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: -1119637179, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: 1427869972, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: -804585613, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  - {fileID: -93741167, guid: 983727aab9fff9647876759b72ab63b4, type: 3}
+  m_MinSpeed: 9
+  m_MaxSpeed: 9
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 1
+  m_TileAnimationFlags: 0

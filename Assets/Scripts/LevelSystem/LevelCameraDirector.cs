@@ -778,25 +778,7 @@ public class LevelCameraDirector : MonoBehaviour
         // RESET / RELOAD SAFETY
         // ==================================================
 
-        /*
-         * Your Level_05 scene is saved with Main Camera at
-         * the IntroCamera position.
-         *
-         * On Reset Level, PlayOnReload is OFF, so we must NOT
-         * allow IntroCamera to remain Live for even one visible
-         * gameplay frame.
-         *
-         * We force a CUT to GameplayCamera:
-         *
-         * 1. pause parallax
-         * 2. freeze player
-         * 3. temporarily make the Brain's default blend a Cut
-         * 4. deactivate IntroCamera so it cannot stay Live
-         * 5. make GameplayCamera highest priority
-         * 6. wait until the Brain reports GameplayCamera live
-         * 7. reset parallax origin
-         * 8. restore the normal blend setting
-         */
+
 
         FreezePlayer(
             true
