@@ -11,6 +11,7 @@ public enum PlatformRespawnMode
 [RequireComponent(typeof(Tilemap))]
 [RequireComponent(typeof(TilemapRenderer))]
 [RequireComponent(typeof(TilemapCollider2D))]
+[RequireComponent(typeof(CompositeCollider2D))] // Injected for Performance
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))]
 public class FallingTilePlatform : MonoBehaviour
@@ -63,6 +64,7 @@ public class FallingTilePlatform : MonoBehaviour
     private Tilemap tilemap;
     private TilemapRenderer tilemapRenderer;
     private TilemapCollider2D tilemapCollider;
+    private CompositeCollider2D compositeCollider;
     private Rigidbody2D rb;
     private AudioSource audioSource;
 
@@ -80,9 +82,7 @@ public class FallingTilePlatform : MonoBehaviour
 
     [Header("Attached Objects")]
     [SerializeField] private GameObject attachmentsRoot;
-
     [SerializeField] private Collider2D[] attachmentInteractionColliders;
-
     [SerializeField] private LeverSwitch attachedLever;
 
     private SpriteRenderer[] attachmentRenderers;
@@ -94,6 +94,7 @@ public class FallingTilePlatform : MonoBehaviour
         tilemap = GetComponent<Tilemap>();
         tilemapRenderer = GetComponent<TilemapRenderer>();
         tilemapCollider = GetComponent<TilemapCollider2D>();
+        compositeCollider = GetComponent<CompositeCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
 
@@ -108,11 +109,17 @@ public class FallingTilePlatform : MonoBehaviour
         originalLocalPosition = transform.localPosition;
         originalLocalRotation = transform.localRotation;
 
+        // --- PERFORMANCE OPTIMIZATIONS ---
+        tilemapCollider.usedByComposite = true;
+        compositeCollider.geometryType = CompositeCollider2D.GeometryType.Polygons;
+
         rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
+        // ---------------------------------
 
         audioSource.playOnAwake = false;
         audioSource.loop = false;
@@ -120,25 +127,18 @@ public class FallingTilePlatform : MonoBehaviour
         // Cache attachment SpriteRenderers before initial setup.
         if (attachmentsRoot != null)
         {
-            attachmentRenderers =
-                attachmentsRoot.GetComponentsInChildren<SpriteRenderer>(true);
-
-            originalAttachmentColors =
-                new Color[attachmentRenderers.Length];
+            attachmentRenderers = attachmentsRoot.GetComponentsInChildren<SpriteRenderer>(true);
+            originalAttachmentColors = new Color[attachmentRenderers.Length];
 
             for (int i = 0; i < attachmentRenderers.Length; i++)
             {
-                originalAttachmentColors[i] =
-                    attachmentRenderers[i].color;
+                originalAttachmentColors[i] = attachmentRenderers[i].color;
             }
         }
         else
         {
-            attachmentRenderers =
-                System.Array.Empty<SpriteRenderer>();
-
-            originalAttachmentColors =
-                System.Array.Empty<Color>();
+            attachmentRenderers = System.Array.Empty<SpriteRenderer>();
+            originalAttachmentColors = System.Array.Empty<Color>();
         }
 
         // Initial setup after caching attachments.
@@ -176,8 +176,6 @@ public class FallingTilePlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log($"Platform touched by: {collision.gameObject.name}, tag: {collision.gameObject.tag}", this);
-
         if (isActivated || platformState != PlatformState.Ready)
         {
             return;
@@ -190,11 +188,9 @@ public class FallingTilePlatform : MonoBehaviour
 
         if (!IsPlayerLandingFromAbove(collision))
         {
-            Debug.Log("Player touched platform, but not from above.", this);
             return;
         }
 
-        Debug.Log("Falling platform activated.", this);
         ActivatePlatform();
     }
 
@@ -239,23 +235,15 @@ public class FallingTilePlatform : MonoBehaviour
 
     private void ActivatePlatform()
     {
-        if (isActivated ||
-        activeRoutine != null ||
-        platformState != PlatformState.Ready)
+        if (isActivated || activeRoutine != null || platformState != PlatformState.Ready)
         {
             return;
         }
 
         isActivated = true;
-
-
         PlayActivationSound();
-
         platformState = PlatformState.Shaking;
-
-        activeRoutine = StartCoroutine(
-            FallSequence()
-        );
+        activeRoutine = StartCoroutine(FallSequence());
     }
 
     private void PlayActivationSound()
@@ -349,8 +337,11 @@ public class FallingTilePlatform : MonoBehaviour
         float duration = Mathf.Max(fallDelay, 0.0001f);
         float progress = Mathf.Clamp01(elapsed / duration);
         float strength = Mathf.Lerp(shakeStrength, shakeStrength * 1.5f, progress);
+
+        // Calculate the random offset
         Vector2 offset = Random.insideUnitCircle * strength * Mathf.Sin(elapsed * shakeSpeed);
 
+        // Apply it directly to the transform for immediate visual updates
         transform.localPosition = originalLocalPosition + new Vector3(offset.x, offset.y, 0f);
         transform.localRotation = originalLocalRotation;
     }
@@ -362,16 +353,16 @@ public class FallingTilePlatform : MonoBehaviour
 
         rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
+
+        // When dynamic, switch to continuous to prevent falling through the floor map bounds
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
         rb.gravityScale = fallingGravityScale;
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
 
         platformState = PlatformState.Falling;
-
-        Debug.Log($"Platform falling. Body type: {rb.bodyType}, gravity: {rb.gravityScale}", this);
     }
-
-
 
     private void SetVisualOpacity(float opacity)
     {
@@ -379,9 +370,7 @@ public class FallingTilePlatform : MonoBehaviour
 
         // Fade the platform Tilemap.
         Color tileColor = originalTilemapColor;
-        tileColor.a =
-            originalTilemapColor.a * normalizedOpacity;
-
+        tileColor.a = originalTilemapColor.a * normalizedOpacity;
         tilemap.color = tileColor;
 
         // Fade the lever and other attached sprites.
@@ -390,31 +379,22 @@ public class FallingTilePlatform : MonoBehaviour
             if (attachmentRenderers[i] == null)
                 continue;
 
-            Color attachmentColor =
-                originalAttachmentColors[i];
-
-            attachmentColor.a =
-                originalAttachmentColors[i].a *
-                normalizedOpacity;
-
-            attachmentRenderers[i].color =
-                attachmentColor;
+            Color attachmentColor = originalAttachmentColors[i];
+            attachmentColor.a = originalAttachmentColors[i].a * normalizedOpacity;
+            attachmentRenderers[i].color = attachmentColor;
         }
     }
-
 
     private void SetAttachmentsInteractive(bool interactive)
     {
         if (attachmentInteractionColliders == null)
             return;
 
-        foreach (Collider2D interactionCollider
-                 in attachmentInteractionColliders)
+        foreach (Collider2D interactionCollider in attachmentInteractionColliders)
         {
             if (interactionCollider != null)
             {
-                interactionCollider.enabled =
-                    interactive;
+                interactionCollider.enabled = interactive;
             }
         }
     }
@@ -475,11 +455,14 @@ public class FallingTilePlatform : MonoBehaviour
 
         rb.simulated = false;
         rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0f;
+
         transform.localPosition = originalLocalPosition;
         transform.localRotation = originalLocalRotation;
+
         SetVisualOpacity(0f);
         tilemapRenderer.enabled = true;
         tilemapCollider.enabled = false;
@@ -504,13 +487,11 @@ public class FallingTilePlatform : MonoBehaviour
         hasPlayedActivationSound = false;
         platformState = PlatformState.Ready;
 
-
         // Enable the lever only when fully visible.
         SetAttachmentsInteractive(true);
 
         isActivated = false;
         activeRoutine = null;
-
     }
 
     private void ResetPlatformImmediately()
@@ -603,8 +584,12 @@ public class FallingTilePlatform : MonoBehaviour
             tilemapRenderer = GetComponent<TilemapRenderer>();
             tilemapCollider = GetComponent<TilemapCollider2D>();
             rb = GetComponent<Rigidbody2D>();
+
+            // Auto-configure the composite collider requirement so it doesn't break
+            if (tilemapCollider != null)
+            {
+                tilemapCollider.usedByComposite = true;
+            }
         }
     }
-
-
 }
