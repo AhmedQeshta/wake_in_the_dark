@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6163549835358402812}
   - component: {fileID: 8294564211951165626}
   - component: {fileID: 6020596757241972175}
+  - component: {fileID: 8188498520775472835}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -88,7 +89,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -588010193
-  m_SortingLayer: 9
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: e31fc23bf6943754bbc928f2415db30d, type: 3}
@@ -184,7 +185,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 1
   m_CompositeOrder: 0
-  m_Offset: {x: 0.18981862, y: -0.49783477}
+  m_Offset: {x: 0.18981862, y: -0.50258857}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -194,7 +195,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.24744654, y: 0.13171285}
+  m_Size: {x: 0.24744654, y: 0.14122045}
   m_EdgeRadius: 0
 --- !u!70 &4948784958754782978
 CapsuleCollider2D:
@@ -322,13 +323,13 @@ CompositeCollider2D:
   - m_Collider: {fileID: 4948784958754782978}
     m_ColliderPaths:
     - - X: 3148222
-        Y: 971476
+        Y: -4319783
       - X: 3122024
-        Y: 1136878
+        Y: -4319783
       - X: 3078681
-        Y: 1298635
+        Y: -5731988
       - X: 3018668
-        Y: 1454977
+        Y: -5731988
       - X: 2942641
         Y: 1604188
       - X: 2851433
@@ -573,9 +574,9 @@ CompositeCollider2D:
         Y: 2913741
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.3135126, y: -0.507322}
-      - {x: 0.3135126, y: -0.3887805}
-      - {x: 0.2406421, y: -0.38870892}
+    - - {x: 0.3135126, y: -0.5731988}
+      - {x: 0.3135126, y: -0.43197832}
+      - {x: 0.2203635, y: -0.4318965}
       - {x: 0.2497499, y: -0.3827941}
       - {x: 0.2627634, y: -0.3722559}
       - {x: 0.274605, y: -0.3604142}
@@ -631,9 +632,9 @@ CompositeCollider2D:
       - {x: 0.0835061, y: 0.3013199}
       - {x: 0.0829849, y: 0.2486694}
       - {x: 0.0835067, y: 0.23872}
-      - {x: 0.086258, y: 0.2243513}
-      - {x: 0.075714804, y: 0.218979}
-      - {x: 0.0616681, y: 0.20985681}
+      - {x: 0.123911105, y: -0.43197832}
+      - {x: 0.075714804, y: -0.4320076}
+      - {x: 0.0616681, y: -0.5731988}
       - {x: 0.0486547, y: 0.1993186}
       - {x: 0.0368131, y: 0.1874768}
       - {x: 0.026275, y: 0.1744632}
@@ -680,6 +681,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
+  controlsEnabled: 1
 --- !u!114 &8294564211951165626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,7 +757,7 @@ MonoBehaviour:
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.1
-  m_ApplyToSortingLayers: 00000000cff22af5d3576b5b3d5d36aebd6e19cd2fadf3dcb75487ebaf31b190
+  m_ApplyToSortingLayers: 00000000cff22af5d3576b5b3d5d36aebd6e19cd2fadf3dcb75487ebaf31b19013c23b66
   m_ShapePath:
   - {x: -0.42821693, y: -0.27469236, z: 0}
   - {x: -0.42944336, y: -0.18251991, z: 0}
@@ -884,6 +886,27 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
+--- !u!114 &8188498520775472835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7365514453692275947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75831331860a0b646a654f7f8c8bf4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightExposure
+  exposureDuration: 3
+  resetExposureOnExit: 1
+  stoneTriggerName: TurnToStone
+  freezePhysicsDuringTransformation: 1
+  animationEventFallbackDelay: 1.25
+  playerMovement: {fileID: 6163549835358402812}
+  playerDeath: {fileID: 8294564211951165626}
+  playerRigidbody: {fileID: 5421154199165526628}
+  playerAnimator: {fileID: 8013107175085263912}
 --- !u!1 &7927681820503638062
 GameObject:
   m_ObjectHideFlags: 0

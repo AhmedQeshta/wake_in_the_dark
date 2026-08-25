@@ -10,8 +10,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement")]
 
-    [SerializeField]
-    private float speed = 5f;
+    [SerializeField] private float speed = 5f;
 
 
     // ==================================================
@@ -20,13 +19,11 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jump")]
 
-    [SerializeField]
-    private float jumpForce = 15f;
+    [SerializeField] private float jumpForce = 15f;
 
 
     [SerializeField]
-    [Range(0.1f, 1f)]
-    private float jumpCutMultiplier = 0.5f;
+    [Range(0.1f, 1f)] private float jumpCutMultiplier = 0.5f;
 
 
     // ==================================================
@@ -35,16 +32,13 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Ground Check")]
 
-    [SerializeField]
-    private Transform groundCheck;
+    [SerializeField] private Transform groundCheck;
 
 
-    [SerializeField]
-    private float groundCheckRadius = 0.2f;
+    [SerializeField] private float groundCheckRadius = 0.2f;
 
 
-    [SerializeField]
-    private LayerMask groundLayer;
+    [SerializeField] private LayerMask groundLayer;
 
 
     // ==================================================
@@ -53,12 +47,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Controls")]
 
-    [Tooltip(
-        "When false, player input is ignored. " +
-        "Timeline Signals can call EnableControls() / DisableControls()."
-    )]
-    [SerializeField]
-    private bool controlsEnabled = true;
+    [Tooltip("When false, player input is ignored. Timeline Signals can call EnableControls() / DisableControls().")]
+    [SerializeField] private bool controlsEnabled = true;
 
 
     // ==================================================
@@ -74,22 +64,13 @@ public class PlayerMovement : MonoBehaviour
     // ANIMATOR HASHES
     // ==================================================
 
-    private static readonly int IsRunningHash =
-        Animator.StringToHash(
-            "IsRunning"
-        );
+    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
 
 
-    private static readonly int IsJumpingHash =
-        Animator.StringToHash(
-            "IsJumping"
-        );
+    private static readonly int IsJumpingHash = Animator.StringToHash("IsJumping");
 
 
-    private static readonly int IsGroundedHash =
-        Animator.StringToHash(
-            "IsGrounded"
-        );
+    private static readonly int IsGroundedHash = Animator.StringToHash("IsGrounded");
 
 
     // ==================================================
@@ -113,8 +94,7 @@ public class PlayerMovement : MonoBehaviour
     // PUBLIC STATE
     // ==================================================
 
-    public bool ControlsEnabled =>
-        controlsEnabled;
+    public bool ControlsEnabled => controlsEnabled;
 
 
     // ==================================================
@@ -123,12 +103,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        rb =
-            GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
 
 
-        animator =
-            GetComponent<Animator>();
+        animator = GetComponent<Animator>();
     }
 
 
@@ -152,11 +130,9 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             /*
-             * Make sure old input does not stay active
-             * while a Timeline cinematic is playing.
+             * Make sure old input does not stay active  while a Timeline cinematic is playing.
              */
-            horizontal =
-                0f;
+            horizontal = 0f;
         }
 
 
@@ -170,16 +146,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (controlsEnabled &&
-            jumpQueued)
-        {
+        if (controlsEnabled && jumpQueued)
             ExecuteJump();
-        }
 
-
-        jumpQueued =
-            false;
-
+        jumpQueued = false;
 
         MovePlayer();
     }
@@ -191,10 +161,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ReadInput()
     {
-        horizontal =
-            Input.GetAxisRaw(
-                "Horizontal"
-            );
+        horizontal = Input.GetAxisRaw("Horizontal");
     }
 
 
@@ -206,41 +173,21 @@ public class PlayerMovement : MonoBehaviour
     {
         if (groundCheck == null)
         {
-            Debug.LogError(
-                "PlayerMovement: groundCheck is not assigned.",
-                this
-            );
-
-
-            isGrounded =
-                false;
-
+            isGrounded = false;
 
             return;
         }
 
 
-        bool touchingGround =
-            Physics2D.OverlapCircle(
-                groundCheck.position,
-                groundCheckRadius,
-                groundLayer
-            );
+        bool touchingGround = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
 
-        isGrounded =
-            touchingGround &&
-            rb.linearVelocity.y <= 0.1f;
-
+        isGrounded = touchingGround && rb.linearVelocity.y <= 0.1f;
 
         if (isGrounded)
         {
-            jumpRequested =
-                false;
-
-
-            jumpCutApplied =
-                false;
+            jumpRequested = false;
+            jumpCutApplied = false;
         }
     }
 
@@ -255,25 +202,12 @@ public class PlayerMovement : MonoBehaviour
             return;
 
 
-        if (Input.GetButtonDown(
-                "Jump"
-            ) &&
-            isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            jumpRequested =
-                true;
-
-
-            isGrounded =
-                false;
-
-
-            jumpCutApplied =
-                false;
-
-
-            jumpQueued =
-                true;
+            jumpRequested = true;
+            isGrounded = false;
+            jumpCutApplied = false;
+            jumpQueued = true;
         }
 
 
@@ -281,23 +215,10 @@ public class PlayerMovement : MonoBehaviour
         // VARIABLE JUMP HEIGHT
         // ----------------------------------------------
 
-        if (Input.GetButtonUp(
-                "Jump"
-            ) &&
-            !isGrounded &&
-            rb.linearVelocity.y > 0f &&
-            !jumpCutApplied)
+        if (Input.GetButtonUp("Jump") && !isGrounded && rb.linearVelocity.y > 0f && !jumpCutApplied)
         {
-            rb.linearVelocity =
-                new Vector2(
-                    rb.linearVelocity.x,
-                    rb.linearVelocity.y *
-                    jumpCutMultiplier
-                );
-
-
-            jumpCutApplied =
-                true;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
+            jumpCutApplied = true;
         }
     }
 
@@ -312,15 +233,10 @@ public class PlayerMovement : MonoBehaviour
             return;
 
 
-        rb.linearVelocity =
-            new Vector2(
-                rb.linearVelocity.x,
-                jumpForce
-            );
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
 
-        isGrounded =
-            false;
+        isGrounded = false;
     }
 
 
@@ -330,10 +246,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        float targetHorizontal =
-            controlsEnabled
-                ? horizontal * speed
-                : 0f;
+        float targetHorizontal = controlsEnabled
+        ? horizontal * speed
+        : 0f;
 
 
         /*
@@ -341,11 +256,7 @@ public class PlayerMovement : MonoBehaviour
          *
          * Keep Y velocity so gravity still works normally.
          */
-        rb.linearVelocity =
-            new Vector2(
-                targetHorizontal,
-                rb.linearVelocity.y
-            );
+        rb.linearVelocity = new Vector2(targetHorizontal, rb.linearVelocity.y);
     }
 
 
@@ -359,41 +270,17 @@ public class PlayerMovement : MonoBehaviour
             return;
 
 
-        if (
-            (
-                horizontal > 0.1f &&
-                facingDirection < 0
-            ) ||
-            (
-                horizontal < -0.1f &&
-                facingDirection > 0
-            )
-        )
-        {
+        if ((horizontal > 0.1f && facingDirection < 0) || (horizontal < -0.1f && facingDirection > 0))
             Flip();
-        }
     }
 
 
     private void Flip()
     {
-        facingDirection *=
-            -1;
-
-
-        Vector3 scale =
-            transform.localScale;
-
-
-        scale.x =
-            Mathf.Abs(
-                scale.x
-            ) *
-            facingDirection;
-
-
-        transform.localScale =
-            scale;
+        facingDirection *= -1;
+        Vector3 scale = transform.localScale;
+        scale.x = Mathf.Abs(scale.x) * facingDirection;
+        transform.localScale = scale;
     }
 
 
@@ -403,35 +290,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimations()
     {
-        bool isRunning =
-            controlsEnabled &&
-            isGrounded &&
-            Mathf.Abs(
-                horizontal
-            ) > 0.1f;
+        bool isRunning = controlsEnabled && isGrounded && Mathf.Abs(horizontal) > 0.1f;
 
 
-        bool isJumping =
-            jumpRequested ||
-            !isGrounded;
+        bool isJumping = jumpRequested || !isGrounded;
 
 
-        animator.SetBool(
-            IsRunningHash,
-            isRunning
-        );
+        animator.SetBool(IsRunningHash, isRunning);
 
 
-        animator.SetBool(
-            IsJumpingHash,
-            isJumping
-        );
+        animator.SetBool(IsJumpingHash, isJumping);
 
 
-        animator.SetBool(
-            IsGroundedHash,
-            isGrounded
-        );
+        animator.SetBool(IsGroundedHash, isGrounded);
     }
 
 
@@ -521,13 +392,9 @@ public class PlayerMovement : MonoBehaviour
             return;
 
 
-        Gizmos.color =
-            Color.yellow;
+        Gizmos.color = Color.yellow;
 
 
-        Gizmos.DrawWireSphere(
-            groundCheck.position,
-            groundCheckRadius
-        );
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }
