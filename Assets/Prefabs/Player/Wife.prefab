@@ -18,9 +18,9 @@ GameObject:
   - component: {fileID: 6790992965107109497}
   - component: {fileID: 8248812184403582645}
   - component: {fileID: 7780255257428434671}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: Wife
-  m_TagString: Player
+  m_TagString: wife
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -685,7 +685,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7649064034796994811}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: LandCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}

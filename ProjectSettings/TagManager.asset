@@ -81,6 +81,9 @@ TagManager:
   - name: decoration_over
     uniqueID: 2210506883
     locked: 0
+  - name: speech_story
+    uniqueID: 1674132747
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []
