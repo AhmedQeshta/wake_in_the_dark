@@ -171,7 +171,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Wife Stone
+    m_DisplayName: Lever Camera 2
   - m_Version: 1
     m_Start: 1
     m_ClipIn: 0
@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fb794a295e73545af71bcdb7375791, type: 3}
   m_Name: CinemachineShot
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineShot
-  DisplayName: Wife Stone
+  DisplayName: Lever Camera 2
   VirtualCamera:
     exposedName: 283d21ec1d9c5474da94d8727f1927ea
     defaultValue: {fileID: 0}

@@ -9,7 +9,8 @@ public class LevelExitDoor : MonoBehaviour
     [Header("Next Level")]
 
     [SerializeField]
-    private string nextSceneName = "Level_02";
+    private string nextSceneName =
+        "Level_02";
 
 
     // ==================================================
@@ -31,7 +32,8 @@ public class LevelExitDoor : MonoBehaviour
         "before the player can leave."
     )]
     [SerializeField]
-    private bool requireDoorOpen = true;
+    private bool requireDoorOpen =
+        true;
 
 
     // ==================================================
@@ -51,7 +53,8 @@ public class LevelExitDoor : MonoBehaviour
     [Header("Player")]
 
     [SerializeField]
-    private string playerTag = "Player";
+    private string playerTag =
+        "Player";
 
 
     // ==================================================
@@ -67,11 +70,7 @@ public class LevelExitDoor : MonoBehaviour
 
     private void Awake()
     {
-        if (levelLoader == null)
-        {
-            levelLoader =
-                FindAnyObjectByType<LevelLoader>();
-        }
+        ResolveLoader();
     }
 
 
@@ -82,23 +81,25 @@ public class LevelExitDoor : MonoBehaviour
     private void OnTriggerEnter2D(
         Collider2D other)
     {
-        TryEnterDoor(other);
+        TryEnterDoor(
+            other
+        );
     }
 
 
     /*
-     * Important:
+     * If the player is already standing inside the trigger
+     * when a lever opens the door, OnTriggerEnter2D will
+     * not fire again.
      *
-     * If the player is already standing inside
-     * the trigger when the lever opens the door,
-     * OnTriggerEnter2D will not happen again.
-     *
-     * OnTriggerStay2D handles that situation.
+     * OnTriggerStay2D handles that case.
      */
     private void OnTriggerStay2D(
         Collider2D other)
     {
-        TryEnterDoor(other);
+        TryEnterDoor(
+            other
+        );
     }
 
 
@@ -127,8 +128,11 @@ public class LevelExitDoor : MonoBehaviour
         // CHECK PLAYER
         // ----------------------------------------------
 
-        if (!player.CompareTag(playerTag))
+        if (!player.CompareTag(
+                playerTag))
+        {
             return;
+        }
 
 
         // ----------------------------------------------
@@ -143,11 +147,7 @@ public class LevelExitDoor : MonoBehaviour
         // CHECK LOADER
         // ----------------------------------------------
 
-        if (levelLoader == null)
-        {
-            levelLoader =
-                FindAnyObjectByType<LevelLoader>();
-        }
+        ResolveLoader();
 
 
         if (levelLoader == null)
@@ -165,7 +165,8 @@ public class LevelExitDoor : MonoBehaviour
         // CHECK NEXT SCENE
         // ----------------------------------------------
 
-        if (string.IsNullOrWhiteSpace(nextSceneName))
+        if (string.IsNullOrWhiteSpace(
+                nextSceneName))
         {
             Debug.LogError(
                 "LevelExitDoor: Next Scene Name is empty.",
@@ -176,7 +177,61 @@ public class LevelExitDoor : MonoBehaviour
         }
 
 
-        transitionStarted = true;
+        // ----------------------------------------------
+        // UPDATE PROGRESSION
+        // ----------------------------------------------
+
+        LevelProgressManager progress =
+            LevelProgressManager.Instance;
+
+
+        if (progress != null)
+        {
+            string currentSceneName =
+                gameObject.scene.name;
+
+
+            bool progressionAllowed =
+                progress
+                    .CompleteLevelAndUnlockNext(
+                        currentSceneName,
+                        nextSceneName
+                    );
+
+
+            if (!progressionAllowed)
+            {
+                Debug.LogError(
+                    "LevelExitDoor: Progression rejected. " +
+                    currentSceneName +
+                    " -> " +
+                    nextSceneName,
+                    this
+                );
+
+                return;
+            }
+        }
+        else
+        {
+            /*
+             * Keep old behavior available during setup/testing,
+             * but warn because progression will not be saved.
+             */
+            Debug.LogWarning(
+                "LevelExitDoor: LevelProgressManager was not found. " +
+                "Loading next level without saving progression.",
+                this
+            );
+        }
+
+
+        // ----------------------------------------------
+        // LOAD NEXT LEVEL
+        // ----------------------------------------------
+
+        transitionStarted =
+            true;
 
 
         Debug.Log(
@@ -193,13 +248,36 @@ public class LevelExitDoor : MonoBehaviour
 
 
     // ==================================================
+    // LOADER
+    // ==================================================
+
+    private void ResolveLoader()
+    {
+        if (levelLoader != null)
+            return;
+
+
+        levelLoader =
+            LevelLoader.Instance;
+
+
+        if (levelLoader == null)
+        {
+            levelLoader =
+                FindAnyObjectByType
+                    <LevelLoader>();
+        }
+    }
+
+
+    // ==================================================
     // DOOR OPEN CHECK
     // ==================================================
 
     private bool IsDoorOpen()
     {
         /*
-         * Door doesn't require unlocking.
+         * Door does not require unlocking.
          */
         if (!requireDoorOpen)
         {
@@ -209,7 +287,7 @@ public class LevelExitDoor : MonoBehaviour
 
         /*
          * HideableTilemap.Hide() makes
-         * IsHidden true after your lever opens it.
+         * IsHidden true after the lever opens it.
          */
         if (doorTilemap != null)
         {
@@ -235,9 +313,11 @@ public class LevelExitDoor : MonoBehaviour
 
     private void OnValidate()
     {
-        if (string.IsNullOrWhiteSpace(playerTag))
+        if (string.IsNullOrWhiteSpace(
+                playerTag))
         {
-            playerTag = "Player";
+            playerTag =
+                "Player";
         }
     }
 }

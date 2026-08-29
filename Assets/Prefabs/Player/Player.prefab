@@ -89,7 +89,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -588010193
-  m_SortingLayer: 10
+  m_SortingLayer: 14
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: e31fc23bf6943754bbc928f2415db30d, type: 3}
@@ -147,7 +147,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -185,7 +185,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 1
   m_CompositeOrder: 0
-  m_Offset: {x: 0.18981862, y: -0.50258857}
+  m_Offset: {x: 0.18981862, y: -0.49995655}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -195,7 +195,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.24744654, y: 0.14122045}
+  m_Size: {x: 0.24744654, y: 0.1359564}
   m_EdgeRadius: 0
 --- !u!70 &4948784958754782978
 CapsuleCollider2D:
@@ -317,19 +317,19 @@ CompositeCollider2D:
       - X: 660953
         Y: -3887805
       - X: 660953
-        Y: -5073220
+        Y: -5111412
       - X: 3135419
-        Y: -5073220
+        Y: -5111412
   - m_Collider: {fileID: 4948784958754782978}
     m_ColliderPaths:
     - - X: 3148222
-        Y: -4319783
+        Y: 971476
       - X: 3122024
-        Y: -4319783
+        Y: 1136878
       - X: 3078681
-        Y: -5731988
+        Y: 1298635
       - X: 3018668
-        Y: -5731988
+        Y: 1454977
       - X: 2942641
         Y: 1604188
       - X: 2851433
@@ -574,9 +574,9 @@ CompositeCollider2D:
         Y: 2913741
   m_CompositePaths:
     m_Paths:
-    - - {x: 0.3135126, y: -0.5731988}
-      - {x: 0.3135126, y: -0.43197832}
-      - {x: 0.2203635, y: -0.4318965}
+    - - {x: 0.3135126, y: -0.5111412}
+      - {x: 0.3135126, y: -0.3887805}
+      - {x: 0.2406421, y: -0.38870892}
       - {x: 0.2497499, y: -0.3827941}
       - {x: 0.2627634, y: -0.3722559}
       - {x: 0.274605, y: -0.3604142}
@@ -632,9 +632,9 @@ CompositeCollider2D:
       - {x: 0.0835061, y: 0.3013199}
       - {x: 0.0829849, y: 0.2486694}
       - {x: 0.0835067, y: 0.23872}
-      - {x: 0.123911105, y: -0.43197832}
-      - {x: 0.075714804, y: -0.4320076}
-      - {x: 0.0616681, y: -0.5731988}
+      - {x: 0.086258, y: 0.2243513}
+      - {x: 0.075714804, y: 0.218979}
+      - {x: 0.0616681, y: 0.20985681}
       - {x: 0.0486547, y: 0.1993186}
       - {x: 0.0368131, y: 0.1874768}
       - {x: 0.026275, y: 0.1744632}
@@ -656,7 +656,7 @@ CompositeCollider2D:
       - {x: 0.06167, y: -0.382795}
       - {x: 0.0707552, y: -0.3887805}
       - {x: 0.0660953, y: -0.3888098}
-      - {x: 0.0661246, y: -0.507322}
+      - {x: 0.0661246, y: -0.5111412}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
@@ -674,14 +674,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 5
+  climbSpeed: 4
   jumpForce: 10
-  jumpCutMultiplier: 0.5
+  jumpCutMultiplier: 0.2
   groundCheck: {fileID: 407272949233803231}
-  groundCheckRadius: 0.2
+  groundCheckRadius: 0.25
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
   controlsEnabled: 1
+  useKinematicBodyDuringCutscene: 1
+  waitForEndOfFrameBeforeRestoringPhysics: 1
 --- !u!114 &8294564211951165626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,7 +760,7 @@ MonoBehaviour:
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.1
-  m_ApplyToSortingLayers: 00000000cff22af5d3576b5b3d5d36aebd6e19cd2fadf3dcb75487ebaf31b19013c23b66
+  m_ApplyToSortingLayers: 00000000cff22af591ce2ef3d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd8d0d44032fadf3dcb75487ebaf31b190594421da83a8c1830b3dc963
   m_ShapePath:
   - {x: -0.42821693, y: -0.27469236, z: 0}
   - {x: -0.42944336, y: -0.18251991, z: 0}
@@ -898,14 +901,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75831331860a0b646a654f7f8c8bf4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLightExposure
-  exposureDuration: 3
-  resetExposureOnExit: 1
   stoneTriggerName: TurnToStone
   freezePhysicsDuringTransformation: 1
-  animationEventFallbackDelay: 1.25
+  animationEventFallbackDelay: 0.5
   playerMovement: {fileID: 6163549835358402812}
   playerDeath: {fileID: 8294564211951165626}
-  playerRigidbody: {fileID: 5421154199165526628}
+  playerRb: {fileID: 0}
   playerAnimator: {fileID: 8013107175085263912}
 --- !u!1 &7927681820503638062
 GameObject:

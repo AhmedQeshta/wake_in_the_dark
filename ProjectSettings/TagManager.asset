@@ -4,6 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
+  - Wife
+  - Ladder
   - wife
   layers:
   - Default
@@ -18,7 +20,7 @@ TagManager:
   - land
   - RespawnPoint
   - wife
-  - 
+  - ladder
   - 
   - 
   - 
@@ -48,6 +50,15 @@ TagManager:
   - name: decoration_under
     uniqueID: 4079931025
     locked: 0
+  - name: map_under_Ladder
+    uniqueID: 88425019
+    locked: 0
+  - name: Ladder
+    uniqueID: 1013122667
+    locked: 0
+  - name: map_over_Ladder
+    uniqueID: 3236132403
+    locked: 0
   - name: traps
     uniqueID: 1533761491
     locked: 0
@@ -65,6 +76,9 @@ TagManager:
     locked: 0
   - name: Interactables
     uniqueID: 3440996029
+    locked: 0
+  - name: decoration_over_under_player
+    uniqueID: 2824503953
     locked: 0
   - name: wife
     uniqueID: 54791565

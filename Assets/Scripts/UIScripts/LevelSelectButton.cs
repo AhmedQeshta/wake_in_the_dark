@@ -16,6 +16,20 @@ public class LevelSelectButton : MonoBehaviour
 
 
     // ==================================================
+    // LOCK VISUAL
+    // ==================================================
+
+    [Header("Lock Visual")]
+
+    [Tooltip(
+        "Optional object shown while this level is locked. " +
+        "Example: a lock icon or dark overlay."
+    )]
+    [SerializeField]
+    private GameObject lockedVisual;
+
+
+    // ==================================================
     // OPTIONS
     // ==================================================
 
@@ -24,6 +38,7 @@ public class LevelSelectButton : MonoBehaviour
     [SerializeField]
     private bool disableIfCurrentLevel =
         true;
+
 
     [SerializeField]
     private bool disableIfSceneMissing =
@@ -46,7 +61,9 @@ public class LevelSelectButton : MonoBehaviour
 
     private Button button;
 
-    private bool subscribed;
+    private bool loaderSubscribed;
+
+    private bool progressSubscribed;
 
 
     // ==================================================
@@ -98,7 +115,8 @@ public class LevelSelectButton : MonoBehaviour
         if (levelLoader == null)
         {
             levelLoader =
-                FindAnyObjectByType<LevelLoader>();
+                FindAnyObjectByType
+                    <LevelLoader>();
         }
     }
 
@@ -109,29 +127,49 @@ public class LevelSelectButton : MonoBehaviour
 
     private void Subscribe()
     {
-        if (subscribed)
-            return;
+        if (!loaderSubscribed)
+        {
+            ResolveLoader();
 
 
-        if (levelLoader == null)
-            return;
+            if (levelLoader != null)
+            {
+                levelLoader.LevelLoaded +=
+                    HandleLevelLoaded;
 
 
-        levelLoader.LevelLoaded +=
-            HandleLevelLoaded;
+                loaderSubscribed =
+                    true;
+            }
+        }
 
 
-        subscribed =
-            true;
+        if (!progressSubscribed &&
+            LevelProgressManager.Instance != null)
+        {
+            LevelProgressManager.Instance
+                .ProgressChanged +=
+                HandleProgressChanged;
+
+
+            progressSubscribed =
+                true;
+        }
     }
 
 
     // ==================================================
-    // LEVEL LOADED
+    // EVENTS
     // ==================================================
 
     private void HandleLevelLoaded(
         string loadedSceneName)
+    {
+        UpdateButtonState();
+    }
+
+
+    private void HandleProgressChanged()
     {
         UpdateButtonState();
     }
@@ -147,6 +185,9 @@ public class LevelSelectButton : MonoBehaviour
             return;
 
 
+        Subscribe();
+
+
         // ----------------------------------------------
         // INVALID NAME
         // ----------------------------------------------
@@ -154,78 +195,142 @@ public class LevelSelectButton : MonoBehaviour
         if (string.IsNullOrWhiteSpace(
                 sceneName))
         {
+            SetLockedVisual(
+                false
+            );
+
+
             button.interactable =
                 false;
+
 
             return;
         }
 
 
         // ----------------------------------------------
-        // SCENE DOESN'T EXIST
+        // SCENE DOES NOT EXIST
         // ----------------------------------------------
 
         if (disableIfSceneMissing &&
             !Application.CanStreamedLevelBeLoaded(
                 sceneName))
         {
+            SetLockedVisual(
+                false
+            );
+
+
             button.interactable =
                 false;
+
 
             return;
         }
 
+
+        // ----------------------------------------------
+        // PROGRESSION LOCK
+        // ----------------------------------------------
+
+        LevelProgressManager progress =
+            LevelProgressManager.Instance;
+
+
+        bool isUnlocked =
+            progress == null ||
+            progress.IsSceneUnlocked(
+                sceneName
+            );
+
+
+        SetLockedVisual(
+            !isUnlocked
+        );
+
+
+        if (!isUnlocked)
+        {
+            button.interactable =
+                false;
+
+
+            return;
+        }
+
+
+        // ----------------------------------------------
+        // CURRENT LEVEL
+        // ----------------------------------------------
 
         if (!disableIfCurrentLevel)
         {
             button.interactable =
                 true;
 
+
             return;
         }
 
 
-        // ----------------------------------------------
-        // FIND CURRENT LEVEL
-        // ----------------------------------------------
-
         string currentSceneName =
-            string.Empty;
-
-
-        ResolveLoader();
-
-
-        if (levelLoader != null)
-        {
-            currentSceneName =
-                levelLoader.CurrentLevelSceneName;
-        }
-
-
-        /*
-         * Safety fallback.
-         */
-        if (string.IsNullOrWhiteSpace(
-                currentSceneName))
-        {
-            currentSceneName =
-                SceneManager
-                    .GetActiveScene()
-                    .name;
-        }
+            GetCurrentLevelSceneName();
 
 
         bool isCurrent =
             string.Equals(
                 currentSceneName,
                 sceneName,
-                System.StringComparison.OrdinalIgnoreCase
+                System.StringComparison
+                    .OrdinalIgnoreCase
             );
 
 
         button.interactable =
             !isCurrent;
+    }
+
+
+    // ==================================================
+    // CURRENT LEVEL
+    // ==================================================
+
+    private string GetCurrentLevelSceneName()
+    {
+        ResolveLoader();
+
+
+        if (levelLoader != null &&
+            !string.IsNullOrWhiteSpace(
+                levelLoader.CurrentLevelSceneName))
+        {
+            return
+                levelLoader
+                    .CurrentLevelSceneName;
+        }
+
+
+        return
+            SceneManager
+                .GetActiveScene()
+                .name;
+    }
+
+
+    // ==================================================
+    // LOCK VISUAL
+    // ==================================================
+
+    private void SetLockedVisual(
+        bool locked)
+    {
+        if (lockedVisual == null)
+            return;
+
+
+        lockedVisual.SetActive(
+            locked
+        );
     }
 
 
@@ -242,6 +347,48 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
+        if (string.IsNullOrWhiteSpace(
+                sceneName))
+        {
+            Debug.LogError(
+                "LevelSelectButton: Scene name is empty.",
+                this
+            );
+
+            return;
+        }
+
+
+        // ----------------------------------------------
+        // RECHECK PROGRESSION
+        // ----------------------------------------------
+
+        LevelProgressManager progress =
+            LevelProgressManager.Instance;
+
+
+        if (progress != null &&
+            !progress.IsSceneUnlocked(
+                sceneName))
+        {
+            Debug.LogWarning(
+                "LevelSelectButton: Level is locked: " +
+                sceneName,
+                this
+            );
+
+
+            UpdateButtonState();
+
+
+            return;
+        }
+
+
+        // ----------------------------------------------
+        // LOAD
+        // ----------------------------------------------
+
         ResolveLoader();
 
 
@@ -256,22 +403,6 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        if (string.IsNullOrWhiteSpace(
-                sceneName))
-        {
-            Debug.LogError(
-                "LevelSelectButton: Scene name is empty.",
-                this
-            );
-
-            return;
-        }
-
-
-        /*
-         * FAST transition specifically for
-         * the Levels menu.
-         */
         levelLoader.LoadLevelFromMenu(
             sceneName
         );
@@ -292,7 +423,7 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        if (subscribed &&
+        if (loaderSubscribed &&
             levelLoader != null)
         {
             levelLoader.LevelLoaded -=
@@ -300,7 +431,20 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        subscribed =
+        if (progressSubscribed &&
+            LevelProgressManager.Instance != null)
+        {
+            LevelProgressManager.Instance
+                .ProgressChanged -=
+                HandleProgressChanged;
+        }
+
+
+        loaderSubscribed =
+            false;
+
+
+        progressSubscribed =
             false;
     }
 }
