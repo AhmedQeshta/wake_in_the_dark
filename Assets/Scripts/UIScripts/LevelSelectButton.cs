@@ -21,10 +21,7 @@ public class LevelSelectButton : MonoBehaviour
 
     [Header("Lock Visual")]
 
-    [Tooltip(
-        "Optional object shown while this level is locked. " +
-        "Example: a lock icon or dark overlay."
-    )]
+    [Tooltip("Optional object shown while this level is locked. Example: a lock icon or dark overlay.")]
     [SerializeField]
     private GameObject lockedVisual;
 
@@ -371,16 +368,7 @@ public class LevelSelectButton : MonoBehaviour
             !progress.IsSceneUnlocked(
                 sceneName))
         {
-            Debug.LogWarning(
-                "LevelSelectButton: Level is locked: " +
-                sceneName,
-                this
-            );
-
-
             UpdateButtonState();
-
-
             return;
         }
 
@@ -393,14 +381,7 @@ public class LevelSelectButton : MonoBehaviour
 
 
         if (levelLoader == null)
-        {
-            Debug.LogError(
-                "LevelSelectButton: LevelLoader not found.",
-                this
-            );
-
             return;
-        }
 
 
         levelLoader.LoadLevelFromMenu(

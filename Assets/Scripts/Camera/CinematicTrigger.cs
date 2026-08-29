@@ -23,9 +23,6 @@ public class CinematicTrigger : MonoBehaviour
     [SerializeField, Min(1)]
     private int initialOverlapCheckFrames = 3;
 
-    [Tooltip("Write useful messages to the Console while testing.")]
-    [SerializeField] private bool debugLogs = true;
-
     private Collider2D triggerCollider;
     private bool hasTriggered;
     private bool triggeredDuringCurrentOverlap;
@@ -86,8 +83,7 @@ public class CinematicTrigger : MonoBehaviour
         TryPlayCinematic(source);
     }
 
-    private void TryPlayCinematic(
-        string source)
+    private void TryPlayCinematic(string source)
     {
         if (playOnlyOnce && hasTriggered)
             return;
@@ -95,19 +91,7 @@ public class CinematicTrigger : MonoBehaviour
         if (triggeredDuringCurrentOverlap)
             return;
 
-        /*
-         * IMPORTANT FOR BOOTSTRAP / ADDITIVE LOADING:
-         *
-         * LevelLoader prepares the newly loaded scene while IsLoading is true.
-         * During that preparation it may call SkipToGameplayImmediate().
-         *
-         * If this trigger starts the Timeline before LevelLoader finishes,
-         * LevelLoader can immediately stop that Timeline and this trigger can
-         * incorrectly think it has already played.
-         *
-         * So do not consume the trigger while LevelLoader is still busy.
-         * OnTriggerStay2D will try again automatically after loading finishes.
-         */
+
         if (LevelLoader.Instance != null &&
             LevelLoader.Instance.IsLoading)
         {
@@ -117,34 +101,12 @@ public class CinematicTrigger : MonoBehaviour
         ResolveDirector();
 
         if (levelCameraDirector == null)
-        {
-            Debug.LogWarning(
-                "CinematicTrigger: No LevelCameraDirector was found inside scene '" +
-                gameObject.scene.name +
-                "'.",
-                this
-            );
             return;
-        }
 
         triggeredDuringCurrentOverlap = true;
 
         if (playOnlyOnce)
-        {
             hasTriggered = true;
-        }
-
-        if (debugLogs)
-        {
-            Debug.Log(
-                "CinematicTrigger: Starting intro in scene '" +
-                gameObject.scene.name +
-                "' from " +
-                source +
-                ".",
-                this
-            );
-        }
 
         levelCameraDirector.PlayIntroTimeline();
     }
@@ -179,14 +141,12 @@ public class CinematicTrigger : MonoBehaviour
             return;
         }
 
-        PlayerMovement player =
-            FindPlayerInMyScene();
+        PlayerMovement player = FindPlayerInMyScene();
 
         if (player == null)
             return;
 
-        Collider2D[] playerColliders =
-            player.GetComponentsInChildren<Collider2D>(true);
+        Collider2D[] playerColliders = player.GetComponentsInChildren<Collider2D>(true);
 
         foreach (Collider2D playerCollider in playerColliders)
         {

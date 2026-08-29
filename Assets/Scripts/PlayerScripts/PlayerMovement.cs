@@ -603,12 +603,6 @@ public class PlayerMovement : MonoBehaviour
             Physics2D.SyncTransforms();
         }
 
-        Debug.Log(
-            "PlayerMovement: BeginCutsceneControl " +
-            "| Body=" + rb.bodyType +
-            " | Gravity=" + rb.gravityScale,
-            this
-        );
     }
 
     // ==================================================
@@ -698,14 +692,6 @@ public class PlayerMovement : MonoBehaviour
 
         endCutsceneRoutine = null;
 
-        Debug.Log(
-            "PlayerMovement: EndCutsceneControl finished " +
-            "| Body=" + rb.bodyType +
-            " | Simulated=" + rb.simulated +
-            " | Gravity=" + rb.gravityScale +
-            " | Interpolation=" + rb.interpolation,
-            this
-        );
     }
 
     // ==================================================
@@ -716,15 +702,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb == null)
             return;
-
-        /*
-         * Normal gameplay for this Player requires:
-         *
-         * Body Type = Dynamic
-         * Simulated = true
-         * Gravity = prefab gravity
-         * Interpolation = prefab interpolation
-         */
 
         rb.simulated = true;
 
@@ -791,13 +768,6 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
 
         UpdateAnimations();
-
-        Debug.Log(
-            "PlayerMovement: ForceEndCutsceneControl " +
-            "| Body=" + rb.bodyType +
-            " | Gravity=" + rb.gravityScale,
-            this
-        );
     }
 
     // ==================================================
