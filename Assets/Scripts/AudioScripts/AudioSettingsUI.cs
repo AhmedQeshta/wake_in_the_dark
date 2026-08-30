@@ -5,22 +5,33 @@ using UnityEngine.UI;
 public class AudioSettingsUI : MonoBehaviour
 {
     // ==================================================
+    // PLAYER PREF KEYS
+    // ==================================================
+
+    private const string MenuMusicVolumeKey =
+        "Settings.MenuMusicVolume";
+
+    private const string LevelMusicVolumeKey =
+        "Settings.LevelMusicVolume";
+
+    private const string VideoVolumeKey =
+        "Settings.LevelIntroVideoVolume";
+
+
+    // ==================================================
     // MENU MUSIC
     // ==================================================
 
     [Header("Menu Music")]
 
     [Tooltip(
-        "Drag the AudioSource used by UIManager for menu music. " +
-        "In your Bootstrap scene this AudioSource is on UI_Manager."
+        "AudioSource used by UIManager for menu music."
     )]
     [SerializeField]
     private AudioSource menuMusicSource;
 
-
     [SerializeField]
     private Slider menuMusicSlider;
-
 
     [SerializeField]
     private TMP_Text menuMusicValueText;
@@ -35,25 +46,27 @@ public class AudioSettingsUI : MonoBehaviour
     [SerializeField]
     private Slider levelMusicSlider;
 
-
     [SerializeField]
     private TMP_Text levelMusicValueText;
 
 
     // ==================================================
-    // PLAYER PREFS
+    // VIDEO AUDIO
     // ==================================================
 
-    private const string
-        MenuMusicVolumeKey =
-            "Settings.MenuMusicVolume";
+    [Header("Video Audio")]
 
+    [Tooltip(
+        "Volume slider for the videos shown before each level."
+    )]
+    [SerializeField]
+    private Slider videoVolumeSlider;
 
-    // ==================================================
-    // STATE
-    // ==================================================
-
-    private bool initialized;
+    [Tooltip(
+        "Percentage text shown beside the video volume slider."
+    )]
+    [SerializeField]
+    private TMP_Text videoVolumeValueText;
 
 
     // ==================================================
@@ -66,27 +79,29 @@ public class AudioSettingsUI : MonoBehaviour
             menuMusicSlider
         );
 
-
         ConfigureSlider(
             levelMusicSlider
+        );
+
+        ConfigureSlider(
+            videoVolumeSlider
         );
 
 
         LoadValues();
 
-
         SetupListeners();
 
 
+        /*
+         * Menu music can be applied immediately because
+         * its AudioSource is referenced directly.
+         */
         ApplyMenuMusicVolume(
             menuMusicSlider != null
                 ? menuMusicSlider.value
                 : GetSavedMenuVolume()
         );
-
-
-        initialized =
-            true;
     }
 
 
@@ -97,21 +112,30 @@ public class AudioSettingsUI : MonoBehaviour
     private void Start()
     {
         /*
-         * Awake order between this component and
-         * AudioManager is not guaranteed.
+         * AudioManager and LevelVideoIntroManager are persistent
+         * Bootstrap systems.
          *
-         * By Start(), AudioManager should exist.
+         * Start() is safer than Awake() for applying their values
+         * because Awake execution order is not guaranteed.
          */
+
         ApplyLevelMusicVolume(
             levelMusicSlider != null
                 ? levelMusicSlider.value
                 : GetSavedLevelVolume()
         );
+
+
+        ApplyVideoVolume(
+            videoVolumeSlider != null
+                ? videoVolumeSlider.value
+                : GetSavedVideoVolume()
+        );
     }
 
 
     // ==================================================
-    // LOAD
+    // LOAD VALUES
     // ==================================================
 
     private void LoadValues()
@@ -119,9 +143,11 @@ public class AudioSettingsUI : MonoBehaviour
         float menuVolume =
             GetSavedMenuVolume();
 
-
         float levelVolume =
             GetSavedLevelVolume();
+
+        float videoVolume =
+            GetSavedVideoVolume();
 
 
         if (menuMusicSlider != null)
@@ -140,31 +166,40 @@ public class AudioSettingsUI : MonoBehaviour
         }
 
 
+        if (videoVolumeSlider != null)
+        {
+            videoVolumeSlider.SetValueWithoutNotify(
+                videoVolume
+            );
+        }
+
+
         UpdatePercentageText(
             menuMusicValueText,
             menuVolume
         );
 
-
         UpdatePercentageText(
             levelMusicValueText,
             levelVolume
+        );
+
+        UpdatePercentageText(
+            videoVolumeValueText,
+            videoVolume
         );
     }
 
 
     // ==================================================
-    // DEFAULT VALUES
+    // GET SAVED MENU VOLUME
     // ==================================================
 
     private float GetSavedMenuVolume()
     {
         /*
-         * First launch:
-         * keep your current menu AudioSource volume.
-         *
-         * Your Bootstrap currently uses a low menu
-         * music volume, so we do not force it to 100%.
+         * On the first launch, keep the current volume
+         * configured on the menu AudioSource.
          */
         float defaultValue =
             menuMusicSource != null
@@ -181,19 +216,48 @@ public class AudioSettingsUI : MonoBehaviour
     }
 
 
+    // ==================================================
+    // GET SAVED LEVEL VOLUME
+    // ==================================================
+
     private float GetSavedLevelVolume()
     {
         if (AudioManager.Instance != null)
         {
-            return
+            return Mathf.Clamp01(
                 AudioManager.Instance
-                    .LevelMusicVolume;
+                    .LevelMusicVolume
+            );
         }
 
 
         return Mathf.Clamp01(
             PlayerPrefs.GetFloat(
-                "Settings.LevelMusicVolume",
+                LevelMusicVolumeKey,
+                1f
+            )
+        );
+    }
+
+
+    // ==================================================
+    // GET SAVED VIDEO VOLUME
+    // ==================================================
+
+    private float GetSavedVideoVolume()
+    {
+        if (LevelVideoIntroManager.Instance != null)
+        {
+            return Mathf.Clamp01(
+                LevelVideoIntroManager.Instance
+                    .VideoVolume
+            );
+        }
+
+
+        return Mathf.Clamp01(
+            PlayerPrefs.GetFloat(
+                VideoVolumeKey,
                 1f
             )
         );
@@ -222,11 +286,20 @@ public class AudioSettingsUI : MonoBehaviour
                     OnLevelMusicSliderChanged
                 );
         }
+
+
+        if (videoVolumeSlider != null)
+        {
+            videoVolumeSlider.onValueChanged
+                .AddListener(
+                    OnVideoVolumeSliderChanged
+                );
+        }
     }
 
 
     // ==================================================
-    // MENU MUSIC SLIDER
+    // MENU MUSIC
     // ==================================================
 
     private void OnMenuMusicSliderChanged(
@@ -241,7 +314,6 @@ public class AudioSettingsUI : MonoBehaviour
             MenuMusicVolumeKey,
             Mathf.Clamp01(value)
         );
-
 
         PlayerPrefs.Save();
     }
@@ -271,7 +343,7 @@ public class AudioSettingsUI : MonoBehaviour
 
 
     // ==================================================
-    // LEVEL MUSIC SLIDER
+    // LEVEL MUSIC
     // ==================================================
 
     private void OnLevelMusicSliderChanged(
@@ -302,14 +374,12 @@ public class AudioSettingsUI : MonoBehaviour
         else
         {
             /*
-             * Safety fallback if AudioManager has not
-             * completed Awake yet.
+             * Fallback if AudioManager is not ready.
              */
             PlayerPrefs.SetFloat(
-                "Settings.LevelMusicVolume",
+                LevelMusicVolumeKey,
                 value
             );
-
 
             PlayerPrefs.Save();
         }
@@ -323,7 +393,63 @@ public class AudioSettingsUI : MonoBehaviour
 
 
     // ==================================================
-    // PERCENT TEXT
+    // VIDEO AUDIO
+    // ==================================================
+
+    private void OnVideoVolumeSliderChanged(
+        float value)
+    {
+        ApplyVideoVolume(
+            value
+        );
+    }
+
+
+    private void ApplyVideoVolume(
+        float value)
+    {
+        value =
+            Mathf.Clamp01(
+                value
+            );
+
+
+        if (LevelVideoIntroManager.Instance != null)
+        {
+            /*
+             * This method:
+             * - changes the current VideoPlayer AudioSource volume
+             * - saves the value to PlayerPrefs
+             */
+            LevelVideoIntroManager.Instance
+                .SetVideoVolume(
+                    value
+                );
+        }
+        else
+        {
+            /*
+             * Fallback if LevelVideoIntroManager
+             * has not completed Awake yet.
+             */
+            PlayerPrefs.SetFloat(
+                VideoVolumeKey,
+                value
+            );
+
+            PlayerPrefs.Save();
+        }
+
+
+        UpdatePercentageText(
+            videoVolumeValueText,
+            value
+        );
+    }
+
+
+    // ==================================================
+    // PERCENTAGE TEXT
     // ==================================================
 
     private void UpdatePercentageText(
@@ -361,10 +487,8 @@ public class AudioSettingsUI : MonoBehaviour
         slider.minValue =
             0f;
 
-
         slider.maxValue =
             1f;
-
 
         slider.wholeNumbers =
             false;
@@ -391,6 +515,15 @@ public class AudioSettingsUI : MonoBehaviour
             levelMusicSlider.onValueChanged
                 .RemoveListener(
                     OnLevelMusicSliderChanged
+                );
+        }
+
+
+        if (videoVolumeSlider != null)
+        {
+            videoVolumeSlider.onValueChanged
+                .RemoveListener(
+                    OnVideoVolumeSliderChanged
                 );
         }
     }

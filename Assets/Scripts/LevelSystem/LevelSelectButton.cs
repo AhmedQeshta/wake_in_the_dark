@@ -21,7 +21,10 @@ public class LevelSelectButton : MonoBehaviour
 
     [Header("Lock Visual")]
 
-    [Tooltip("Optional object shown while this level is locked. Example: a lock icon or dark overlay.")]
+    [Tooltip(
+        "Optional separate object shown while this level is locked. " +
+        "Do not assign the BTN GameObject itself."
+    )]
     [SerializeField]
     private GameObject lockedVisual;
 
@@ -185,10 +188,6 @@ public class LevelSelectButton : MonoBehaviour
         Subscribe();
 
 
-        // ----------------------------------------------
-        // INVALID NAME
-        // ----------------------------------------------
-
         if (string.IsNullOrWhiteSpace(
                 sceneName))
         {
@@ -204,10 +203,6 @@ public class LevelSelectButton : MonoBehaviour
             return;
         }
 
-
-        // ----------------------------------------------
-        // SCENE DOES NOT EXIST
-        // ----------------------------------------------
 
         if (disableIfSceneMissing &&
             !Application.CanStreamedLevelBeLoaded(
@@ -225,10 +220,6 @@ public class LevelSelectButton : MonoBehaviour
             return;
         }
 
-
-        // ----------------------------------------------
-        // PROGRESSION LOCK
-        // ----------------------------------------------
 
         LevelProgressManager progress =
             LevelProgressManager.Instance;
@@ -256,10 +247,6 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
-        // CURRENT LEVEL
-        // ----------------------------------------------
-
         if (!disableIfCurrentLevel)
         {
             button.interactable =
@@ -278,8 +265,7 @@ public class LevelSelectButton : MonoBehaviour
             string.Equals(
                 currentSceneName,
                 sceneName,
-                System.StringComparison
-                    .OrdinalIgnoreCase
+                System.StringComparison.OrdinalIgnoreCase
             );
 
 
@@ -302,8 +288,7 @@ public class LevelSelectButton : MonoBehaviour
                 levelLoader.CurrentLevelSceneName))
         {
             return
-                levelLoader
-                    .CurrentLevelSceneName;
+                levelLoader.CurrentLevelSceneName;
         }
 
 
@@ -332,7 +317,7 @@ public class LevelSelectButton : MonoBehaviour
 
 
     // ==================================================
-    // LOAD LEVEL
+    // LOAD SELECTED LEVEL
     // ==================================================
 
     private void LoadSelectedLevel()
@@ -356,10 +341,6 @@ public class LevelSelectButton : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
-        // RECHECK PROGRESSION
-        // ----------------------------------------------
-
         LevelProgressManager progress =
             LevelProgressManager.Instance;
 
@@ -368,22 +349,56 @@ public class LevelSelectButton : MonoBehaviour
             !progress.IsSceneUnlocked(
                 sceneName))
         {
+            Debug.LogWarning(
+                "LevelSelectButton: Level is locked: " +
+                sceneName,
+                this
+            );
+
+
             UpdateButtonState();
+
+
             return;
         }
 
-
-        // ----------------------------------------------
-        // LOAD
-        // ----------------------------------------------
 
         ResolveLoader();
 
 
         if (levelLoader == null)
+        {
+            Debug.LogError(
+                "LevelSelectButton: LevelLoader not found.",
+                this
+            );
+
             return;
+        }
 
 
+        // ----------------------------------------------
+        // NEW: VIDEO BEFORE MENU LEVEL LOAD
+        // ----------------------------------------------
+
+        LevelVideoIntroManager videoIntro =
+            LevelVideoIntroManager.Instance;
+
+
+        if (videoIntro != null)
+        {
+            videoIntro.RequestLevelFromMenu(
+                sceneName
+            );
+
+
+            return;
+        }
+
+
+        /*
+         * Safe fallback to the old behavior.
+         */
         levelLoader.LoadLevelFromMenu(
             sceneName
         );

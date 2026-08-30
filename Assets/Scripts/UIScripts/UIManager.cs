@@ -345,7 +345,7 @@ public class UIManager : MonoBehaviour
         if (startButton != null)
         {
             startButton.onClick.AddListener(
-                StartGame
+                StartGameWithIntroVideo
             );
         }
 
@@ -519,6 +519,76 @@ public class UIManager : MonoBehaviour
         // ----------------------------------------------
 
         PlayMenuAudio();
+    }
+
+
+    // ==================================================
+    // START GAME WITH LEVEL 1 VIDEO
+    // ==================================================
+
+    private void StartGameWithIntroVideo()
+    {
+        if (gameStarted ||
+            isTransitioning)
+        {
+            return;
+        }
+
+
+        /*
+         * Level_01 is already loaded by Bootstrap.
+         *
+         * Therefore:
+         *
+         * Start button
+         *      ↓
+         * LevelVideoIntroManager
+         *      ↓
+         * Level_01 intro video
+         *      ↓
+         * Skip OR Continue
+         *      ↓
+         * StartGameAfterIntroVideo()
+         *      ↓
+         * normal gameplay
+         */
+        if (LevelVideoIntroManager.Instance != null)
+        {
+            LevelVideoIntroManager.Instance
+                .RequestInitialLoadedLevel();
+
+            return;
+        }
+
+
+        /*
+         * Safe fallback:
+         * if the video manager is missing, keep the old behavior.
+         */
+        Debug.LogWarning(
+            "UIManager: LevelVideoIntroManager was not found. " +
+            "Starting Level_01 directly.",
+            this
+        );
+
+
+        StartGame();
+    }
+
+
+    // ==================================================
+    // START GAME AFTER LEVEL 1 VIDEO
+    // ==================================================
+
+    /*
+     * Assign this public method to:
+     *
+     * LevelVideoIntroManager
+     * -> On Already Loaded Level Ready
+     */
+    public void StartGameAfterIntroVideo()
+    {
+        StartGame();
     }
 
 

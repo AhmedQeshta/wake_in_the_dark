@@ -75,7 +75,7 @@ public class LevelExitDoor : MonoBehaviour
 
 
     // ==================================================
-    // ENTER
+    // TRIGGER
     // ==================================================
 
     private void OnTriggerEnter2D(
@@ -87,13 +87,6 @@ public class LevelExitDoor : MonoBehaviour
     }
 
 
-    /*
-     * If the player is already standing inside the trigger
-     * when a lever opens the door, OnTriggerEnter2D will
-     * not fire again.
-     *
-     * OnTriggerStay2D handles that case.
-     */
     private void OnTriggerStay2D(
         Collider2D other)
     {
@@ -114,19 +107,11 @@ public class LevelExitDoor : MonoBehaviour
             return;
 
 
-        // ----------------------------------------------
-        // FIND PLAYER ROOT
-        // ----------------------------------------------
-
         GameObject player =
             other.attachedRigidbody != null
                 ? other.attachedRigidbody.gameObject
                 : other.gameObject;
 
-
-        // ----------------------------------------------
-        // CHECK PLAYER
-        // ----------------------------------------------
 
         if (!player.CompareTag(
                 playerTag))
@@ -135,17 +120,9 @@ public class LevelExitDoor : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
-        // CHECK DOOR STATE
-        // ----------------------------------------------
-
         if (!IsDoorOpen())
             return;
 
-
-        // ----------------------------------------------
-        // CHECK LOADER
-        // ----------------------------------------------
 
         ResolveLoader();
 
@@ -161,10 +138,6 @@ public class LevelExitDoor : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
-        // CHECK NEXT SCENE
-        // ----------------------------------------------
-
         if (string.IsNullOrWhiteSpace(
                 nextSceneName))
         {
@@ -178,7 +151,7 @@ public class LevelExitDoor : MonoBehaviour
 
 
         // ----------------------------------------------
-        // UPDATE PROGRESSION
+        // UNLOCK NEXT LEVEL FIRST
         // ----------------------------------------------
 
         LevelProgressManager progress =
@@ -214,10 +187,6 @@ public class LevelExitDoor : MonoBehaviour
         }
         else
         {
-            /*
-             * Keep old behavior available during setup/testing,
-             * but warn because progression will not be saved.
-             */
             Debug.LogWarning(
                 "LevelExitDoor: LevelProgressManager was not found. " +
                 "Loading next level without saving progression.",
@@ -226,17 +195,36 @@ public class LevelExitDoor : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
-        // LOAD NEXT LEVEL
-        // ----------------------------------------------
-
         transitionStarted =
             true;
 
 
-        Debug.Log(
-            "Exit door entered. Loading: " +
-            nextSceneName,
+        // ----------------------------------------------
+        // NEW: VIDEO BEFORE NEXT LEVEL
+        // ----------------------------------------------
+
+        LevelVideoIntroManager videoIntro =
+            LevelVideoIntroManager.Instance;
+
+
+        if (videoIntro != null)
+        {
+            videoIntro.RequestLevel(
+                nextSceneName
+            );
+
+
+            return;
+        }
+
+
+        /*
+         * Safe fallback:
+         * if the video system is missing, keep the old behavior.
+         */
+        Debug.LogWarning(
+            "LevelExitDoor: LevelVideoIntroManager was not found. " +
+            "Loading the next level directly.",
             this
         );
 
@@ -271,24 +259,17 @@ public class LevelExitDoor : MonoBehaviour
 
 
     // ==================================================
-    // DOOR OPEN CHECK
+    // DOOR OPEN
     // ==================================================
 
     private bool IsDoorOpen()
     {
-        /*
-         * Door does not require unlocking.
-         */
         if (!requireDoorOpen)
         {
             return true;
         }
 
 
-        /*
-         * HideableTilemap.Hide() makes
-         * IsHidden true after the lever opens it.
-         */
         if (doorTilemap != null)
         {
             return
@@ -308,7 +289,7 @@ public class LevelExitDoor : MonoBehaviour
 
 
     // ==================================================
-    // VALIDATION
+    // VALIDATE
     // ==================================================
 
     private void OnValidate()
