@@ -9,26 +9,16 @@ public class AnimatedTileTrigger : MonoBehaviour
     // ==================================================
     // TILEMAP
     // ==================================================
-
     [Header("Tilemap")]
-
-    [SerializeField]
-    private Tilemap tilemap;
+    [SerializeField] private Tilemap tilemap;
 
 
     // ==================================================
     // ANIMATED PARTS
     // ==================================================
-
     [Header("Animated Parts")]
-
-    [Tooltip(
-        "One entry for each tile part. " +
-        "For the 2x2 statue use 4 entries: " +
-        "top-left, top-right, bottom-left, bottom-right."
-    )]
-    [SerializeField]
-    private AnimatedPart[] animatedParts;
+    [Tooltip("One entry for each tile part. For the 2x2 statue use 4 entries: top-left, top-right, bottom-left, bottom-right.")]
+    [SerializeField] private AnimatedPart[] animatedParts;
 
 
     // ==================================================
@@ -36,21 +26,12 @@ public class AnimatedTileTrigger : MonoBehaviour
     // ==================================================
 
     [Header("Playback")]
-
-    [Tooltip(
-        "Duration of one complete animation cycle. " +
-        "Example: 4 frames at 4 FPS = 1 second."
-    )]
-    [SerializeField, Min(0.01f)]
-    private float animationDuration = 1f;
+    [Tooltip("Duration of one complete animation cycle. Example: 4 frames at 4 FPS = 1 second.")]
+    [SerializeField, Min(0.01f)] private float animationDuration = 1f;
 
 
-    [Tooltip(
-        "What happens after one complete animation cycle."
-    )]
-    [SerializeField]
-    private AnimationEndBehavior endBehavior =
-        AnimationEndBehavior.FreezeOnLastFrame;
+    [Tooltip("What happens after one complete animation cycle.")]
+    [SerializeField] private AnimationEndBehavior endBehavior = AnimationEndBehavior.FreezeOnLastFrame;
 
 
     // ==================================================
@@ -60,35 +41,24 @@ public class AnimatedTileTrigger : MonoBehaviour
     [Header("Trigger Options")]
 
     [FormerlySerializedAs("playOnce")]
-    [Tooltip(
-        "If enabled, this trigger can activate only once."
-    )]
-    [SerializeField]
-    private bool triggerOnlyOnce = true;
+    [Tooltip("If enabled, this trigger can activate only once.")]
+    [SerializeField] private bool triggerOnlyOnce = true;
 
 
     [Tooltip("Delay before the animation starts.")]
-    [SerializeField, Min(0f)]
-    private float startDelay = 0f;
+    [SerializeField, Min(0f)] private float startDelay = 0f;
 
 
-    [Tooltip(
-        "Disable the trigger collider after activation."
-    )]
-    [SerializeField]
-    private bool disableTriggerAfterActivation = true;
+    [Tooltip("Disable the trigger collider after activation.")]
+    [SerializeField] private bool disableTriggerAfterActivation = true;
 
 
     // ==================================================
     // STATE
     // ==================================================
-
     private Collider2D triggerCollider;
-
     private TileBase[] originalTiles;
-
     private bool activated;
-
     private Coroutine animationRoutine;
 
 
@@ -98,17 +68,12 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void Awake()
     {
-        triggerCollider =
-            GetComponent<Collider2D>();
-
+        triggerCollider = GetComponent<Collider2D>();
 
         if (triggerCollider != null)
-        {
-            triggerCollider.isTrigger =
-                true;
-        }
-    }
+            triggerCollider.isTrigger = true;
 
+    }
 
     // ==================================================
     // START
@@ -126,35 +91,19 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void CacheOriginalTiles()
     {
-        if (tilemap == null ||
-            animatedParts == null)
-        {
+        if (tilemap == null || animatedParts == null)
             return;
-        }
 
+        originalTiles = new TileBase[animatedParts.Length];
 
-        originalTiles =
-            new TileBase[
-                animatedParts.Length
-            ];
-
-
-        for (int i = 0;
-             i < animatedParts.Length;
-             i++)
+        for (int i = 0; i < animatedParts.Length; i++)
         {
-            AnimatedPart part =
-                animatedParts[i];
-
+            AnimatedPart part = animatedParts[i];
 
             if (part == null)
                 continue;
 
-
-            originalTiles[i] =
-                tilemap.GetTile(
-                    part.cell
-                );
+            originalTiles[i] = tilemap.GetTile(part.cell);
         }
     }
 
@@ -163,24 +112,15 @@ public class AnimatedTileTrigger : MonoBehaviour
     // PLAYER ENTERS TRIGGER
     // ==================================================
 
-    private void OnTriggerEnter2D(
-        Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (activated &&
-            triggerOnlyOnce)
-        {
+        if (activated && triggerOnlyOnce)
             return;
-        }
 
-
-        PlayerMovement player =
-            other.GetComponentInParent
-                <PlayerMovement>();
-
+        PlayerMovement player = other.GetComponentInParent<PlayerMovement>();
 
         if (player == null)
             return;
-
 
         StartAnimation();
     }
@@ -192,29 +132,15 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     public void StartAnimation()
     {
-        if (activated &&
-            triggerOnlyOnce)
-        {
+        if (activated && triggerOnlyOnce)
             return;
-        }
 
-
-        activated =
-            true;
-
+        activated = true;
 
         if (animationRoutine != null)
-        {
-            StopCoroutine(
-                animationRoutine
-            );
-        }
+            StopCoroutine(animationRoutine);
 
-
-        animationRoutine =
-            StartCoroutine(
-                StartAnimationRoutine()
-            );
+        animationRoutine = StartCoroutine(StartAnimationRoutine());
     }
 
 
@@ -222,50 +148,26 @@ public class AnimatedTileTrigger : MonoBehaviour
     // ANIMATION ROUTINE
     // ==================================================
 
-    private IEnumerator
-        StartAnimationRoutine()
+    private IEnumerator StartAnimationRoutine()
     {
         if (startDelay > 0f)
-        {
-            yield return
-                new WaitForSeconds(
-                    startDelay
-                );
-        }
-
+            yield return new WaitForSeconds(startDelay);
 
         ApplyAnimatedTiles();
 
 
-        if (disableTriggerAfterActivation &&
-            triggerCollider != null)
+        if (disableTriggerAfterActivation && triggerCollider != null)
+            triggerCollider.enabled = false;
+
+        if (endBehavior == AnimationEndBehavior.KeepAnimating)
         {
-            triggerCollider.enabled =
-                false;
-        }
-
-
-        if (endBehavior ==
-            AnimationEndBehavior.KeepAnimating)
-        {
-            animationRoutine =
-                null;
-
+            animationRoutine = null;
             yield break;
         }
 
-
-        yield return
-            new WaitForSeconds(
-                animationDuration
-            );
-
-
+        yield return new WaitForSeconds(animationDuration);
         ApplyEndBehavior();
-
-
-        animationRoutine =
-            null;
+        animationRoutine = null;
     }
 
 
@@ -275,34 +177,16 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void ApplyAnimatedTiles()
     {
-        if (tilemap == null ||
-            animatedParts == null)
-        {
+        if (tilemap == null || animatedParts == null)
             return;
-        }
 
-
-        foreach (
-            AnimatedPart part
-            in animatedParts
-        )
+        foreach (AnimatedPart part in animatedParts)
         {
-            if (part == null ||
-                part.animatedTile == null)
-            {
+            if (part == null || part.animatedTile == null)
                 continue;
-            }
 
-
-            tilemap.SetTile(
-                part.cell,
-                part.animatedTile
-            );
-
-
-            tilemap.RefreshTile(
-                part.cell
-            );
+            tilemap.SetTile(part.cell, part.animatedTile);
+            tilemap.RefreshTile(part.cell);
         }
     }
 
@@ -315,35 +199,20 @@ public class AnimatedTileTrigger : MonoBehaviour
     {
         switch (endBehavior)
         {
-            case AnimationEndBehavior
-                .FreezeOnFirstFrame:
-
+            case AnimationEndBehavior.FreezeOnFirstFrame:
                 RestoreOriginalTiles();
-
                 break;
 
-
-            case AnimationEndBehavior
-                .FreezeOnLastFrame:
-
+            case AnimationEndBehavior.FreezeOnLastFrame:
                 ApplyLastFrameTiles();
-
                 break;
 
-
-            case AnimationEndBehavior
-                .Disappear:
-
+            case AnimationEndBehavior.Disappear:
                 ClearAnimatedCells();
-
                 break;
 
-
-            case AnimationEndBehavior
-                .KeepAnimating:
-
+            case AnimationEndBehavior.KeepAnimating:
             default:
-
                 break;
         }
     }
@@ -355,49 +224,18 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void ApplyLastFrameTiles()
     {
-        if (tilemap == null ||
-            animatedParts == null)
-        {
+        if (tilemap == null || animatedParts == null)
             return;
-        }
 
 
-        for (int i = 0;
-             i < animatedParts.Length;
-             i++)
+        for (int i = 0; i < animatedParts.Length; i++)
         {
-            AnimatedPart part =
-                animatedParts[i];
+            AnimatedPart part = animatedParts[i];
 
+            if (part == null || part.lastFrameTile == null) continue;
 
-            if (part == null)
-                continue;
-
-
-            if (part.lastFrameTile == null)
-            {
-                Debug.LogWarning(
-                    "AnimatedTileTrigger: Last Frame Tile " +
-                    "is missing for Animated Part " +
-                    i +
-                    ".",
-                    this
-                );
-
-
-                continue;
-            }
-
-
-            tilemap.SetTile(
-                part.cell,
-                part.lastFrameTile
-            );
-
-
-            tilemap.RefreshTile(
-                part.cell
-            );
+            tilemap.SetTile(part.cell, part.lastFrameTile);
+            tilemap.RefreshTile(part.cell);
         }
     }
 
@@ -408,31 +246,16 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void ClearAnimatedCells()
     {
-        if (tilemap == null ||
-            animatedParts == null)
-        {
+        if (tilemap == null || animatedParts == null)
             return;
-        }
 
 
-        foreach (
-            AnimatedPart part
-            in animatedParts
-        )
+        foreach (AnimatedPart part in animatedParts)
         {
-            if (part == null)
-                continue;
+            if (part == null) continue;
 
-
-            tilemap.SetTile(
-                part.cell,
-                null
-            );
-
-
-            tilemap.RefreshTile(
-                part.cell
-            );
+            tilemap.SetTile(part.cell, null);
+            tilemap.RefreshTile(part.cell);
         }
     }
 
@@ -445,28 +268,16 @@ public class AnimatedTileTrigger : MonoBehaviour
     {
         if (animationRoutine != null)
         {
-            StopCoroutine(
-                animationRoutine
-            );
-
-
-            animationRoutine =
-                null;
+            StopCoroutine(animationRoutine);
+            animationRoutine = null;
         }
 
-
-        activated =
-            false;
-
+        activated = false;
 
         RestoreOriginalTiles();
 
-
         if (triggerCollider != null)
-        {
-            triggerCollider.enabled =
-                true;
-        }
+            triggerCollider.enabled = true;
     }
 
 
@@ -476,42 +287,21 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void RestoreOriginalTiles()
     {
-        if (tilemap == null ||
-            animatedParts == null ||
-            originalTiles == null)
-        {
+        if (tilemap == null || animatedParts == null || originalTiles == null)
             return;
-        }
 
 
-        int count =
-            Mathf.Min(
-                animatedParts.Length,
-                originalTiles.Length
-            );
+        int count = Mathf.Min(animatedParts.Length, originalTiles.Length);
 
 
-        for (int i = 0;
-             i < count;
-             i++)
+        for (int i = 0; i < count; i++)
         {
-            AnimatedPart part =
-                animatedParts[i];
+            AnimatedPart part = animatedParts[i];
 
+            if (part == null) continue;
 
-            if (part == null)
-                continue;
-
-
-            tilemap.SetTile(
-                part.cell,
-                originalTiles[i]
-            );
-
-
-            tilemap.RefreshTile(
-                part.cell
-            );
+            tilemap.SetTile(part.cell, originalTiles[i]);
+            tilemap.RefreshTile(part.cell);
         }
     }
 
@@ -522,28 +312,12 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     private void OnValidate()
     {
-        startDelay =
-            Mathf.Max(
-                0f,
-                startDelay
-            );
+        startDelay = Mathf.Max(0f, startDelay);
+        animationDuration = Mathf.Max(0.01f, animationDuration);
 
-
-        animationDuration =
-            Mathf.Max(
-                0.01f,
-                animationDuration
-            );
-
-
-        Collider2D col =
-            GetComponent<Collider2D>();
-
+        Collider2D col = GetComponent<Collider2D>();
 
         if (col != null)
-        {
-            col.isTrigger =
-                true;
-        }
+            col.isTrigger = true;
     }
 }

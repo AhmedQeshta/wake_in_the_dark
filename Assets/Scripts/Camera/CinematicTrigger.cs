@@ -27,8 +27,7 @@ public class CinematicTrigger : MonoBehaviour
     private bool hasTriggered;
     private bool triggeredDuringCurrentOverlap;
 
-    private readonly HashSet<Collider2D> playerCollidersInside =
-        new HashSet<Collider2D>();
+    private readonly HashSet<Collider2D> playerCollidersInside = new HashSet<Collider2D>();
 
     private Coroutine initialOverlapRoutine;
 
@@ -42,20 +41,17 @@ public class CinematicTrigger : MonoBehaviour
     private void Start()
     {
         if (checkInitialOverlap)
-        {
-            initialOverlapRoutine =
-                StartCoroutine(InitialOverlapCheckRoutine());
-        }
+            initialOverlapRoutine = StartCoroutine(InitialOverlapCheckRoutine());
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        TryRegisterAndTrigger(other, "OnTriggerEnter2D");
+        TryRegisterAndTrigger(other);
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        TryRegisterAndTrigger(other, "OnTriggerStay2D");
+        TryRegisterAndTrigger(other);
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -66,24 +62,20 @@ public class CinematicTrigger : MonoBehaviour
         playerCollidersInside.Remove(other);
 
         if (playerCollidersInside.Count == 0)
-        {
             triggeredDuringCurrentOverlap = false;
-        }
     }
 
-    private void TryRegisterAndTrigger(
-        Collider2D other,
-        string source)
+    private void TryRegisterAndTrigger(Collider2D other)
     {
         if (!IsPlayerCollider(other))
             return;
 
         playerCollidersInside.Add(other);
 
-        TryPlayCinematic(source);
+        TryPlayCinematic();
     }
 
-    private void TryPlayCinematic(string source)
+    private void TryPlayCinematic()
     {
         if (playOnlyOnce && hasTriggered)
             return;
@@ -113,11 +105,7 @@ public class CinematicTrigger : MonoBehaviour
 
     private IEnumerator InitialOverlapCheckRoutine()
     {
-        int frames =
-            Mathf.Max(
-                1,
-                initialOverlapCheckFrames
-            );
+        int frames = Mathf.Max(1, initialOverlapCheckFrames);
 
         for (int i = 0; i < frames; i++)
         {
@@ -134,12 +122,9 @@ public class CinematicTrigger : MonoBehaviour
 
     private void CheckForPlayerAlreadyInside()
     {
-        if (triggerCollider == null ||
-            !triggerCollider.enabled ||
-            !triggerCollider.gameObject.activeInHierarchy)
-        {
+        if (triggerCollider == null || !triggerCollider.enabled || !triggerCollider.gameObject.activeInHierarchy)
             return;
-        }
+
 
         PlayerMovement player = FindPlayerInMyScene();
 
@@ -150,81 +135,56 @@ public class CinematicTrigger : MonoBehaviour
 
         foreach (Collider2D playerCollider in playerColliders)
         {
-            if (playerCollider == null ||
-                !playerCollider.enabled ||
-                playerCollider == triggerCollider)
-            {
+            if (playerCollider == null || !playerCollider.enabled || playerCollider == triggerCollider)
                 continue;
-            }
 
-            ColliderDistance2D distance =
-                triggerCollider.Distance(playerCollider);
 
-            if (!distance.isOverlapped)
-                continue;
+            ColliderDistance2D distance = triggerCollider.Distance(playerCollider);
+
+            if (!distance.isOverlapped) continue;
 
             playerCollidersInside.Add(playerCollider);
 
-            TryPlayCinematic("InitialOverlapCheck");
+            TryPlayCinematic();
 
             return;
         }
     }
 
-    private bool IsPlayerCollider(
-        Collider2D other)
+    private bool IsPlayerCollider(Collider2D other)
     {
         if (other == null)
             return false;
 
-        PlayerMovement movement =
-            other.GetComponentInParent<PlayerMovement>();
+        PlayerMovement movement = other.GetComponentInParent<PlayerMovement>();
 
         if (movement != null)
-        {
-            return
-                string.IsNullOrWhiteSpace(playerTag) ||
-                movement.CompareTag(playerTag);
-        }
+            return string.IsNullOrWhiteSpace(playerTag) || movement.CompareTag(playerTag);
 
         if (other.attachedRigidbody != null)
         {
-            GameObject bodyObject =
-                other.attachedRigidbody.gameObject;
+            GameObject bodyObject = other.attachedRigidbody.gameObject;
 
-            if (bodyObject != null &&
-                (
-                    string.IsNullOrWhiteSpace(playerTag) ||
-                    bodyObject.CompareTag(playerTag)
-                ))
-            {
+            if (bodyObject != null && (string.IsNullOrWhiteSpace(playerTag) || bodyObject.CompareTag(playerTag)))
                 return true;
-            }
         }
 
-        return
-            !string.IsNullOrWhiteSpace(playerTag) &&
-            other.CompareTag(playerTag);
+        return !string.IsNullOrWhiteSpace(playerTag) && other.CompareTag(playerTag);
     }
 
     private PlayerMovement FindPlayerInMyScene()
     {
-        Scene scene =
-            gameObject.scene;
+        Scene scene = gameObject.scene;
 
-        if (!scene.IsValid() ||
-            !scene.isLoaded)
-        {
+        if (!scene.IsValid() || !scene.isLoaded)
             return null;
-        }
 
         foreach (GameObject root in scene.GetRootGameObjects())
         {
             if (root == null)
                 continue;
 
-            PlayerMovement player =
-                root.GetComponentInChildren<PlayerMovement>(true);
+            PlayerMovement player = root.GetComponentInChildren<PlayerMovement>(true);
 
             if (player != null)
                 return player;
@@ -235,31 +195,22 @@ public class CinematicTrigger : MonoBehaviour
 
     private void ResolveDirector()
     {
-        if (levelCameraDirector != null &&
-            levelCameraDirector.gameObject.scene ==
-            gameObject.scene)
-        {
+        if (levelCameraDirector != null && levelCameraDirector.gameObject.scene == gameObject.scene)
             return;
-        }
 
         levelCameraDirector = null;
 
-        Scene scene =
-            gameObject.scene;
+        Scene scene = gameObject.scene;
 
-        if (!scene.IsValid() ||
-            !scene.isLoaded)
-        {
+        if (!scene.IsValid() || !scene.isLoaded)
             return;
-        }
 
         foreach (GameObject root in scene.GetRootGameObjects())
         {
             if (root == null)
                 continue;
 
-            LevelCameraDirector director =
-                root.GetComponentInChildren<LevelCameraDirector>(true);
+            LevelCameraDirector director = root.GetComponentInChildren<LevelCameraDirector>(true);
 
             if (director != null)
             {
@@ -279,21 +230,15 @@ public class CinematicTrigger : MonoBehaviour
     private void ConfigureCollider()
     {
         if (triggerCollider == null)
-        {
-            triggerCollider =
-                GetComponent<Collider2D>();
-        }
+            triggerCollider = GetComponent<Collider2D>();
 
         if (triggerCollider != null)
-        {
             triggerCollider.isTrigger = true;
-        }
     }
 
     private void Reset()
     {
-        triggerCollider =
-            GetComponent<Collider2D>();
+        triggerCollider = GetComponent<Collider2D>();
 
         ConfigureCollider();
         ResolveDirector();
@@ -301,19 +246,12 @@ public class CinematicTrigger : MonoBehaviour
 
     private void OnValidate()
     {
-        initialOverlapCheckFrames =
-            Mathf.Max(
-                1,
-                initialOverlapCheckFrames
-            );
+        initialOverlapCheckFrames = Mathf.Max(1, initialOverlapCheckFrames);
 
         if (string.IsNullOrWhiteSpace(playerTag))
-        {
             playerTag = "Player";
-        }
 
-        triggerCollider =
-            GetComponent<Collider2D>();
+        triggerCollider = GetComponent<Collider2D>();
 
         ConfigureCollider();
     }

@@ -71,8 +71,7 @@ public class LevelCameraDirector : MonoBehaviour
     {
         ResolveReferences();
 
-        if (introPlayableDirector == null ||
-            introPlayableDirector.playableAsset == null)
+        if (introPlayableDirector == null || introPlayableDirector.playableAsset == null)
         {
             SkipToGameplayImmediate();
             return;
@@ -102,8 +101,7 @@ public class LevelCameraDirector : MonoBehaviour
     {
         ResolveReferences();
 
-        if (introPlayableDirector != null &&
-            introPlayableDirector.state == PlayState.Playing)
+        if (introPlayableDirector != null && introPlayableDirector.state == PlayState.Playing)
         {
             introPlayableDirector.Stop();
         }
@@ -120,9 +118,7 @@ public class LevelCameraDirector : MonoBehaviour
     {
         ResolveReferences();
 
-        return cameraSetup != null
-            ? cameraSetup.GameplayCamera
-            : null;
+        return cameraSetup != null ? cameraSetup.GameplayCamera : null;
     }
 
     private void SetGameplayLive()
@@ -146,11 +142,9 @@ public class LevelCameraDirector : MonoBehaviour
         if (introPlaying || focusPlaying)
             return;
 
-        float targetDuration =
-            duration > 0f ? duration : defaultFocusDuration;
+        float targetDuration = duration > 0f ? duration : defaultFocusDuration;
 
-        focusRoutine =
-            StartCoroutine(FocusRoutine(targetDuration));
+        focusRoutine = StartCoroutine(FocusRoutine(targetDuration));
     }
 
     private IEnumerator FocusRoutine(float duration)
@@ -173,10 +167,7 @@ public class LevelCameraDirector : MonoBehaviour
         SetGameplayLive();
 
         if (focusReturnBlendWait > 0f)
-        {
-            yield return
-                new WaitForSecondsRealtime(focusReturnBlendWait);
-        }
+            yield return new WaitForSecondsRealtime(focusReturnBlendWait);
 
         ResumeBackgroundParallax();
         RestorePlayer();
@@ -194,19 +185,15 @@ public class LevelCameraDirector : MonoBehaviour
 
         cameraSetup.BindScene();
 
-        CinemachineCamera gameplayCamera =
-            cameraSetup.GameplayCamera;
+        CinemachineCamera gameplayCamera = cameraSetup.GameplayCamera;
 
-        Transform playerTarget =
-            cameraSetup.PlayerTarget;
+        Transform playerTarget = cameraSetup.PlayerTarget;
 
         if (gameplayCamera != null && playerTarget != null)
             gameplayCamera.Follow = playerTarget;
     }
 
-    private void SetPriority(
-        CinemachineCamera camera,
-        int priority)
+    private void SetPriority(CinemachineCamera camera, int priority)
     {
         if (camera == null)
             return;
@@ -231,8 +218,7 @@ public class LevelCameraDirector : MonoBehaviour
         movement.enabled = false;
         playerFrozen = true;
 
-        Rigidbody2D rigidbody =
-            movement.GetComponent<Rigidbody2D>();
+        Rigidbody2D rigidbody = movement.GetComponent<Rigidbody2D>();
 
         if (rigidbody != null)
         {
@@ -242,8 +228,7 @@ public class LevelCameraDirector : MonoBehaviour
             rigidbody.bodyType = RigidbodyType2D.Static;
         }
 
-        Animator animator =
-            movement.GetComponentInChildren<Animator>();
+        Animator animator = movement.GetComponentInChildren<Animator>();
 
         if (animator != null)
         {
@@ -263,20 +248,15 @@ public class LevelCameraDirector : MonoBehaviour
 
         if (movement != null)
         {
-            Rigidbody2D rigidbody =
-                movement.GetComponent<Rigidbody2D>();
+            Rigidbody2D rigidbody = movement.GetComponent<Rigidbody2D>();
 
             if (rigidbody != null)
             {
-                movement.transform.position =
-                    frozenPlayerPosition;
-
-                rigidbody.bodyType =
-                    previousPlayerBodyType;
+                movement.transform.position = frozenPlayerPosition;
+                rigidbody.bodyType = previousPlayerBodyType;
             }
 
-            movement.enabled =
-                previousMovementEnabled;
+            movement.enabled = previousMovementEnabled;
         }
 
         playerFrozen = false;
@@ -286,11 +266,8 @@ public class LevelCameraDirector : MonoBehaviour
     {
         ResolveReferences();
 
-        if (cameraSetup != null &&
-            cameraSetup.PlayerMovement != null)
-        {
+        if (cameraSetup != null && cameraSetup.PlayerMovement != null)
             return cameraSetup.PlayerMovement;
-        }
 
         return FindComponentInMyScene<PlayerMovement>();
     }
@@ -326,8 +303,7 @@ public class LevelCameraDirector : MonoBehaviour
             focusCamera = FindCinemachineCameraByName("DoorCamera");
     }
 
-    private CinemachineCamera
-        FindCinemachineCameraByName(string objectName)
+    private CinemachineCamera FindCinemachineCameraByName(string objectName)
     {
         Scene scene = gameObject.scene;
 
@@ -336,29 +312,22 @@ public class LevelCameraDirector : MonoBehaviour
 
         foreach (GameObject root in scene.GetRootGameObjects())
         {
-            CinemachineCamera[] cameras =
-                root.GetComponentsInChildren<CinemachineCamera>(true);
+            CinemachineCamera[] cameras = root.GetComponentsInChildren<CinemachineCamera>(true);
 
             foreach (CinemachineCamera camera in cameras)
             {
                 if (camera == null)
                     continue;
 
-                if (string.Equals(
-                    camera.gameObject.name,
-                    objectName,
-                    System.StringComparison.OrdinalIgnoreCase))
-                {
+                if (string.Equals(camera.gameObject.name, objectName, System.StringComparison.OrdinalIgnoreCase))
                     return camera;
-                }
             }
         }
 
         return null;
     }
 
-    private T FindComponentInMyScene<T>()
-        where T : Component
+    private T FindComponentInMyScene<T>() where T : Component
     {
         Scene scene = gameObject.scene;
 

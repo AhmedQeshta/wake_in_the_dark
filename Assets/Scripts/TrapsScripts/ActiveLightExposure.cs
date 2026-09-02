@@ -25,19 +25,9 @@ public class ActiveLightExposure
   // ==================================================
   // PUBLIC VALUES
   // ==================================================
-
   public bool IsValid => Zone != null;
-
-
-  public float RequiredDuration =>
-      Zone != null
-          ? Mathf.Max(0.1f, Zone.ExposureDuration)
-          : 0.1f;
-
-
+  public float RequiredDuration => Zone != null ? Mathf.Max(0.1f, Zone.ExposureDuration) : 0.1f;
   public float NormalizedExposure => Mathf.Clamp01(ExposureTime / RequiredDuration);
-
-
   public bool IsComplete => ExposureTime >= RequiredDuration;
 
 
@@ -50,10 +40,7 @@ public class ActiveLightExposure
     if (!IsValid)
       return;
 
-
     ExposureTime += Mathf.Max(0f, deltaTime);
-
-
     ExposureTime = Mathf.Min(ExposureTime, RequiredDuration);
   }
 

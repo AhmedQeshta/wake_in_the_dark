@@ -31,16 +31,9 @@ public class PlayerLightExposure : MonoBehaviour
     // ==================================================
 
     [Header("References")]
-
     [SerializeField] private PlayerMovement playerMovement;
-
-
     [SerializeField] private PlayerDeath playerDeath;
-
-
     [SerializeField] private Rigidbody2D playerRb;
-
-
     [SerializeField] private Animator playerAnimator;
 
 
@@ -49,20 +42,11 @@ public class PlayerLightExposure : MonoBehaviour
     // ==================================================
 
     private readonly List<ActiveLightExposure> activeLights = new List<ActiveLightExposure>();
-
-
     private bool transformingToStone;
-
     private bool waitingForRespawn;
-
     private Coroutine fallbackDeathRoutine;
-
-
     private RigidbodyType2D previousBodyType;
-
     private bool physicsFrozenByExposure;
-
-
     private int stoneTriggerHash;
 
 
@@ -71,29 +55,19 @@ public class PlayerLightExposure : MonoBehaviour
     // ==================================================
 
     public bool IsExposed => activeLights.Count > 0;
-
-
     public bool IsTransformingToStone => transformingToStone;
-
-
     public float HighestExposure01
     {
         get
         {
             float highest = 0f;
-
-
             foreach (ActiveLightExposure activeLight in activeLights)
             {
                 if (activeLight == null || !activeLight.IsValid)
                     continue;
-
                 if (activeLight.NormalizedExposure > highest)
-                {
                     highest = activeLight.NormalizedExposure;
-                }
             }
-
 
             return highest;
         }
@@ -107,7 +81,6 @@ public class PlayerLightExposure : MonoBehaviour
     private void Awake()
     {
         ResolveReferences();
-
         RebuildAnimatorHash();
     }
 
@@ -118,10 +91,7 @@ public class PlayerLightExposure : MonoBehaviour
 
     private void Update()
     {
-        // ----------------------------------------------
         // WAIT FOR EXISTING PLAYERDEATH RESPAWN
-        // ----------------------------------------------
-
         if (waitingForRespawn)
         {
             if (playerDeath != null && !playerDeath.IsDead)
@@ -131,29 +101,21 @@ public class PlayerLightExposure : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
         // PLAYER DIED FROM ANOTHER HAZARD
-        // ----------------------------------------------
-
         if (playerDeath != null && playerDeath.IsDead)
         {
             CancelExposureForExternalDeath();
-
             return;
         }
 
 
-        // ----------------------------------------------
         // STONE ANIMATION ALREADY STARTED
-        // ----------------------------------------------
 
         if (transformingToStone)
             return;
 
 
-        // ----------------------------------------------
         // NOTHING EXPOSING PLAYER
-        // ----------------------------------------------
 
         if (activeLights.Count == 0)
             return;
@@ -163,9 +125,7 @@ public class PlayerLightExposure : MonoBehaviour
 
 
         if (lightThatKilledPlayer != null)
-        {
-            BeginStoneTransformation(lightThatKilledPlayer);
-        }
+            BeginStoneTransformation();
     }
 
 
@@ -179,23 +139,17 @@ public class PlayerLightExposure : MonoBehaviour
         {
             ActiveLightExposure activeLight = activeLights[i];
 
-
             if (activeLight == null || !activeLight.IsValid)
             {
                 activeLights.RemoveAt(i);
                 continue;
             }
 
-
             activeLight.AddExposure(Time.deltaTime);
 
-
             if (activeLight.IsComplete)
-            {
                 return activeLight.Zone;
-            }
         }
-
 
         return null;
     }
@@ -207,10 +161,7 @@ public class PlayerLightExposure : MonoBehaviour
 
     public void EnterDangerousLight(DangerousLightZone lightZone)
     {
-        if ((lightZone == null)
-        || (playerDeath != null && playerDeath.IsDead)
-        || (transformingToStone || waitingForRespawn)
-        || (FindActiveLight(lightZone) != null))
+        if ((lightZone == null) || (playerDeath != null && playerDeath.IsDead) || transformingToStone || waitingForRespawn || (FindActiveLight(lightZone) != null))
             return;
 
         activeLights.Add(new ActiveLightExposure(lightZone));
@@ -226,15 +177,12 @@ public class PlayerLightExposure : MonoBehaviour
         if (lightZone == null)
             return;
 
-
         /*
-         * Leaving this light removes its runtime entry,
-         * so its exposure resets to zero.
+         * Leaving this light removes its runtime entry, so its exposure resets to zero.
          */
         for (int i = activeLights.Count - 1; i >= 0; i--)
         {
             ActiveLightExposure activeLight = activeLights[i];
-
 
             if (activeLight == null || activeLight.Zone == lightZone)
                 activeLights.RemoveAt(i);
@@ -260,58 +208,34 @@ public class PlayerLightExposure : MonoBehaviour
     // BEGIN STONE TRANSFORMATION
     // ==================================================
 
-    private void BeginStoneTransformation(DangerousLightZone sourceLight)
+    private void BeginStoneTransformation()
     {
         if (transformingToStone || waitingForRespawn)
             return;
 
         ResolveReferences();
 
-
-        if (playerAnimator == null)
+        if (playerAnimator == null || playerDeath == null)
             return;
-
-
-        if (playerDeath == null)
-        {
-            return;
-        }
-
 
         transformingToStone = true;
-
-
         activeLights.Clear();
 
-
-        // ----------------------------------------------
         // DISABLE PLAYER CONTROLS
-        // ----------------------------------------------
-
         if (playerMovement != null)
             playerMovement.DisableControls();
 
 
-        // ----------------------------------------------
         // FREEZE PHYSICS
-        // ----------------------------------------------
-
         FreezePlayerPhysics();
 
 
-        // ----------------------------------------------
         // PLAY STONE ANIMATION
-        // ----------------------------------------------
-
         playerAnimator.ResetTrigger(stoneTriggerHash);
-
-
         playerAnimator.SetTrigger(stoneTriggerHash);
 
 
-        // ----------------------------------------------
         // FALLBACK
-        // ----------------------------------------------
 
         if (fallbackDeathRoutine != null)
             StopCoroutine(fallbackDeathRoutine);
@@ -319,8 +243,6 @@ public class PlayerLightExposure : MonoBehaviour
 
         if (animationEventFallbackDelay > 0f)
             fallbackDeathRoutine = StartCoroutine(AnimationEventFallbackRoutine());
-
-
 
     }
 
@@ -362,15 +284,10 @@ public class PlayerLightExposure : MonoBehaviour
 
 
         /*
-         * Existing PlayerDeath starts only after
-         * the stone transformation has finished.
+         * Existing PlayerDeath starts only after the stone transformation has finished.
          */
         playerDeath.KillPlayer();
-
-
         waitingForRespawn = playerDeath.IsDead;
-
-
         transformingToStone = false;
     }
 
@@ -401,17 +318,9 @@ public class PlayerLightExposure : MonoBehaviour
 
 
         previousBodyType = playerRb.bodyType;
-
-
         playerRb.linearVelocity = Vector2.zero;
-
-
         playerRb.angularVelocity = 0f;
-
-
         playerRb.bodyType = RigidbodyType2D.Static;
-
-
         physicsFrozenByExposure = true;
     }
 
@@ -423,14 +332,8 @@ public class PlayerLightExposure : MonoBehaviour
 
 
         playerRb.bodyType = previousBodyType;
-
-
         playerRb.linearVelocity = Vector2.zero;
-
-
         playerRb.angularVelocity = 0f;
-
-
         physicsFrozenByExposure = false;
     }
 
@@ -442,23 +345,17 @@ public class PlayerLightExposure : MonoBehaviour
     private void CancelExposureForExternalDeath()
     {
         waitingForRespawn = true;
-
-
         activeLights.Clear();
 
 
         if (fallbackDeathRoutine != null)
         {
             StopCoroutine(fallbackDeathRoutine);
-
-
             fallbackDeathRoutine = null;
         }
 
 
         RestorePlayerPhysics();
-
-
         transformingToStone = false;
     }
 
@@ -470,18 +367,13 @@ public class PlayerLightExposure : MonoBehaviour
     private void ResetAfterRespawn()
     {
         waitingForRespawn = false;
-
-
         transformingToStone = false;
-
-
         activeLights.Clear();
 
 
         if (fallbackDeathRoutine != null)
         {
             StopCoroutine(fallbackDeathRoutine);
-
             fallbackDeathRoutine = null;
         }
 
@@ -492,16 +384,11 @@ public class PlayerLightExposure : MonoBehaviour
         if (playerAnimator != null)
         {
             playerAnimator.ResetTrigger(stoneTriggerHash);
-
-
             playerAnimator.Play("idle", 0, 0f);
         }
 
-
         if (playerMovement != null)
-        {
             playerMovement.EnableControls();
-        }
     }
 
 
@@ -514,15 +401,11 @@ public class PlayerLightExposure : MonoBehaviour
         if (playerMovement == null)
             playerMovement = GetComponent<PlayerMovement>();
 
-
         if (playerDeath == null)
             playerDeath = GetComponent<PlayerDeath>();
 
-
         if (playerRb == null)
             playerRb = GetComponent<Rigidbody2D>();
-
-
 
         if (playerAnimator == null)
             playerAnimator = GetComponent<Animator>();
@@ -537,7 +420,6 @@ public class PlayerLightExposure : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(stoneTriggerName))
             stoneTriggerName = "TurnToStone";
-
 
         stoneTriggerHash = Animator.StringToHash(stoneTriggerName);
     }

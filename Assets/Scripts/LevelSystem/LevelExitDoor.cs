@@ -3,11 +3,32 @@ using UnityEngine;
 public class LevelExitDoor : MonoBehaviour
 {
     // ==================================================
+    // EXIT TYPE
+    // ==================================================
+
+    public enum ExitType
+    {
+        NextLevel,
+        GameEnding
+    }
+
+
+    [Header("Exit")]
+
+    [SerializeField]
+    private ExitType exitType =
+        ExitType.NextLevel;
+
+
+    // ==================================================
     // NEXT LEVEL
     // ==================================================
 
     [Header("Next Level")]
 
+    [Tooltip(
+        "Used only when Exit Type = Next Level."
+    )]
     [SerializeField]
     private string nextSceneName =
         "Level_02";
@@ -20,16 +41,14 @@ public class LevelExitDoor : MonoBehaviour
     [Header("Door State")]
 
     [Tooltip(
-        "Assign the HideableTilemap that represents " +
-        "the actual exit door."
+        "Assign the HideableTilemap that represents the actual exit door."
     )]
     [SerializeField]
     private HideableTilemap doorTilemap;
 
 
     [Tooltip(
-        "If enabled, the door must be hidden/open " +
-        "before the player can leave."
+        "If enabled, the door must be hidden/open before the player can leave."
     )]
     [SerializeField]
     private bool requireDoorOpen =
@@ -107,14 +126,8 @@ public class LevelExitDoor : MonoBehaviour
             return;
 
 
-        GameObject player =
-            other.attachedRigidbody != null
-                ? other.attachedRigidbody.gameObject
-                : other.gameObject;
-
-
-        if (!player.CompareTag(
-                playerTag))
+        if (!IsPlayer(
+                other))
         {
             return;
         }
@@ -124,6 +137,31 @@ public class LevelExitDoor : MonoBehaviour
             return;
 
 
+        switch (exitType)
+        {
+            case ExitType.GameEnding:
+
+                HandleGameEnding();
+
+                break;
+
+
+            case ExitType.NextLevel:
+            default:
+
+                HandleNextLevel();
+
+                break;
+        }
+    }
+
+
+    // ==================================================
+    // NEXT LEVEL
+    // ==================================================
+
+    private void HandleNextLevel()
+    {
         ResolveLoader();
 
 
@@ -151,7 +189,7 @@ public class LevelExitDoor : MonoBehaviour
 
 
         // ----------------------------------------------
-        // UNLOCK NEXT LEVEL FIRST
+        // UNLOCK NEXT LEVEL
         // ----------------------------------------------
 
         LevelProgressManager progress =
@@ -200,7 +238,7 @@ public class LevelExitDoor : MonoBehaviour
 
 
         // ----------------------------------------------
-        // NEW: VIDEO BEFORE NEXT LEVEL
+        // VIDEO BEFORE NEXT LEVEL
         // ----------------------------------------------
 
         LevelVideoIntroManager videoIntro =
@@ -213,18 +251,17 @@ public class LevelExitDoor : MonoBehaviour
                 nextSceneName
             );
 
-
             return;
         }
 
 
-        /*
-         * Safe fallback:
-         * if the video system is missing, keep the old behavior.
-         */
+        // ----------------------------------------------
+        // SAFE FALLBACK
+        // ----------------------------------------------
+
         Debug.LogWarning(
             "LevelExitDoor: LevelVideoIntroManager was not found. " +
-            "Loading the next level directly.",
+            "Loading next level directly.",
             this
         );
 
@@ -232,6 +269,112 @@ public class LevelExitDoor : MonoBehaviour
         levelLoader.LoadLevel(
             nextSceneName
         );
+    }
+
+
+    // ==================================================
+    // GAME ENDING
+    // ==================================================
+
+    private void HandleGameEnding()
+    {
+        transitionStarted =
+            true;
+
+
+        LevelVideoIntroManager videoIntro =
+            LevelVideoIntroManager.Instance;
+
+
+        if (videoIntro != null)
+        {
+            videoIntro.PlayGameEnding();
+
+            return;
+        }
+
+
+        /*
+         * Safe fallback:
+         * if the video system is missing, return to the
+         * Bootstrap main menu without an ending video.
+         */
+        Debug.LogWarning(
+            "LevelExitDoor: LevelVideoIntroManager was not found. " +
+            "Returning to the main menu directly.",
+            this
+        );
+
+
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance
+                .ReturnToMainMenuAfterGameEnding();
+
+            return;
+        }
+
+
+        transitionStarted =
+            false;
+
+
+        Debug.LogError(
+            "LevelExitDoor: Neither LevelVideoIntroManager nor UIManager was found.",
+            this
+        );
+    }
+
+
+    // ==================================================
+    // PLAYER
+    // ==================================================
+
+    private bool IsPlayer(
+        Collider2D other)
+    {
+        if (other == null)
+            return false;
+
+
+        PlayerMovement movement =
+            other.GetComponentInParent
+                <PlayerMovement>();
+
+
+        if (movement != null)
+        {
+            return
+                string.IsNullOrWhiteSpace(
+                    playerTag
+                ) ||
+                movement.CompareTag(
+                    playerTag
+                );
+        }
+
+
+        if (other.attachedRigidbody != null)
+        {
+            GameObject bodyObject =
+                other.attachedRigidbody
+                    .gameObject;
+
+
+            if (bodyObject != null &&
+                bodyObject.CompareTag(
+                    playerTag
+                ))
+            {
+                return true;
+            }
+        }
+
+
+        return
+            other.CompareTag(
+                playerTag
+            );
     }
 
 
@@ -285,6 +428,17 @@ public class LevelExitDoor : MonoBehaviour
 
 
         return false;
+    }
+
+
+    // ==================================================
+    // RESET
+    // ==================================================
+
+    public void ResetTransitionState()
+    {
+        transitionStarted =
+            false;
     }
 
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+// to handel Unity Editor
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,19 +14,14 @@ public class ExitGameButton : MonoBehaviour
     // ==================================================
 
     [Header("Exit Game")]
-
-    [SerializeField, Min(0f)]
-    private float exitDelay = 0f;
+    [SerializeField, Min(0f)] private float exitDelay = 0f;
 
 
     // ==================================================
     // COMPONENTS
     // ==================================================
-
     private Button button;
-
     private bool exiting;
-
 
     // ==================================================
     // AWAKE
@@ -33,13 +29,8 @@ public class ExitGameButton : MonoBehaviour
 
     private void Awake()
     {
-        button =
-            GetComponent<Button>();
-
-
-        button.onClick.AddListener(
-            ExitGame
-        );
+        button = GetComponent<Button>();
+        button.onClick.AddListener(ExitGame);
     }
 
 
@@ -52,22 +43,15 @@ public class ExitGameButton : MonoBehaviour
         if (exiting)
             return;
 
-
-        exiting =
-            true;
-
+        exiting = true;
 
         if (exitDelay <= 0f)
         {
             QuitNow();
-
             return;
         }
 
-
-        StartCoroutine(
-            ExitAfterDelay()
-        );
+        StartCoroutine(ExitAfterDelay());
     }
 
 
@@ -75,15 +59,9 @@ public class ExitGameButton : MonoBehaviour
     // DELAY
     // ==================================================
 
-    private System.Collections.IEnumerator
-        ExitAfterDelay()
+    private System.Collections.IEnumerator ExitAfterDelay()
     {
-        yield return
-            new WaitForSecondsRealtime(
-                exitDelay
-            );
-
-
+        yield return new WaitForSecondsRealtime(exitDelay);
         QuitNow();
     }
 
@@ -116,9 +94,6 @@ public class ExitGameButton : MonoBehaviour
         if (button == null)
             return;
 
-
-        button.onClick.RemoveListener(
-            ExitGame
-        );
+        button.onClick.RemoveListener(ExitGame);
     }
 }

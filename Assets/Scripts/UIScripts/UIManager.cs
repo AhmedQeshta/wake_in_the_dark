@@ -7,27 +7,17 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // INSTANCE
     // ==================================================
-
     public static UIManager Instance { get; private set; }
 
 
     // ==================================================
     // CANVAS GROUPS
     // ==================================================
-
     [Header("Canvas Groups")]
-
-    [SerializeField]
-    private CanvasGroup mainMenuGroup;
-
-    [SerializeField]
-    private CanvasGroup settingsMenuGroup;
-
-    [SerializeField]
-    private CanvasGroup levelsMenuGroup;
-
-    [SerializeField]
-    private CanvasGroup backgroundGroup;
+    [SerializeField] private CanvasGroup mainMenuGroup;
+    [SerializeField] private CanvasGroup settingsMenuGroup;
+    [SerializeField] private CanvasGroup levelsMenuGroup;
+    [SerializeField] private CanvasGroup backgroundGroup;
 
 
     // ==================================================
@@ -35,21 +25,11 @@ public class UIManager : MonoBehaviour
     // ==================================================
 
     [Header("Main Menu Buttons")]
-
-    [SerializeField]
-    private Button startButton;
-
-    [SerializeField]
-    private Button pauseButton;
-
-    [SerializeField]
-    private Button resetButton;
-
-    [SerializeField]
-    private Button levelsButton;
-
-    [SerializeField]
-    private Button settingsButton;
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button pauseButton;
+    [SerializeField] private Button resetButton;
+    [SerializeField] private Button levelsButton;
+    [SerializeField] private Button settingsButton;
 
 
     // ==================================================
@@ -57,9 +37,7 @@ public class UIManager : MonoBehaviour
     // ==================================================
 
     [Header("Settings Menu")]
-
-    [SerializeField]
-    private Button settingsBackButton;
+    [SerializeField] private Button settingsBackButton;
 
 
     // ==================================================
@@ -67,9 +45,7 @@ public class UIManager : MonoBehaviour
     // ==================================================
 
     [Header("Levels Menu")]
-
-    [SerializeField]
-    private Button levelsBackButton;
+    [SerializeField] private Button levelsBackButton;
 
 
     // ==================================================
@@ -77,25 +53,25 @@ public class UIManager : MonoBehaviour
     // ==================================================
 
     [Header("Menu Audio")]
-
-    [Tooltip(
-        "Music used only while the Start / Pause menu is visible."
-    )]
-    [SerializeField]
-    private AudioSource menuAudioSource;
-
+    [Tooltip("Music used only while the Start / Pause menu is visible.")]
+    [SerializeField] private AudioSource menuAudioSource;
 
     // ==================================================
     // UI ANIMATION
     // ==================================================
 
     [Header("UI Animation")]
+    [SerializeField, Min(0.01f)] private float menuFadeDuration = 0.25f;
+    [SerializeField, Min(0.01f)] private float backgroundFadeDuration = 0.4f;
 
-    [SerializeField, Min(0.01f)]
-    private float menuFadeDuration = 0.25f;
 
-    [SerializeField, Min(0.01f)]
-    private float backgroundFadeDuration = 0.4f;
+    // ==================================================
+    // GAME ENDING
+    // ==================================================
+
+    [Header("Game Ending")]
+    [Tooltip("Level that should be loaded behind the Bootstrap main menu after the game ending.")]
+    [SerializeField] private string initialMenuLevelSceneName = "Level_01";
 
 
     // ==================================================
@@ -103,24 +79,23 @@ public class UIManager : MonoBehaviour
     // ==================================================
 
     private bool gameStarted;
-
     private bool menuOpen;
-
     private bool isTransitioning;
 
 
+    /*
+     * True only while Level_Final is being replaced by Level_01 behind the Bootstrap Start Menu.
+     */
+    private bool returningToMainMenuAfterEnding;
     private Coroutine backgroundFadeRoutine;
-
 
     // ==================================================
     // SESSION
     // ==================================================
-
     /*
      * Used mainly if Bootstrap itself is reloaded.
      *
-     * During normal additive level changes,
-     * UIManager remains alive inside Bootstrap.
+     * During normal additive level changes, UIManager remains alive inside Bootstrap.
      */
     private static bool sessionStarted;
 
@@ -129,12 +104,10 @@ public class UIManager : MonoBehaviour
     // RESET STATIC STATE
     // ==================================================
 
-    [RuntimeInitializeOnLoadMethod(
-        RuntimeInitializeLoadType.SubsystemRegistration)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticState()
     {
         sessionStarted = false;
-
         Instance = null;
     }
 
@@ -145,129 +118,76 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        // ----------------------------------------------
         // SINGLE INSTANCE
-        // ----------------------------------------------
 
-        if (Instance != null &&
-            Instance != this)
+        if (Instance != null && Instance != this)
         {
-            Debug.LogError(
-                "Duplicate UIManager found.",
-                this
-            );
-
             Destroy(gameObject);
-
             return;
         }
 
-
         Instance = this;
 
-
-        // ----------------------------------------------
         // BUTTONS
-        // ----------------------------------------------
 
         SetupButtonListeners();
 
 
-        // ----------------------------------------------
         // MENU AUDIO
-        // ----------------------------------------------
 
         if (menuAudioSource != null)
         {
             menuAudioSource.playOnAwake = false;
-
             menuAudioSource.loop = true;
-
-
             /*
-             * IMPORTANT:
-             *
              * Gameplay uses:
-             *
-             * AudioListener.pause = true
-             *
-             * when the pause menu opens.
-             *
+             * AudioListener.pause = true, when the pause menu opens.
+             * 
              * Menu music must continue playing.
              */
             menuAudioSource.ignoreListenerPause = true;
         }
 
 
-        // ----------------------------------------------
         // GAME STATE
-        // ----------------------------------------------
-
         gameStarted = sessionStarted;
 
 
-        // ----------------------------------------------
         // SUBMENUS HIDDEN
-        // ----------------------------------------------
-
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
+        SetCanvasImmediate(settingsMenuGroup, false);
 
 
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
+        SetCanvasImmediate(levelsMenuGroup, false);
 
 
-        // ----------------------------------------------
         // INITIAL STATE
-        // ----------------------------------------------
 
         if (!gameStarted)
-        {
             ShowInitialMenu();
-        }
         else
-        {
             StartGameplayStateImmediate();
-        }
-    }
 
+    }
 
     // ==================================================
     // START
     // ==================================================
-
     private void Start()
     {
         /*
-         * Awake order between UIManager and
-         * AudioManager is not guaranteed.
-         *
+         * Awake order between UIManager and AudioManager is not guaranteed.
          * By Start(), both should normally exist.
          */
-
 
         if (gameStarted)
         {
             if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance
-                    .StartGameplayMusic();
-            }
+                AudioManager.Instance.StartGameplayMusic();
         }
         else
         {
             if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance
-                    .StopGameplayMusic(
-                        true
-                    );
-            }
+                AudioManager.Instance.StopGameplayMusic(true);
         }
     }
 
@@ -279,59 +199,31 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         /*
-         * ESC does not control pause before
-         * gameplay has started.
+         * ESC does not control pause before gameplay has started.
          */
-        if (!gameStarted ||
-            isTransitioning)
-        {
+        if (!gameStarted || isTransitioning || !Input.GetKeyDown(KeyCode.Escape))
             return;
-        }
 
-
-        if (!Input.GetKeyDown(
-                KeyCode.Escape))
-        {
-            return;
-        }
-
-
-        // ----------------------------------------------
         // SETTINGS OPEN
-        // ----------------------------------------------
-
         if (IsSettingsOpen())
         {
             CloseSettings();
-
             return;
         }
 
-
-        // ----------------------------------------------
         // LEVELS OPEN
-        // ----------------------------------------------
-
         if (IsLevelsOpen())
         {
             CloseLevels();
-
             return;
         }
 
 
-        // ----------------------------------------------
         // PAUSE / RESUME
-        // ----------------------------------------------
-
         if (menuOpen)
-        {
             ResumeGame();
-        }
         else
-        {
             PauseGame();
-        }
     }
 
 
@@ -342,66 +234,38 @@ public class UIManager : MonoBehaviour
     private void SetupButtonListeners()
     {
         // START
+        /*
+         * Level_01 is already loaded behind the Bootstrap menu.
+         * The Start button must request the Level 1 intro video FIRST.
+         *
+         * Do not call StartGame() directly here, otherwise gameplay starts immediately and the Level 1 video is bypassed.
+         */
         if (startButton != null)
-        {
-            startButton.onClick.AddListener(
-                StartGameWithIntroVideo
-            );
-        }
-
+            startButton.onClick.AddListener(StartGameWithIntroVideo);
 
         // RESUME
         if (pauseButton != null)
-        {
-            pauseButton.onClick.AddListener(
-                ResumeGame
-            );
-        }
-
+            pauseButton.onClick.AddListener(ResumeGame);
 
         // RESET
         if (resetButton != null)
-        {
-            resetButton.onClick.AddListener(
-                ResetLevel
-            );
-        }
-
+            resetButton.onClick.AddListener(ResetLevel);
 
         // LEVELS
         if (levelsButton != null)
-        {
-            levelsButton.onClick.AddListener(
-                OpenLevels
-            );
-        }
-
+            levelsButton.onClick.AddListener(OpenLevels);
 
         // SETTINGS
         if (settingsButton != null)
-        {
-            settingsButton.onClick.AddListener(
-                OpenSettings
-            );
-        }
-
+            settingsButton.onClick.AddListener(OpenSettings);
 
         // SETTINGS BACK
         if (settingsBackButton != null)
-        {
-            settingsBackButton.onClick.AddListener(
-                CloseSettings
-            );
-        }
-
+            settingsBackButton.onClick.AddListener(CloseSettings);
 
         // LEVELS BACK
         if (levelsBackButton != null)
-        {
-            levelsBackButton.onClick.AddListener(
-                CloseLevels
-            );
-        }
+            levelsBackButton.onClick.AddListener(CloseLevels);
     }
 
 
@@ -411,113 +275,44 @@ public class UIManager : MonoBehaviour
 
     private void ShowInitialMenu()
     {
-
-        // ----------------------------------------------
         // CURSOR
-        // ----------------------------------------------
-
         if (GameCursorManager.Instance != null)
-        {
-            GameCursorManager.Instance
-                .ShowMenuCursor();
-        }
+            GameCursorManager.Instance.ShowMenuCursor();
 
-        // ----------------------------------------------
         // STATE
-        // ----------------------------------------------
-
         gameStarted = false;
-
         menuOpen = true;
-
         isTransitioning = false;
 
-
-        // ----------------------------------------------
         // FREEZE GAME
-        // ----------------------------------------------
-
         Time.timeScale = 0f;
 
-
-        // ----------------------------------------------
-        // BUTTONS
-        // ----------------------------------------------
-
         /*
-         * First launch:
-         *
-         * Start visible
-         * Resume hidden
-         * Reset hidden
+         * ==> BUTTONS
+         * First launch: Start visible, Resume hidden, Reset hidden
          */
-        SetMenuButtons(
-            showStart: true,
-            showPause: false,
-            showReset: false
-        );
+        SetMenuButtons(showStart: true, showPause: false, showReset: false);
 
-
-        // ----------------------------------------------
         // MAIN MENU
-        // ----------------------------------------------
+        SetCanvasImmediate(mainMenuGroup, true);
 
-        SetCanvasImmediate(
-            mainMenuGroup,
-            true
-        );
-
-
-        // ----------------------------------------------
         // SUBMENUS
-        // ----------------------------------------------
+        SetCanvasImmediate(settingsMenuGroup, false);
+        SetCanvasImmediate(levelsMenuGroup, false);
 
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // BACKGROUND
-        // ----------------------------------------------
+        SetCanvasImmediate(backgroundGroup, true);
 
-        SetCanvasImmediate(
-            backgroundGroup,
-            true
-        );
-
-
-        // ----------------------------------------------
         // GAME AUDIO
-        // ----------------------------------------------
-
         PauseGameAudio();
 
-
         /*
-         * Level music should not play behind
-         * the first Start menu.
+         * Level music should not play behind the first Start menu.
          */
         if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance
-                .StopGameplayMusic(
-                    true
-                );
-        }
+            AudioManager.Instance.StopGameplayMusic(true);
 
-
-        // ----------------------------------------------
         // MENU MUSIC
-        // ----------------------------------------------
-
         PlayMenuAudio();
     }
 
@@ -528,50 +323,26 @@ public class UIManager : MonoBehaviour
 
     private void StartGameWithIntroVideo()
     {
-        if (gameStarted ||
-            isTransitioning)
-        {
+        if (gameStarted || isTransitioning)
             return;
-        }
-
 
         /*
          * Level_01 is already loaded by Bootstrap.
-         *
          * Therefore:
-         *
-         * Start button
-         *      ↓
-         * LevelVideoIntroManager
-         *      ↓
-         * Level_01 intro video
-         *      ↓
-         * Skip OR Continue
-         *      ↓
-         * StartGameAfterIntroVideo()
-         *      ↓
-         * normal gameplay
+         * Start button 
+         * => LevelVideoIntroManager 
+         * => Level_01 intro video
+         * =>  Skip OR Continue => StartGameAfterIntroVideo() => normal gameplay
          */
         if (LevelVideoIntroManager.Instance != null)
         {
-            LevelVideoIntroManager.Instance
-                .RequestInitialLoadedLevel();
-
+            LevelVideoIntroManager.Instance.RequestInitialLoadedLevel();
             return;
         }
 
-
         /*
-         * Safe fallback:
-         * if the video manager is missing, keep the old behavior.
+         * Safe fallback: if the video manager is missing, keep the old behavior.
          */
-        Debug.LogWarning(
-            "UIManager: LevelVideoIntroManager was not found. " +
-            "Starting Level_01 directly.",
-            this
-        );
-
-
         StartGame();
     }
 
@@ -579,12 +350,9 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // START GAME AFTER LEVEL 1 VIDEO
     // ==================================================
-
     /*
      * Assign this public method to:
-     *
-     * LevelVideoIntroManager
-     * -> On Already Loaded Level Ready
+     * LevelVideoIntroManager -> On Already Loaded Level Ready
      */
     public void StartGameAfterIntroVideo()
     {
@@ -595,144 +363,57 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // START GAME
     // ==================================================
-
     private void StartGame()
     {
-
-        // ----------------------------------------------
         // CURSOR
-        // ----------------------------------------------
-
         if (GameCursorManager.Instance != null)
-        {
-            GameCursorManager.Instance
-                .HideGameplayCursor();
-        }
+            GameCursorManager.Instance.HideGameplayCursor();
 
-        if (gameStarted ||
-            isTransitioning)
-        {
+        if (gameStarted || isTransitioning)
             return;
-        }
 
 
-        // ----------------------------------------------
         // STATE
-        // ----------------------------------------------
-
         gameStarted = true;
-
         sessionStarted = true;
-
         menuOpen = false;
 
 
-        // ----------------------------------------------
         // SUBMENUS
-        // ----------------------------------------------
+        SetCanvasImmediate(settingsMenuGroup, false);
+        SetCanvasImmediate(levelsMenuGroup, false);
 
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
-        // BUTTONS
-        // ----------------------------------------------
 
         /*
-         * From now on:
-         *
-         * Start hidden
-         * Resume visible
-         * Reset visible
+         * BUTTONS
+         * From now on: Start hidden, Resume visible, Reset visible
          */
-        SetMenuButtons(
-            showStart: false,
-            showPause: true,
-            showReset: true
-        );
+        SetMenuButtons(showStart: false, showPause: true, showReset: true);
 
-
-        // ----------------------------------------------
         // MENU AUDIO
-        // ----------------------------------------------
-
         StopMenuAudio();
 
-
-        // ----------------------------------------------
         // GAME AUDIO
-        // ----------------------------------------------
-
         ResumeGameAudio();
 
-
-        // ----------------------------------------------
         // LEVEL MUSIC
-        // ----------------------------------------------
-
         if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance
-                .StartGameplayMusic();
-        }
+            AudioManager.Instance.StartGameplayMusic();
 
-
-        // ----------------------------------------------
         // GAMEPLAY
-        // ----------------------------------------------
-
         Time.timeScale = 1f;
-
 
         // ==================================================
         // LEVEL 1 CINEMACHINE INTRO
         // ==================================================
-
-        /*
-         * Level_01 was already loaded behind
-         * the Start menu.
-         *
-         * Once Start is pressed:
-         *
-         * IntroCamera
-         *      ↓
-         * GameplayCamera / Player
-         */
         if (LevelLoader.Instance != null)
-        {
-            LevelLoader.Instance
-                .PlayCurrentLevelIntro();
-        }
+            LevelLoader.Instance.PlayCurrentLevelIntro();
 
-
-        // ----------------------------------------------
         // MENU FADE OUT
-        // ----------------------------------------------
+        StartCoroutine(FadeCanvas(mainMenuGroup, false));
 
-        StartCoroutine(
-            FadeCanvas(
-                mainMenuGroup,
-                false
-            )
-        );
-
-
-        // ----------------------------------------------
         // BACKGROUND FADE OUT
-        // ----------------------------------------------
-
-        FadeBackground(
-            false
-        );
+        FadeBackground(false);
     }
 
 
@@ -742,104 +423,42 @@ public class UIManager : MonoBehaviour
 
     private void PauseGame()
     {
-
-        // ----------------------------------------------
         // CURSOR
-        // ----------------------------------------------
-
         if (GameCursorManager.Instance != null)
-        {
-            GameCursorManager.Instance
-                .ShowMenuCursor();
-        }
+            GameCursorManager.Instance.ShowMenuCursor();
 
-        if (!gameStarted ||
-            isTransitioning)
-        {
+        if (!gameStarted || isTransitioning)
             return;
-        }
 
-
-        // ----------------------------------------------
         // STATE
-        // ----------------------------------------------
-
         menuOpen = true;
 
-
-        // ----------------------------------------------
         // SUBMENUS
-        // ----------------------------------------------
-
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
+        SetCanvasImmediate(settingsMenuGroup, false);
+        SetCanvasImmediate(levelsMenuGroup, false);
 
 
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // BUTTONS
-        // ----------------------------------------------
-
-        SetMenuButtons(
-            showStart: false,
-            showPause: true,
-            showReset: true
-        );
+        SetMenuButtons(showStart: false, showPause: true, showReset: true);
 
 
-        // ----------------------------------------------
         // FREEZE GAME
-        // ----------------------------------------------
-
         Time.timeScale = 0f;
 
-
-        // ----------------------------------------------
-        // PAUSE GAME AUDIO
-        // ----------------------------------------------
-
         /*
+         *  PAUSE GAME AUDIO
          * AudioManager music has:
-         *
-         * ignoreListenerPause = false
-         *
-         * therefore it pauses automatically.
+         * ignoreListenerPause = false ,therefore it pauses automatically.
          */
         PauseGameAudio();
 
-
-        // ----------------------------------------------
         // BACKGROUND
-        // ----------------------------------------------
+        FadeBackground(true);
 
-        FadeBackground(
-            true
-        );
-
-
-        // ----------------------------------------------
         // MENU
-        // ----------------------------------------------
+        StartCoroutine(FadeCanvas(mainMenuGroup, true));
 
-        StartCoroutine(
-            FadeCanvas(
-                mainMenuGroup,
-                true
-            )
-        );
-
-
-        // ----------------------------------------------
         // MENU MUSIC
-        // ----------------------------------------------
-
         PlayMenuAudio();
     }
 
@@ -850,101 +469,36 @@ public class UIManager : MonoBehaviour
 
     private void ResumeGame()
     {
-
-        // ----------------------------------------------
         // CURSOR
-        // ----------------------------------------------
-
         if (GameCursorManager.Instance != null)
-        {
-            GameCursorManager.Instance
-                .HideGameplayCursor();
-        }
-
-        if (!gameStarted ||
-            isTransitioning)
-        {
-            return;
-        }
-
+            GameCursorManager.Instance.HideGameplayCursor();
 
         /*
-         * If user is inside Settings/Levels,
-         * Back should be used first.
-         */
-        if (IsSettingsOpen() ||
-            IsLevelsOpen())
-        {
+         * If user is inside Settings/Levels, Back should be used first, and game not Started or not Transitioning.
+        */
+        if (!gameStarted || isTransitioning || IsSettingsOpen() || IsLevelsOpen())
             return;
-        }
 
-
-        // ----------------------------------------------
         // STATE
-        // ----------------------------------------------
-
         menuOpen = false;
 
-
-        // ----------------------------------------------
         // MENU MUSIC
-        // ----------------------------------------------
-
         StopMenuAudio();
 
-
-        // ----------------------------------------------
         // GAME AUDIO
-        // ----------------------------------------------
-
         ResumeGameAudio();
 
-
-        /*
-         * AudioManager's track was paused,
-         * not stopped.
-         *
-         * It resumes from the same timestamp.
-         */
-
-
-        // ----------------------------------------------
         // GAME
-        // ----------------------------------------------
-
         Time.timeScale = 1f;
 
-
-        // ----------------------------------------------
         // BUTTONS
-        // ----------------------------------------------
+        SetMenuButtons(showStart: false, showPause: true, showReset: true);
 
-        SetMenuButtons(
-            showStart: false,
-            showPause: true,
-            showReset: true
-        );
-
-
-        // ----------------------------------------------
         // MAIN MENU OUT
-        // ----------------------------------------------
+        StartCoroutine(FadeCanvas(mainMenuGroup, false));
 
-        StartCoroutine(
-            FadeCanvas(
-                mainMenuGroup,
-                false
-            )
-        );
-
-
-        // ----------------------------------------------
         // BACKGROUND OUT
-        // ----------------------------------------------
-
-        FadeBackground(
-            false
-        );
+        FadeBackground(false);
     }
 
 
@@ -957,19 +511,11 @@ public class UIManager : MonoBehaviour
         if (isTransitioning)
             return;
 
-
         /*
          * Settings can't remain visible underneath.
          */
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
-
-
-        StartCoroutine(
-            OpenLevelsRoutine()
-        );
+        SetCanvasImmediate(settingsMenuGroup, false);
+        StartCoroutine(OpenLevelsRoutine());
     }
 
 
@@ -977,26 +523,11 @@ public class UIManager : MonoBehaviour
     {
         isTransitioning = true;
 
-
-        // ----------------------------------------------
         // MAIN MENU OUT
-        // ----------------------------------------------
+        yield return FadeCanvasInternal(mainMenuGroup, false);
 
-        yield return FadeCanvasInternal(
-            mainMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // LEVELS IN
-        // ----------------------------------------------
-
-        yield return FadeCanvasInternal(
-            levelsMenuGroup,
-            true
-        );
-
+        yield return FadeCanvasInternal(levelsMenuGroup, true);
 
         isTransitioning = false;
     }
@@ -1005,16 +536,12 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // CLOSE LEVELS
     // ==================================================
-
     private void CloseLevels()
     {
         if (isTransitioning)
             return;
 
-
-        StartCoroutine(
-            CloseLevelsRoutine()
-        );
+        StartCoroutine(CloseLevelsRoutine());
     }
 
 
@@ -1022,26 +549,11 @@ public class UIManager : MonoBehaviour
     {
         isTransitioning = true;
 
-
-        // ----------------------------------------------
         // LEVELS OUT
-        // ----------------------------------------------
+        yield return FadeCanvasInternal(levelsMenuGroup, false);
 
-        yield return FadeCanvasInternal(
-            levelsMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // START / PAUSE MENU BACK
-        // ----------------------------------------------
-
-        yield return FadeCanvasInternal(
-            mainMenuGroup,
-            true
-        );
-
+        yield return FadeCanvasInternal(mainMenuGroup, true);
 
         isTransitioning = false;
     }
@@ -1050,37 +562,25 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // LEVELS OPEN CHECK
     // ==================================================
-
     private bool IsLevelsOpen()
     {
-        return
-            levelsMenuGroup != null &&
-            levelsMenuGroup.alpha > 0.5f;
+        return levelsMenuGroup != null && levelsMenuGroup.alpha > 0.5f;
     }
 
 
     // ==================================================
     // OPEN SETTINGS
     // ==================================================
-
     private void OpenSettings()
     {
         if (isTransitioning)
             return;
 
-
         /*
          * Levels can't remain underneath.
          */
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        StartCoroutine(
-            OpenSettingsRoutine()
-        );
+        SetCanvasImmediate(levelsMenuGroup, false);
+        StartCoroutine(OpenSettingsRoutine());
     }
 
 
@@ -1088,26 +588,11 @@ public class UIManager : MonoBehaviour
     {
         isTransitioning = true;
 
-
-        // ----------------------------------------------
         // MAIN MENU OUT
-        // ----------------------------------------------
+        yield return FadeCanvasInternal(mainMenuGroup, false);
 
-        yield return FadeCanvasInternal(
-            mainMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // SETTINGS IN
-        // ----------------------------------------------
-
-        yield return FadeCanvasInternal(
-            settingsMenuGroup,
-            true
-        );
-
+        yield return FadeCanvasInternal(settingsMenuGroup, true);
 
         isTransitioning = false;
     }
@@ -1116,16 +601,12 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // CLOSE SETTINGS
     // ==================================================
-
     private void CloseSettings()
     {
         if (isTransitioning)
             return;
 
-
-        StartCoroutine(
-            CloseSettingsRoutine()
-        );
+        StartCoroutine(CloseSettingsRoutine());
     }
 
 
@@ -1133,26 +614,11 @@ public class UIManager : MonoBehaviour
     {
         isTransitioning = true;
 
-
-        // ----------------------------------------------
         // SETTINGS OUT
-        // ----------------------------------------------
+        yield return FadeCanvasInternal(settingsMenuGroup, false);
 
-        yield return FadeCanvasInternal(
-            settingsMenuGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // MAIN MENU BACK
-        // ----------------------------------------------
-
-        yield return FadeCanvasInternal(
-            mainMenuGroup,
-            true
-        );
-
+        yield return FadeCanvasInternal(mainMenuGroup, true);
 
         isTransitioning = false;
     }
@@ -1164,9 +630,7 @@ public class UIManager : MonoBehaviour
 
     private bool IsSettingsOpen()
     {
-        return
-            settingsMenuGroup != null &&
-            settingsMenuGroup.alpha > 0.5f;
+        return settingsMenuGroup != null && settingsMenuGroup.alpha > 0.5f;
     }
 
 
@@ -1176,38 +640,16 @@ public class UIManager : MonoBehaviour
 
     private void ResetLevel()
     {
-        if (!gameStarted ||
-            isTransitioning)
-        {
+        if (!gameStarted || isTransitioning || LevelLoader.Instance == null)
             return;
-        }
-
-
-        if (LevelLoader.Instance == null)
-        {
-            Debug.LogError(
-                "UIManager: LevelLoader.Instance is null.",
-                this
-            );
-
-            return;
-        }
 
 
         /*
-         * IMPORTANT:
-         *
-         * DO NOT use:
-         *
-         * SceneManager.LoadScene(...)
-         *
-         * Bootstrap must stay alive.
-         *
-         * LevelLoader unloads/reloads only
-         * the active Level_XX scene.
+         * Note:
+         * DO NOT use: SceneManager.LoadScene(...)
+         * Bootstrap must stay alive. LevelLoader unloads/reloads only the active Level_XX scene.
          */
-        LevelLoader.Instance
-            .ReloadCurrentLevel();
+        LevelLoader.Instance.ReloadCurrentLevel();
     }
 
 
@@ -1217,30 +659,14 @@ public class UIManager : MonoBehaviour
 
     public void ReloadAfterPlayerDeath()
     {
-        if (isTransitioning)
+        if (isTransitioning || LevelLoader.Instance == null)
             return;
-
-
-        if (LevelLoader.Instance == null)
-        {
-            Debug.LogError(
-                "UIManager: LevelLoader not found " +
-                "during player death reload.",
-                this
-            );
-
-            return;
-        }
-
 
         /*
          * Same architecture as Reset:
-         *
-         * Bootstrap stays
-         * current level reloads
+         * Bootstrap stays current level reloads
          */
-        LevelLoader.Instance
-            .ReloadCurrentLevel();
+        LevelLoader.Instance.ReloadCurrentLevel();
     }
 
 
@@ -1250,7 +676,6 @@ public class UIManager : MonoBehaviour
 
     /*
      * Called by LevelLoader BEFORE:
-     *
      * Level_01 → Level_02
      * Levels menu selection
      * Reset
@@ -1258,97 +683,52 @@ public class UIManager : MonoBehaviour
      */
     public void PrepareForLevelChange()
     {
-
-        // ----------------------------------------------
         // CURSOR
-        // ----------------------------------------------
-
         if (GameCursorManager.Instance != null)
-        {
-            GameCursorManager.Instance
-                .HideGameplayCursor();
-        }
+            GameCursorManager.Instance.HideGameplayCursor();
 
-        // ----------------------------------------------
         // SESSION
-        // ----------------------------------------------
-
         sessionStarted = true;
-
         gameStarted = true;
-
         menuOpen = false;
-
         isTransitioning = true;
 
-
-        // ----------------------------------------------
         // STOP OLD UI COROUTINES
-        // ----------------------------------------------
-
         StopAllCoroutines();
 
-
         backgroundFadeRoutine = null;
-
 
         // ==================================================
         // HIDE ALL MENUS IMMEDIATELY
         // ==================================================
+        SetCanvasImmediate(mainMenuGroup, false);
+        SetCanvasImmediate(settingsMenuGroup, false);
+        SetCanvasImmediate(levelsMenuGroup, false);
+        SetCanvasImmediate(backgroundGroup, false);
 
-        SetCanvasImmediate(
-            mainMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            backgroundGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // BUTTONS
-        // ----------------------------------------------
-
-        SetMenuButtons(
-            showStart: false,
-            showPause: true,
-            showReset: true
-        );
-
-
-        // ----------------------------------------------
+        SetMenuButtons(showStart: false, showPause: true, showReset: true);
         // MENU MUSIC
-        // ----------------------------------------------
 
         StopMenuAudio();
 
 
-        // ----------------------------------------------
         // GAME AUDIO
-        // ----------------------------------------------
 
-        ResumeGameAudio();
+        bool keepWorldAudioMuted = returningToMainMenuAfterEnding || (LevelVideoIntroManager.Instance != null && LevelVideoIntroManager.Instance.KeepWorldAudioMutedDuringLevelLoad);
+
+        /*
+         * A level-intro / ending video already silenced the
+         * previous level. Keep it silent until the new level
+         * has completely loaded.
+        */
+        if (keepWorldAudioMuted)
+            PauseGameAudio();
+        else
+            ResumeGameAudio();
 
 
-        // ----------------------------------------------
         // GAME TIME
-        // ----------------------------------------------
-
         Time.timeScale = 1f;
     }
 
@@ -1359,120 +739,164 @@ public class UIManager : MonoBehaviour
 
     /*
      * Called by LevelLoader after:
-     *
      * Level_02 loaded
      * Level_03 loaded
      * level reload completed
-     *
      * This means we return DIRECTLY to gameplay.
      */
     public void OnLevelLoadFinished()
     {
 
-        // ----------------------------------------------
-        // CURSOR
-        // ----------------------------------------------
-
-        if (GameCursorManager.Instance != null)
+        if (returningToMainMenuAfterEnding)
         {
-            GameCursorManager.Instance
-                .HideGameplayCursor();
+            isTransitioning = false;
+            Time.timeScale = 1f;
+            PauseGameAudio();
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.StopGameplayMusic(true);
+
+            if (LevelVideoIntroManager.Instance != null)
+                LevelVideoIntroManager.Instance.NotifyLevelLoadFinished();
+
+            return;
         }
 
-        // ----------------------------------------------
+        // CURSOR
+        if (GameCursorManager.Instance != null)
+            GameCursorManager.Instance.HideGameplayCursor();
+
         // SESSION
-        // ----------------------------------------------
-
         sessionStarted = true;
-
         gameStarted = true;
-
         menuOpen = false;
-
         isTransitioning = false;
 
-
-        // ----------------------------------------------
         // GAME
-        // ----------------------------------------------
-
         Time.timeScale = 1f;
 
-
-        // ----------------------------------------------
         // AUDIO LISTENER
-        // ----------------------------------------------
-
         ResumeGameAudio();
 
 
         // ==================================================
         // MENUS HIDDEN
         // ==================================================
+        SetCanvasImmediate(mainMenuGroup, false);
+        SetCanvasImmediate(settingsMenuGroup, false);
+        SetCanvasImmediate(levelsMenuGroup, false);
+        SetCanvasImmediate(backgroundGroup, false);
 
-        SetCanvasImmediate(
-            mainMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            backgroundGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // BUTTONS FOR NEXT PAUSE
-        // ----------------------------------------------
+        SetMenuButtons(showStart: false, showPause: true, showReset: true);
 
-        SetMenuButtons(
-            showStart: false,
-            showPause: true,
-            showReset: true
-        );
-
-
-        // ----------------------------------------------
         // MENU MUSIC OFF
-        // ----------------------------------------------
-
         StopMenuAudio();
 
 
         // ==================================================
         // CURRENT LEVEL MUSIC
         // ==================================================
-
         /*
          * AudioManager already detected the new
          * LevelMusicSettings when the scene loaded.
-         *
          * This tells it gameplay is active.
-         *
-         * It will:
-         *
-         * Level 1 music → Level 2 music
-         *
-         * using the configured crossfade.
+         * It will: Level 1 music → Level 2 music using the configured crossfade.
          */
         if (AudioManager.Instance != null)
+            AudioManager.Instance.StartGameplayMusic();
+
+        if (LevelVideoIntroManager.Instance != null)
+            LevelVideoIntroManager.Instance.NotifyLevelLoadFinished();
+    }
+
+
+    // ==================================================
+    // RETURN TO MAIN MENU AFTER GAME ENDING
+    // ==================================================
+
+    public void ReturnToMainMenuAfterGameEnding()
+    {
+        returningToMainMenuAfterEnding = true;
+        /*
+         * The Bootstrap scene remains alive for the whole game.
+         * To begin a clean new game:
+         * 1. unload Level_Final,
+         * 2. load Level_01 behind the menu,
+         * 3. restore the initial Bootstrap menu state.
+         */
+
+        if (LevelLoader.Instance == null)
         {
-            AudioManager.Instance
-                .StartGameplayMusic();
+            sessionStarted = false;
+            returningToMainMenuAfterEnding = false;
+
+            if (LevelVideoIntroManager.Instance != null)
+                LevelVideoIntroManager.Instance.NotifyLevelLoadFinished();
+
+
+            ShowInitialMenu();
+            return;
         }
+
+        if (string.IsNullOrWhiteSpace(initialMenuLevelSceneName))
+            initialMenuLevelSceneName = "Level_01";
+
+
+
+        /*
+         * If Level_01 is already the active level, no scene transition is necessary.
+         */
+        if (string.Equals(LevelLoader.Instance.CurrentLevelSceneName, initialMenuLevelSceneName, System.StringComparison.OrdinalIgnoreCase))
+        {
+            sessionStarted = false;
+            returningToMainMenuAfterEnding = false;
+
+            if (LevelVideoIntroManager.Instance != null)
+                LevelVideoIntroManager.Instance.NotifyLevelLoadFinished();
+
+            ShowInitialMenu();
+            return;
+        }
+
+
+        /*
+         * LoadLevelFromMenu already performs the normal safe additive unload/load flow and keeps Bootstrap alive.
+         * It temporarily enters gameplay state while loading.
+         * The coroutine below waits until LevelLoader finishes, then restores the actual Start Menu state.
+         */
+        LevelLoader.Instance.LoadLevelFromMenu(initialMenuLevelSceneName);
+        StartCoroutine(ReturnToMainMenuAfterEndingRoutine());
+    }
+
+
+    private IEnumerator ReturnToMainMenuAfterEndingRoutine()
+    {
+        /*
+         * StartCoroutine in LevelLoader sets IsLoading on its
+         * first execution, but yield once so the transition is
+         * unquestionably underway.
+         */
+        yield return null;
+
+        LevelLoader loader = LevelLoader.Instance;
+
+
+        while (loader != null && loader.IsLoading)
+            yield return null;
+
+
+
+        /*
+         * This is a NEW GAME session now.
+         * Level_01 stays loaded behind the menu exactly like the original Bootstrap startup architecture.
+         */
+        sessionStarted = false;
+        gameStarted = false;
+        menuOpen = true;
+        isTransitioning = false;
+        ShowInitialMenu();
+        returningToMainMenuAfterEnding = false;
     }
 
 
@@ -1486,89 +910,36 @@ public class UIManager : MonoBehaviour
      */
     private void StartGameplayStateImmediate()
     {
-
-        // ----------------------------------------------
         // CURSOR
-        // ----------------------------------------------
-
         if (GameCursorManager.Instance != null)
-        {
-            GameCursorManager.Instance
-                .HideGameplayCursor();
-        }
+            GameCursorManager.Instance.HideGameplayCursor();
+
 
         gameStarted = true;
-
         menuOpen = false;
-
         isTransitioning = false;
 
-
-        // ----------------------------------------------
         // GAME
-        // ----------------------------------------------
-
         Time.timeScale = 1f;
-
-
         ResumeGameAudio();
 
-
-        // ----------------------------------------------
         // BUTTONS
-        // ----------------------------------------------
+        SetMenuButtons(showStart: false, showPause: true, showReset: true);
 
-        SetMenuButtons(
-            showStart: false,
-            showPause: true,
-            showReset: true
-        );
-
-
-        // ----------------------------------------------
         // UI
-        // ----------------------------------------------
-
-        SetCanvasImmediate(
-            mainMenuGroup,
-            false
-        );
+        SetCanvasImmediate(mainMenuGroup, false);
+        SetCanvasImmediate(settingsMenuGroup, false);
+        SetCanvasImmediate(levelsMenuGroup, false);
+        SetCanvasImmediate(backgroundGroup, false);
 
 
-        SetCanvasImmediate(
-            settingsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            levelsMenuGroup,
-            false
-        );
-
-
-        SetCanvasImmediate(
-            backgroundGroup,
-            false
-        );
-
-
-        // ----------------------------------------------
         // MENU MUSIC
-        // ----------------------------------------------
-
         StopMenuAudio();
 
-
-        // ----------------------------------------------
         // LEVEL MUSIC
-        // ----------------------------------------------
-
         if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance
-                .StartGameplayMusic();
-        }
+            AudioManager.Instance.StartGameplayMusic();
+
     }
 
 
@@ -1576,57 +947,29 @@ public class UIManager : MonoBehaviour
     // BUTTON VISIBILITY
     // ==================================================
 
-    private void SetMenuButtons(
-        bool showStart,
-        bool showPause,
-        bool showReset)
+    private void SetMenuButtons(bool showStart, bool showPause, bool showReset)
     {
         if (startButton != null)
-        {
-            startButton.gameObject.SetActive(
-                showStart
-            );
-        }
-
+            startButton.gameObject.SetActive(showStart);
 
         if (pauseButton != null)
-        {
-            pauseButton.gameObject.SetActive(
-                showPause
-            );
-        }
-
+            pauseButton.gameObject.SetActive(showPause);
 
         if (resetButton != null)
-        {
-            resetButton.gameObject.SetActive(
-                showReset
-            );
-        }
+            resetButton.gameObject.SetActive(showReset);
     }
 
 
     // ==================================================
     // STANDARD CANVAS FADE
     // ==================================================
-
-    private IEnumerator FadeCanvas(
-        CanvasGroup group,
-        bool show)
+    private IEnumerator FadeCanvas(CanvasGroup group, bool show)
     {
         if (group == null)
             yield break;
 
-
         isTransitioning = true;
-
-
-        yield return FadeCanvasInternal(
-            group,
-            show
-        );
-
-
+        yield return FadeCanvasInternal(group, show);
         isTransitioning = false;
     }
 
@@ -1634,106 +977,57 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // INTERNAL CANVAS FADE
     // ==================================================
-
-    private IEnumerator FadeCanvasInternal(
-        CanvasGroup group,
-        bool show)
+    private IEnumerator FadeCanvasInternal(CanvasGroup group, bool show)
     {
         if (group == null)
             yield break;
 
-
-        float startAlpha =
-            group.alpha;
-
-
-        float targetAlpha =
-            show
-                ? 1f
-                : 0f;
+        float startAlpha = group.alpha;
+        float targetAlpha = show ? 1f : 0f;
 
 
-        // ----------------------------------------------
         // INPUT
-        // ----------------------------------------------
-
         if (show)
         {
             group.interactable = true;
-
             group.blocksRaycasts = true;
         }
         else
         {
             group.interactable = false;
-
             group.blocksRaycasts = false;
         }
 
 
-        // ----------------------------------------------
         // ALREADY THERE
-        // ----------------------------------------------
-
-        if (Mathf.Approximately(
-                startAlpha,
-                targetAlpha))
+        if (Mathf.Approximately(startAlpha, targetAlpha))
         {
             group.alpha = targetAlpha;
-
             group.interactable = show;
-
             group.blocksRaycasts = show;
-
             yield break;
         }
 
 
-        // ----------------------------------------------
         // FADE
-        // ----------------------------------------------
-
         float elapsed = 0f;
 
-
-        while (elapsed <
-               menuFadeDuration)
+        while (elapsed < menuFadeDuration)
         {
             /*
-             * UI must animate even when
-             * Time.timeScale = 0.
+             * UI must animate even when Time.timeScale = 0.
              */
-            elapsed +=
-                Time.unscaledDeltaTime;
-
-
-            float progress =
-                Mathf.Clamp01(
-                    elapsed /
-                    menuFadeDuration
-                );
-
-
-            group.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    targetAlpha,
-                    progress
-                );
-
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsed / menuFadeDuration);
+            group.alpha = Mathf.Lerp(startAlpha, targetAlpha, progress);
 
             yield return null;
         }
 
 
-        // ----------------------------------------------
         // FINAL
-        // ----------------------------------------------
-
         group.alpha = targetAlpha;
-
         group.interactable = show;
-
         group.blocksRaycasts = show;
     }
 
@@ -1741,111 +1035,47 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // BACKGROUND FADE
     // ==================================================
-
-    private void FadeBackground(
-        bool show)
+    private void FadeBackground(bool show)
     {
         if (backgroundGroup == null)
             return;
 
-
         if (backgroundFadeRoutine != null)
-        {
-            StopCoroutine(
-                backgroundFadeRoutine
-            );
-        }
+            StopCoroutine(backgroundFadeRoutine);
 
-
-        backgroundFadeRoutine =
-            StartCoroutine(
-                FadeBackgroundRoutine(
-                    show
-                )
-            );
+        backgroundFadeRoutine = StartCoroutine(FadeBackgroundRoutine(show));
     }
 
 
-    private IEnumerator FadeBackgroundRoutine(
-        bool show)
+    private IEnumerator FadeBackgroundRoutine(bool show)
     {
         if (backgroundGroup == null)
             yield break;
 
+        float startAlpha = backgroundGroup.alpha;
+        float targetAlpha = show ? 1f : 0f;
 
-        float startAlpha =
-            backgroundGroup.alpha;
-
-
-        float targetAlpha =
-            show
-                ? 1f
-                : 0f;
-
-
-        // ----------------------------------------------
         // INPUT
-        // ----------------------------------------------
+        backgroundGroup.interactable = show;
+        backgroundGroup.blocksRaycasts = show;
 
-        backgroundGroup.interactable =
-            show;
-
-
-        backgroundGroup.blocksRaycasts =
-            show;
-
-
-        // ----------------------------------------------
         // FADE
-        // ----------------------------------------------
-
         float elapsed = 0f;
 
-
-        while (elapsed <
-               backgroundFadeDuration)
+        while (elapsed < backgroundFadeDuration)
         {
-            elapsed +=
-                Time.unscaledDeltaTime;
-
-
-            float progress =
-                Mathf.Clamp01(
-                    elapsed /
-                    backgroundFadeDuration
-                );
-
-
-            backgroundGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    targetAlpha,
-                    progress
-                );
-
-
+            elapsed += Time.unscaledDeltaTime;
+            float progress = Mathf.Clamp01(elapsed / backgroundFadeDuration);
+            backgroundGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, progress);
             yield return null;
         }
 
 
-        // ----------------------------------------------
         // FINAL
-        // ----------------------------------------------
-
-        backgroundGroup.alpha =
-            targetAlpha;
-
-
-        backgroundGroup.interactable =
-            show;
-
-
-        backgroundGroup.blocksRaycasts =
-            show;
-
-
-        backgroundFadeRoutine =
-            null;
+        backgroundGroup.alpha = targetAlpha;
+        backgroundGroup.interactable = show;
+        backgroundGroup.blocksRaycasts = show;
+        backgroundFadeRoutine = null;
     }
 
 
@@ -1853,57 +1083,81 @@ public class UIManager : MonoBehaviour
     // CANVAS IMMEDIATE
     // ==================================================
 
-    private void SetCanvasImmediate(
-        CanvasGroup group,
-        bool show)
+    private void SetCanvasImmediate(CanvasGroup group, bool show)
     {
         if (group == null)
             return;
+        group.alpha = show ? 1f : 0f;
+        group.interactable = show;
+        group.blocksRaycasts = show;
+    }
 
 
-        group.alpha =
-            show
-                ? 1f
-                : 0f;
+    // ==================================================
+    // VIDEO / TRANSITION AUDIO
+    // ==================================================
+
+    public void PrepareForVideoPlayback()
+    {
+        /*
+         * The previous level must be silent while its intro/ending video is displayed.
+         * Menu music uses ignoreListenerPause = true, so it must also be stopped explicitly.
+         */
+
+        StopMenuAudio();
+        PauseGameAudio();
 
 
-        group.interactable =
-            show;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.StopGameplayMusic(true);
+
+    }
 
 
-        group.blocksRaycasts =
-            show;
+    public void RestoreAudioAfterCancelledVideo()
+    {
+        if (gameStarted)
+        {
+            StopMenuAudio();
+            ResumeGameAudio();
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.StartGameplayMusic();
+
+            return;
+        }
+
+
+        /*
+         * Still on the initial Bootstrap menu.
+         */
+        PauseGameAudio();
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.StopGameplayMusic(true);
+
+        PlayMenuAudio();
     }
 
 
     // ==================================================
     // GAME AUDIO
     // ==================================================
-
     private void PauseGameAudio()
     {
         /*
          * Pauses:
-         *
-         * Level music
-         * player sounds
-         * trap sounds
-         * lever sounds
-         * platform sounds
-         * etc.
+         * Level music, player sounds, trap sounds, lever sounds, platform sounds, etc.
          */
         AudioListener.pause = true;
-
 
         /*
          * Menu music ignores the listener pause.
          */
         if (menuAudioSource != null)
-        {
-            menuAudioSource.ignoreListenerPause =
-                true;
-        }
+            menuAudioSource.ignoreListenerPause = true;
     }
+
 
 
     private void ResumeGameAudio()
@@ -1921,15 +1175,11 @@ public class UIManager : MonoBehaviour
         if (menuAudioSource == null)
             return;
 
-
-        menuAudioSource.ignoreListenerPause =
-            true;
-
+        menuAudioSource.ignoreListenerPause = true;
 
         if (!menuAudioSource.isPlaying)
-        {
             menuAudioSource.Play();
-        }
+
     }
 
 
@@ -1938,27 +1188,21 @@ public class UIManager : MonoBehaviour
         if (menuAudioSource == null)
             return;
 
-
         if (menuAudioSource.isPlaying)
-        {
             menuAudioSource.Stop();
-        }
     }
 
 
     // ==================================================
     // STATIC GAMEPLAY STATE
     // ==================================================
-
     public static void MarkGameplayStarted()
     {
         sessionStarted = true;
 
-
         if (Instance != null)
-        {
             Instance.gameStarted = true;
-        }
+
     }
 
 
@@ -1971,16 +1215,12 @@ public class UIManager : MonoBehaviour
         if (Instance != this)
             return;
 
-
         Instance = null;
 
-
         /*
-         * Ensure Editor / scene shutdown doesn't
-         * remain stuck in paused state.
+         * Ensure Editor / scene shutdown doesn't remain stuck in paused state.
          */
         Time.timeScale = 1f;
-
 
         AudioListener.pause = false;
     }
@@ -1989,20 +1229,12 @@ public class UIManager : MonoBehaviour
     // ==================================================
     // VALIDATION
     // ==================================================
-
     private void OnValidate()
     {
-        menuFadeDuration =
-            Mathf.Max(
-                0.01f,
-                menuFadeDuration
-            );
+        if (string.IsNullOrWhiteSpace(initialMenuLevelSceneName))
+            initialMenuLevelSceneName = "Level_01";
 
-
-        backgroundFadeDuration =
-            Mathf.Max(
-                0.01f,
-                backgroundFadeDuration
-            );
+        menuFadeDuration = Mathf.Max(0.01f, menuFadeDuration);
+        backgroundFadeDuration = Mathf.Max(0.01f, backgroundFadeDuration);
     }
 }

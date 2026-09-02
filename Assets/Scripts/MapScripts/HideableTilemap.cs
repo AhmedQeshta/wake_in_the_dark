@@ -14,12 +14,8 @@ public class HideableTilemap : MonoBehaviour
     [SerializeField] private bool canReappear = true;
 
     [Header("Fade Effect")]
-    [SerializeField, Min(0.01f)]
-    private float fadeDuration = 0.5f;
-
-    [SerializeField]
-    private AnimationCurve fadeCurve =
-        AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    [SerializeField, Min(0.01f)] private float fadeDuration = 0.5f;
+    [SerializeField] private AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     private Tilemap tilemap;
     private TilemapRenderer tilemapRenderer;
@@ -27,12 +23,9 @@ public class HideableTilemap : MonoBehaviour
 
     private Color originalColor;
     private float visibleAlpha;
-
     private Coroutine fadeCoroutine;
-
     private bool isHidden;
     private bool isTransitioning;
-
     public bool IsHidden => isHidden;
     public bool IsTransitioning => isTransitioning;
 
@@ -46,13 +39,9 @@ public class HideableTilemap : MonoBehaviour
         visibleAlpha = originalColor.a;
 
         if (startHidden)
-        {
             ApplyHiddenStateImmediately();
-        }
         else
-        {
             ApplyVisibleStateImmediately();
-        }
     }
 
     public bool Hide()
@@ -81,13 +70,9 @@ public class HideableTilemap : MonoBehaviour
     private void StartVisibilityChange(bool makeVisible)
     {
         if (fadeCoroutine != null)
-        {
             StopCoroutine(fadeCoroutine);
-        }
 
-        fadeCoroutine = StartCoroutine(
-            ChangeVisibility(makeVisible)
-        );
+        fadeCoroutine = StartCoroutine(ChangeVisibility(makeVisible));
     }
 
     private IEnumerator ChangeVisibility(bool makeVisible)
@@ -102,10 +87,7 @@ public class HideableTilemap : MonoBehaviour
 
             SetAlpha(0f);
 
-            yield return FadeAlpha(
-                0f,
-                visibleAlpha
-            );
+            yield return FadeAlpha(0f, visibleAlpha);
 
             // Become solid only when fully visible.
             tilemapCollider.enabled = true;
@@ -115,13 +97,8 @@ public class HideableTilemap : MonoBehaviour
         {
             // Open the path as soon as the door starts fading.
             tilemapCollider.enabled = false;
-
             float currentAlpha = tilemap.color.a;
-
-            yield return FadeAlpha(
-                currentAlpha,
-                0f
-            );
+            yield return FadeAlpha(currentAlpha, 0f);
 
             tilemapRenderer.enabled = false;
             isHidden = true;
@@ -141,22 +118,11 @@ public class HideableTilemap : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
 
-            float normalizedTime =
-                Mathf.Clamp01(
-                    elapsedTime / fadeDuration
-                );
-
-            float curvedTime =
-                fadeCurve.Evaluate(normalizedTime);
-
-            float alpha = Mathf.Lerp(
-                startAlpha,
-                targetAlpha,
-                curvedTime
-            );
+            float normalizedTime = Mathf.Clamp01(elapsedTime / fadeDuration);
+            float curvedTime = fadeCurve.Evaluate(normalizedTime);
+            float alpha = Mathf.Lerp(startAlpha, targetAlpha, curvedTime);
 
             SetAlpha(alpha);
-
             yield return null;
         }
 
@@ -167,17 +133,14 @@ public class HideableTilemap : MonoBehaviour
     {
         Color color = originalColor;
         color.a = Mathf.Clamp01(alpha);
-
         tilemap.color = color;
     }
 
     private void ApplyHiddenStateImmediately()
     {
         SetAlpha(0f);
-
         tilemapRenderer.enabled = false;
         tilemapCollider.enabled = false;
-
         isHidden = true;
         isTransitioning = false;
     }
@@ -185,10 +148,8 @@ public class HideableTilemap : MonoBehaviour
     private void ApplyVisibleStateImmediately()
     {
         SetAlpha(visibleAlpha);
-
         tilemapRenderer.enabled = true;
         tilemapCollider.enabled = true;
-
         isHidden = false;
         isTransitioning = false;
     }
@@ -206,21 +167,9 @@ public class HideableTilemap : MonoBehaviour
 
     private void OnValidate()
     {
-        fadeDuration = Mathf.Max(
-            0.01f,
-            fadeDuration
-        );
+        fadeDuration = Mathf.Max(0.01f, fadeDuration);
 
-        if (fadeCurve == null ||
-            fadeCurve.length == 0)
-        {
-            fadeCurve =
-                AnimationCurve.EaseInOut(
-                    0f,
-                    0f,
-                    1f,
-                    1f
-                );
-        }
+        if (fadeCurve == null || fadeCurve.length == 0)
+            fadeCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     }
 }

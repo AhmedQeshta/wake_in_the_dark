@@ -7,9 +7,7 @@ public class DangerousLightZone : MonoBehaviour
     // ==================================================
     // LIGHT EXPOSURE
     // ==================================================
-
     [Header("Light Exposure")]
-
     [Tooltip("How long the player can stay inside THIS light before transforming into stone.")]
     [SerializeField, Min(0.1f)] private float exposureDuration = 3f;
 
@@ -17,9 +15,7 @@ public class DangerousLightZone : MonoBehaviour
     // ==================================================
     // COLLIDER
     // ==================================================
-
     [Header("Collider")]
-
     [Tooltip("Automatically keep this Collider2D configured as a Trigger.")]
     [SerializeField] private bool forceIsTrigger = true;
 
@@ -27,22 +23,14 @@ public class DangerousLightZone : MonoBehaviour
     // ==================================================
     // PUBLIC VALUES
     // ==================================================
-
     public float ExposureDuration => exposureDuration;
 
-
-    // ==================================================
-    // STATE
-    // ==================================================
-
     /*
+     * ** ---- STATE 
      * Player may have multiple Collider2D components.
-     *
-     * Count them so one collider exiting does not stop
-     * exposure while another player collider is still inside.
+     * Count them so one collider exiting does not stop exposure while another player collider is still inside.
      */
     private readonly Dictionary<PlayerLightExposure, int> playerColliderCounts = new Dictionary<PlayerLightExposure, int>();
-
 
     private Collider2D zoneCollider;
 
@@ -92,25 +80,14 @@ public class DangerousLightZone : MonoBehaviour
     {
         PlayerLightExposure exposure = other.GetComponentInParent<PlayerLightExposure>();
 
-
-        if (exposure == null)
+        if (exposure == null || !playerColliderCounts.TryGetValue(exposure, out int currentCount))
             return;
-
-
-        if (!playerColliderCounts.TryGetValue(exposure, out int currentCount))
-        {
-            return;
-        }
-
 
         currentCount--;
-
 
         if (currentCount <= 0)
         {
             playerColliderCounts.Remove(exposure);
-
-
             exposure.ExitDangerousLight(this);
         }
         else
@@ -129,18 +106,13 @@ public class DangerousLightZone : MonoBehaviour
         if (playerColliderCounts.Count == 0)
             return;
 
-
         List<PlayerLightExposure> players = new List<PlayerLightExposure>(playerColliderCounts.Keys);
-
 
         foreach (PlayerLightExposure exposure in players)
         {
             if (exposure != null)
-            {
                 exposure.ExitDangerousLight(this);
-            }
         }
-
 
         playerColliderCounts.Clear();
     }
@@ -155,11 +127,8 @@ public class DangerousLightZone : MonoBehaviour
         if (zoneCollider == null)
             return;
 
-
         if (forceIsTrigger)
-        {
             zoneCollider.isTrigger = true;
-        }
     }
 
 
@@ -170,8 +139,6 @@ public class DangerousLightZone : MonoBehaviour
     private void Reset()
     {
         zoneCollider = GetComponent<Collider2D>();
-
-
         ConfigureCollider();
     }
 
@@ -183,11 +150,7 @@ public class DangerousLightZone : MonoBehaviour
     private void OnValidate()
     {
         exposureDuration = Mathf.Max(0.1f, exposureDuration);
-
-
         zoneCollider = GetComponent<Collider2D>();
-
-
         ConfigureCollider();
     }
 }

@@ -9,16 +9,14 @@ public class LevelCameraBounds : MonoBehaviour
 
     [Header("Camera Bounds")]
 
-    [SerializeField]
-    private Collider2D boundingCollider;
+    [SerializeField] private Collider2D boundingCollider;
 
 
     // ==================================================
     // PUBLIC
     // ==================================================
 
-    public Collider2D BoundingCollider =>
-        boundingCollider;
+    public Collider2D BoundingCollider => boundingCollider;
 
 
     // ==================================================
@@ -40,18 +38,7 @@ public class LevelCameraBounds : MonoBehaviour
         if (boundingCollider != null)
             return;
 
-
-        boundingCollider =
-            GetComponent<Collider2D>();
-
-
-        if (boundingCollider == null)
-        {
-            Debug.LogError(
-                "LevelCameraBounds: No Collider2D found.",
-                this
-            );
-        }
+        boundingCollider = GetComponent<Collider2D>();
     }
 
 
@@ -62,9 +49,6 @@ public class LevelCameraBounds : MonoBehaviour
     private void OnValidate()
     {
         if (boundingCollider == null)
-        {
-            boundingCollider =
-                GetComponent<Collider2D>();
-        }
+            boundingCollider = GetComponent<Collider2D>();
     }
 }

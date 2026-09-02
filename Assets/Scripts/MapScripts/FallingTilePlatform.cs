@@ -2,11 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public enum PlatformRespawnMode
-{
-    Never,
-    AfterDelay
-}
+
 
 [RequireComponent(typeof(Tilemap))]
 [RequireComponent(typeof(TilemapRenderer))]
@@ -16,15 +12,8 @@ public enum PlatformRespawnMode
 [RequireComponent(typeof(AudioSource))]
 public class FallingTilePlatform : MonoBehaviour
 {
-    private enum PlatformState
-    {
-        Ready,
-        Shaking,
-        Falling,
-        FadingOut,
-        Hidden,
-        Respawning
-    }
+    private enum PlatformState { Ready, Shaking, Falling, FadingOut, Hidden, Respawning }
+    public enum PlatformRespawnMode { Never, AfterDelay }
 
     [Header("Activation")]
     [SerializeField] private string playerTag = "Player";
@@ -100,7 +89,6 @@ public class FallingTilePlatform : MonoBehaviour
 
         if (tilemap == null || tilemapRenderer == null || tilemapCollider == null || rb == null || audioSource == null)
         {
-            Debug.LogError($"{nameof(FallingTilePlatform)} requires Tilemap, TilemapRenderer, TilemapCollider2D, Rigidbody2D, and AudioSource on the same GameObject.", this);
             enabled = false;
             return;
         }
@@ -152,14 +140,10 @@ public class FallingTilePlatform : MonoBehaviour
 
         // Enable attachments in initial state.
         if (attachmentsRoot != null)
-        {
             attachmentsRoot.SetActive(true);
-        }
 
         if (attachedLever != null)
-        {
             attachedLever.RestoreVisualState();
-        }
 
         SetAttachmentsInteractive(true);
     }
@@ -176,20 +160,8 @@ public class FallingTilePlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isActivated || platformState != PlatformState.Ready)
-        {
+        if (isActivated || platformState != PlatformState.Ready || !collision.gameObject.CompareTag(playerTag) || !IsPlayerLandingFromAbove(collision))
             return;
-        }
-
-        if (!collision.gameObject.CompareTag(playerTag))
-        {
-            return;
-        }
-
-        if (!IsPlayerLandingFromAbove(collision))
-        {
-            return;
-        }
 
         ActivatePlatform();
     }
@@ -197,12 +169,7 @@ public class FallingTilePlatform : MonoBehaviour
     private bool IsPlayerLandingFromAbove(Collision2D collision)
     {
         Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
-        if (playerRb == null)
-        {
-            return false;
-        }
-
-        if (playerRb.linearVelocity.y > FallingVelocityThreshold)
+        if (playerRb == null || playerRb.linearVelocity.y > FallingVelocityThreshold)
         {
             return false;
         }
@@ -213,9 +180,7 @@ public class FallingTilePlatform : MonoBehaviour
         {
             ContactPoint2D contact = collision.GetContact(index);
             if (contact.point.y >= platformTop - landingTolerance)
-            {
                 return true;
-            }
         }
 
         if (topContactThreshold > 0f)
@@ -224,9 +189,7 @@ public class FallingTilePlatform : MonoBehaviour
             {
                 ContactPoint2D contact = collision.GetContact(index);
                 if (contact.normal.y >= topContactThreshold)
-                {
                     return true;
-                }
             }
         }
 
@@ -236,9 +199,7 @@ public class FallingTilePlatform : MonoBehaviour
     private void ActivatePlatform()
     {
         if (isActivated || activeRoutine != null || platformState != PlatformState.Ready)
-        {
             return;
-        }
 
         isActivated = true;
         PlayActivationSound();
@@ -248,21 +209,12 @@ public class FallingTilePlatform : MonoBehaviour
 
     private void PlayActivationSound()
     {
-        if (hasPlayedActivationSound)
-        {
+        if (hasPlayedActivationSound || activationSound == null || audioSource == null)
             return;
-        }
 
         hasPlayedActivationSound = true;
 
-        if (activationSound == null || audioSource == null)
-        {
-            return;
-        }
-
-        audioSource.pitch = randomizeSoundPitch
-            ? Random.Range(minimumPitch, maximumPitch)
-            : 1f;
+        audioSource.pitch = randomizeSoundPitch ? Random.Range(minimumPitch, maximumPitch) : 1f;
 
         audioSource.PlayOneShot(activationSound, activationSoundVolume);
     }
@@ -282,9 +234,7 @@ public class FallingTilePlatform : MonoBehaviour
             }
         }
         else if (fallDelay > 0f)
-        {
             yield return new WaitForSeconds(fallDelay);
-        }
 
         transform.localPosition = originalLocalPosition;
         transform.localRotation = originalLocalRotation;
@@ -298,9 +248,7 @@ public class FallingTilePlatform : MonoBehaviour
         }
 
         if (disappearDelay > 0f)
-        {
             yield return new WaitForSeconds(disappearDelay);
-        }
 
         if (disappearAfterFalling)
         {
@@ -309,9 +257,7 @@ public class FallingTilePlatform : MonoBehaviour
             if (respawnMode == PlatformRespawnMode.AfterDelay)
             {
                 if (respawnDelay > 0f)
-                {
                     yield return new WaitForSeconds(respawnDelay);
-                }
 
                 yield return StartCoroutine(RespawnWithFade());
             }
@@ -321,9 +267,7 @@ public class FallingTilePlatform : MonoBehaviour
             if (respawnMode == PlatformRespawnMode.AfterDelay)
             {
                 if (respawnDelay > 0f)
-                {
                     yield return new WaitForSeconds(respawnDelay);
-                }
 
                 yield return StartCoroutine(RespawnWithFade());
             }
@@ -393,9 +337,7 @@ public class FallingTilePlatform : MonoBehaviour
         foreach (Collider2D interactionCollider in attachmentInteractionColliders)
         {
             if (interactionCollider != null)
-            {
                 interactionCollider.enabled = interactive;
-            }
         }
     }
 
@@ -411,9 +353,7 @@ public class FallingTilePlatform : MonoBehaviour
         while (elapsed < duration)
         {
             float normalizedTime = Mathf.Clamp01(elapsed / duration);
-            float curveValue = fadeCurve != null && fadeCurve.length > 0
-                ? fadeCurve.Evaluate(normalizedTime)
-                : normalizedTime;
+            float curveValue = fadeCurve != null && fadeCurve.length > 0 ? fadeCurve.Evaluate(normalizedTime) : normalizedTime;
 
             float opacity = Mathf.Lerp(startOpacity, targetOpacity, curveValue);
             SetVisualOpacity(opacity);
@@ -427,9 +367,7 @@ public class FallingTilePlatform : MonoBehaviour
     private IEnumerator FadeOutAndHide()
     {
         if (platformState == PlatformState.Hidden)
-        {
             yield break;
-        }
 
         platformState = PlatformState.FadingOut;
         tilemapCollider.enabled = false;
@@ -444,9 +382,7 @@ public class FallingTilePlatform : MonoBehaviour
 
         // Hide the lever only after opacity reaches zero.
         if (attachmentsRoot != null)
-        {
             attachmentsRoot.SetActive(false);
-        }
     }
 
     private IEnumerator RespawnWithFade()
@@ -468,14 +404,10 @@ public class FallingTilePlatform : MonoBehaviour
         tilemapCollider.enabled = false;
 
         if (attachmentsRoot != null)
-        {
             attachmentsRoot.SetActive(true);
-        }
 
         if (attachedLever != null)
-        {
             attachedLever.RestoreVisualState();
-        }
 
         SetAttachmentsInteractive(false);
 
@@ -494,39 +426,6 @@ public class FallingTilePlatform : MonoBehaviour
         activeRoutine = null;
     }
 
-    private void ResetPlatformImmediately()
-    {
-        rb.simulated = false;
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.gravityScale = 0f;
-        rb.linearVelocity = Vector2.zero;
-        rb.angularVelocity = 0f;
-        transform.localPosition = originalLocalPosition;
-        transform.localRotation = originalLocalRotation;
-        SetVisualOpacity(1f);
-        tilemapRenderer.enabled = true;
-        tilemapCollider.enabled = true;
-
-        // Restore attachment visibility and interactivity.
-        if (attachmentsRoot != null)
-        {
-            attachmentsRoot.SetActive(true);
-        }
-
-        if (attachedLever != null)
-        {
-            attachedLever.RestoreVisualState();
-        }
-
-        SetAttachmentsInteractive(true);
-
-        rb.simulated = true;
-        isActivated = false;
-        hasPlayedActivationSound = false;
-        platformState = PlatformState.Ready;
-        activeRoutine = null;
-    }
-
     private void OnDisable()
     {
         if (activeRoutine != null)
@@ -536,22 +435,16 @@ public class FallingTilePlatform : MonoBehaviour
         }
 
         if (audioSource != null)
-        {
             audioSource.pitch = 1f;
-        }
 
         if (tilemap != null)
-        {
             SetVisualOpacity(1f);
-        }
     }
 
     private void OnValidate()
     {
         if (string.IsNullOrWhiteSpace(playerTag))
-        {
             playerTag = "Player";
-        }
 
         fadeOutDuration = Mathf.Max(0.01f, fadeOutDuration);
         fadeInDuration = Mathf.Max(0.01f, fadeInDuration);
@@ -574,9 +467,7 @@ public class FallingTilePlatform : MonoBehaviour
         }
 
         if (fadeCurve == null || fadeCurve.length == 0)
-        {
             fadeCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-        }
 
         if (!Application.isPlaying)
         {
@@ -587,9 +478,7 @@ public class FallingTilePlatform : MonoBehaviour
 
             // Auto-configure the composite collider requirement so it doesn't break
             if (tilemapCollider != null)
-            {
                 tilemapCollider.usedByComposite = true;
-            }
         }
     }
 }

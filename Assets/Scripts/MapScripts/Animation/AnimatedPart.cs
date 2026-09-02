@@ -11,9 +11,6 @@ public class AnimatedPart
     [Tooltip("Animated Tile used for this statue part.")]
     public TileBase animatedTile;
 
-    [Tooltip(
-        "Static Tile representing the LAST frame of this part. " +
-        "Only required when End Behavior is Freeze On Last Frame."
-    )]
+    [Tooltip("Static Tile representing the LAST frame of this part. Only required when End Behavior is Freeze On Last Frame.")]
     public TileBase lastFrameTile;
 }

@@ -21,9 +21,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jump")]
     [SerializeField] private float jumpForce = 11f;
-
-    [SerializeField, Range(0.1f, 1f)]
-    private float jumpCutMultiplier = 0.35f;
+    [SerializeField, Range(0.1f, 1f)] private float jumpCutMultiplier = 0.35f;
 
     // ==================================================
     // GROUND CHECK
@@ -31,9 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
-
     [SerializeField] private float groundCheckRadius = 0.2f;
-
     [SerializeField] private LayerMask groundLayer;
 
     // ==================================================
@@ -50,31 +46,23 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Cutscene Control")]
 
-    [Tooltip(
-        "Makes the Rigidbody2D Kinematic while Timeline owns the Player. " +
-        "This prevents gravity and physics from fighting Timeline animation."
-    )]
-    [SerializeField]
-    private bool useKinematicBodyDuringCutscene = true;
+    [Tooltip("Makes the Rigidbody2D Kinematic while Timeline owns the Player. This prevents gravity and physics from fighting Timeline animation.")]
+    [SerializeField] private bool useKinematicBodyDuringCutscene = true;
 
-    [Tooltip(
-        "Wait for the current rendered frame to finish before physics is restored. " +
-        "Recommended when EndCutsceneControl is called from a Timeline Signal."
-    )]
-    [SerializeField]
-    private bool waitForEndOfFrameBeforeRestoringPhysics = true;
+    [Tooltip("Wait for the current rendered frame to finish before physics is restored. Recommended when EndCutsceneControl is called from a Timeline Signal.")]
+    [SerializeField] private bool waitForEndOfFrameBeforeRestoringPhysics = true;
+
 
     // ==================================================
     // COMPONENTS
     // ==================================================
-
     private Rigidbody2D rb;
     private Animator animator;
+
 
     // ==================================================
     // NORMAL GAMEPLAY PHYSICS
     // ==================================================
-
     private float defaultGravity;
     private RigidbodyType2D defaultBodyType;
     private RigidbodyInterpolation2D defaultInterpolation;
@@ -114,27 +102,21 @@ public class PlayerMovement : MonoBehaviour
     // ANIMATOR HASHES
     // ==================================================
 
-    private static readonly int IsRunningHash =
-        Animator.StringToHash("IsRunning");
+    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
 
-    private static readonly int IsJumpingHash =
-        Animator.StringToHash("IsJumping");
+    private static readonly int IsJumpingHash = Animator.StringToHash("IsJumping");
 
-    private static readonly int IsGroundedHash =
-        Animator.StringToHash("IsGrounded");
+    private static readonly int IsGroundedHash = Animator.StringToHash("IsGrounded");
 
-    private static readonly int IsClimbingHash =
-        Animator.StringToHash("IsClimbing");
+    private static readonly int IsClimbingHash = Animator.StringToHash("IsClimbing");
 
-    private static readonly int ClimbSpeedYHash =
-        Animator.StringToHash("ClimbSpeedY");
+    private static readonly int ClimbSpeedYHash = Animator.StringToHash("ClimbSpeedY");
 
     // ==================================================
     // PUBLIC STATE
     // ==================================================
 
     public bool ControlsEnabled => controlsEnabled;
-
     public bool CutsceneControlActive => cutsceneControlActive;
 
     // ==================================================
@@ -189,9 +171,7 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (controlsEnabled && jumpQueued)
-        {
             ExecuteJump();
-        }
 
         jumpQueued = false;
 
@@ -214,26 +194,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleClimbState()
     {
-        if (isTouchingLadder &&
-            Mathf.Abs(vertical) > 0.1f &&
-            !isClimbing)
+        if (isTouchingLadder && Mathf.Abs(vertical) > 0.1f && !isClimbing)
         {
             isClimbing = true;
 
             if (currentLadder != null)
             {
-                transform.position =
-                    new Vector3(
-                        currentLadder.position.x,
-                        transform.position.y,
-                        transform.position.z
-                    );
+                transform.position = new Vector3(currentLadder.position.x, transform.position.y, transform.position.z);
 
-                rb.linearVelocity =
-                    new Vector2(
-                        0f,
-                        rb.linearVelocity.y
-                    );
+                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
                 horizontal = 0f;
             }
@@ -249,8 +218,7 @@ public class PlayerMovement : MonoBehaviour
         if (!controlsEnabled)
             return;
 
-        if (Input.GetButtonDown("Jump") &&
-            (isGrounded || isClimbing))
+        if (Input.GetButtonDown("Jump") && (isGrounded || isClimbing))
         {
             jumpRequested = true;
             isGrounded = false;
@@ -259,18 +227,9 @@ public class PlayerMovement : MonoBehaviour
             isClimbing = false;
         }
 
-        if (Input.GetButtonUp("Jump") &&
-            !isGrounded &&
-            rb.linearVelocity.y > 0f &&
-            !jumpCutApplied)
+        if (Input.GetButtonUp("Jump") && !isGrounded && rb.linearVelocity.y > 0f && !jumpCutApplied)
         {
-            rb.linearVelocity =
-                new Vector2(
-                    rb.linearVelocity.x,
-                    rb.linearVelocity.y *
-                    jumpCutMultiplier
-                );
-
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
             jumpCutApplied = true;
         }
     }
@@ -281,26 +240,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void ExecuteJump()
     {
-        if (!controlsEnabled ||
-            cutsceneControlActive)
-        {
+        if (!controlsEnabled || cutsceneControlActive)
             return;
-        }
 
         // Safety: make sure Timeline did not leave physics
         // in Kinematic mode or with Gravity Scale = 0.
         RestoreGameplayPhysics();
 
         isClimbing = false;
-
         rb.gravityScale = defaultGravity;
-
-        rb.linearVelocity =
-            new Vector2(
-                rb.linearVelocity.x,
-                jumpForce
-            );
-
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         isGrounded = false;
     }
 
@@ -313,30 +262,17 @@ public class PlayerMovement : MonoBehaviour
         if (cutsceneControlActive)
             return;
 
-        float targetHorizontal =
-            controlsEnabled
-                ? horizontal * speed
-                : 0f;
+        float targetHorizontal = controlsEnabled ? horizontal * speed : 0f;
 
         if (isClimbing)
         {
             rb.gravityScale = 0f;
-
-            rb.linearVelocity =
-                new Vector2(
-                    targetHorizontal,
-                    vertical * climbSpeed
-                );
+            rb.linearVelocity = new Vector2(targetHorizontal, vertical * climbSpeed);
         }
         else
         {
             rb.gravityScale = defaultGravity;
-
-            rb.linearVelocity =
-                new Vector2(
-                    targetHorizontal,
-                    rb.linearVelocity.y
-                );
+            rb.linearVelocity = new Vector2(targetHorizontal, rb.linearVelocity.y);
         }
     }
 
@@ -372,27 +308,17 @@ public class PlayerMovement : MonoBehaviour
         if (groundCheck == null)
             return;
 
-        bool touchingGround =
-            Physics2D.OverlapCircle(
-                groundCheck.position,
-                groundCheckRadius,
-                groundLayer
-            );
+        bool touchingGround = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
-        isGrounded =
-            touchingGround &&
-            rb.linearVelocity.y <= 0.1f;
+        isGrounded = touchingGround && rb.linearVelocity.y <= 0.1f;
 
         if (isGrounded)
         {
             jumpRequested = false;
             jumpCutApplied = false;
 
-            if (!isTouchingLadder ||
-                vertical <= 0f)
-            {
+            if (!isTouchingLadder || vertical <= 0f)
                 isClimbing = false;
-            }
         }
     }
 
@@ -402,31 +328,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleFlip()
     {
-        if (!controlsEnabled ||
-            cutsceneControlActive)
-        {
+        if (!controlsEnabled || cutsceneControlActive)
             return;
-        }
 
-        if ((horizontal > 0.1f &&
-             facingDirection < 0) ||
-            (horizontal < -0.1f &&
-             facingDirection > 0))
-        {
+        if ((horizontal > 0.1f && facingDirection < 0) || (horizontal < -0.1f && facingDirection > 0))
             Flip();
-        }
     }
 
     private void Flip()
     {
         facingDirection *= -1;
-
         Vector3 scale = transform.localScale;
-
-        scale.x =
-            Mathf.Abs(scale.x) *
-            facingDirection;
-
+        scale.x = Mathf.Abs(scale.x) * facingDirection;
         transform.localScale = scale;
     }
 
@@ -439,41 +352,14 @@ public class PlayerMovement : MonoBehaviour
         if (cutsceneControlActive)
             return;
 
-        bool isRunning =
-            controlsEnabled &&
-            isGrounded &&
-            Mathf.Abs(horizontal) > 0.1f;
+        bool isRunning = controlsEnabled && isGrounded && Mathf.Abs(horizontal) > 0.1f;
+        bool isJumping = jumpRequested || (!isGrounded && !isClimbing);
 
-        bool isJumping =
-            jumpRequested ||
-            (!isGrounded && !isClimbing);
-
-        animator.SetBool(
-            IsRunningHash,
-            isRunning
-        );
-
-        animator.SetBool(
-            IsJumpingHash,
-            isJumping
-        );
-
-        animator.SetBool(
-            IsGroundedHash,
-            isGrounded
-        );
-
-        animator.SetBool(
-            IsClimbingHash,
-            isClimbing
-        );
-
-        animator.SetFloat(
-            ClimbSpeedYHash,
-            isClimbing
-                ? Mathf.Abs(vertical)
-                : 0f
-        );
+        animator.SetBool(IsRunningHash, isRunning);
+        animator.SetBool(IsJumpingHash, isJumping);
+        animator.SetBool(IsGroundedHash, isGrounded);
+        animator.SetBool(IsClimbingHash, isClimbing);
+        animator.SetFloat(ClimbSpeedYHash, isClimbing ? Mathf.Abs(vertical) : 0f);
     }
 
     // ==================================================
@@ -486,39 +372,22 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         controlsEnabled = false;
-
         ClearInputState();
-
         isClimbing = false;
 
-        if (rb != null &&
-            !cutsceneControlActive)
+        if (rb != null && !cutsceneControlActive)
         {
             rb.gravityScale = defaultGravity;
-
-            rb.linearVelocity =
-                new Vector2(
-                    0f,
-                    rb.linearVelocity.y
-                );
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
 
         if (animator != null)
         {
-            animator.SetBool(
-                IsRunningHash,
-                false
-            );
+            animator.SetBool(IsRunningHash, false);
 
-            animator.SetBool(
-                IsClimbingHash,
-                false
-            );
+            animator.SetBool(IsClimbingHash, false);
 
-            animator.SetFloat(
-                ClimbSpeedYHash,
-                0f
-            );
+            animator.SetFloat(ClimbSpeedYHash, 0f);
         }
     }
 
@@ -531,16 +400,13 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         ClearInputState();
-
         RestoreGameplayPhysics();
-
         controlsEnabled = true;
     }
 
     // ==================================================
     // BEGIN CUTSCENE CONTROL
     // ==================================================
-
     public void BeginCutsceneControl()
     {
         if (cutsceneControlActive)
@@ -552,8 +418,7 @@ public class PlayerMovement : MonoBehaviour
             endCutsceneRoutine = null;
         }
 
-        controlsWereEnabledBeforeCutscene =
-            controlsEnabled;
+        controlsWereEnabledBeforeCutscene = controlsEnabled;
 
         cutsceneControlActive = true;
         controlsEnabled = false;
@@ -564,42 +429,24 @@ public class PlayerMovement : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetBool(
-                IsRunningHash,
-                false
-            );
-
-            animator.SetBool(
-                IsClimbingHash,
-                false
-            );
-
-            animator.SetFloat(
-                ClimbSpeedYHash,
-                0f
-            );
+            animator.SetBool(IsRunningHash, false);
+            animator.SetBool(IsClimbingHash, false);
+            animator.SetFloat(ClimbSpeedYHash, 0f);
         }
 
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
-
             rb.gravityScale = 0f;
-
-            rb.interpolation =
-                RigidbodyInterpolation2D.None;
+            rb.interpolation = RigidbodyInterpolation2D.None;
 
             rb.simulated = true;
 
             if (useKinematicBodyDuringCutscene)
-            {
-                rb.bodyType =
-                    RigidbodyType2D.Kinematic;
-            }
+                rb.bodyType = RigidbodyType2D.Kinematic;
 
             rb.WakeUp();
-
             Physics2D.SyncTransforms();
         }
 
@@ -615,40 +462,24 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (endCutsceneRoutine != null)
-        {
             StopCoroutine(endCutsceneRoutine);
-        }
 
-        endCutsceneRoutine =
-            StartCoroutine(
-                EndCutsceneControlRoutine()
-            );
+        endCutsceneRoutine = StartCoroutine(EndCutsceneControlRoutine());
     }
 
     private IEnumerator EndCutsceneControlRoutine()
     {
         if (waitForEndOfFrameBeforeRestoringPhysics)
-        {
             yield return new WaitForEndOfFrame();
-        }
 
         // Capture Timeline's final Player position.
-        Vector3 finalPosition =
-            transform.position;
-
-        float finalRotation =
-            transform.eulerAngles.z;
+        Vector3 finalPosition = transform.position;
+        float finalRotation = transform.eulerAngles.z;
 
         if (rb != null)
         {
-            rb.position =
-                new Vector2(
-                    finalPosition.x,
-                    finalPosition.y
-                );
-
+            rb.position = new Vector2(finalPosition.x, finalPosition.y);
             rb.rotation = finalRotation;
-
             rb.linearVelocity = Vector2.zero;
             rb.angularVelocity = 0f;
 
@@ -680,16 +511,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         ClearInputState();
-
         isClimbing = false;
-
         CheckGround();
-
-        controlsEnabled =
-            controlsWereEnabledBeforeCutscene;
-
+        controlsEnabled = controlsWereEnabledBeforeCutscene;
         UpdateAnimations();
-
         endCutsceneRoutine = null;
 
     }
@@ -704,22 +529,11 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         rb.simulated = true;
-
-        rb.bodyType =
-            defaultBodyType == RigidbodyType2D.Dynamic
-                ? defaultBodyType
-                : RigidbodyType2D.Dynamic;
-
-        rb.gravityScale =
-            defaultGravity;
-
-        rb.interpolation =
-            defaultInterpolation;
-
+        rb.bodyType = defaultBodyType == RigidbodyType2D.Dynamic ? defaultBodyType : RigidbodyType2D.Dynamic;
+        rb.gravityScale = defaultGravity;
+        rb.interpolation = defaultInterpolation;
         rb.angularVelocity = 0f;
-
         rb.WakeUp();
-
         Physics2D.SyncTransforms();
     }
 
@@ -731,7 +545,6 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontal = 0f;
         vertical = 0f;
-
         jumpQueued = false;
         jumpRequested = false;
         jumpCutApplied = false;
@@ -760,27 +573,21 @@ public class PlayerMovement : MonoBehaviour
         }
 
         ClearInputState();
-
         isClimbing = false;
-
         controlsEnabled = true;
-
         CheckGround();
-
         UpdateAnimations();
     }
 
     // ==================================================
     // GIZMOS
     // ==================================================
-
     private void OnDrawGizmosSelected()
     {
         if (groundCheck == null)
             return;
 
         Gizmos.color = Color.yellow;
-
         Gizmos.DrawWireSphere(
             groundCheck.position,
             groundCheckRadius

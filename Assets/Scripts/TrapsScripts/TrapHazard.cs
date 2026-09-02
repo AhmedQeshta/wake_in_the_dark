@@ -8,8 +8,7 @@ public class TrapHazard : MonoBehaviour
     // ==================================================
 
     [Header("Player Detection")]
-    [SerializeField]
-    private string playerTag = "Player";
+    [SerializeField] private string playerTag = "Player";
 
 
     // ==================================================
@@ -17,28 +16,17 @@ public class TrapHazard : MonoBehaviour
     // ==================================================
 
     [Header("Trap Audio")]
-    [SerializeField]
-    private AudioClip trapHitSound;
-
-    [SerializeField, Range(0f, 1f)]
-    private float trapHitVolume = 1f;
-
-    [SerializeField]
-    private bool randomizePitch = true;
-
-    [SerializeField, Range(0.5f, 1.5f)]
-    private float minimumPitch = 0.95f;
-
-    [SerializeField, Range(0.5f, 1.5f)]
-    private float maximumPitch = 1.05f;
+    [SerializeField] private AudioClip trapHitSound;
+    [SerializeField, Range(0f, 1f)] private float trapHitVolume = 1f;
+    [SerializeField] private bool randomizePitch = true;
+    [SerializeField, Range(0.5f, 1.5f)] private float minimumPitch = 0.95f;
+    [SerializeField, Range(0.5f, 1.5f)] private float maximumPitch = 1.05f;
 
 
     // ==================================================
     // COMPONENTS
     // ==================================================
-
     private AudioSource audioSource;
-
 
     // ==================================================
     // AWAKE
@@ -46,23 +34,14 @@ public class TrapHazard : MonoBehaviour
 
     private void Awake()
     {
-        audioSource =
-            GetComponent<AudioSource>();
-
-
-        audioSource.playOnAwake =
-            false;
-
-        audioSource.loop =
-            false;
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
 
         /*
-         * Trap sound is gameplay audio.
-         * Therefore it should pause when
-         * the pause menu is opened.
+         * Trap sound is gameplay audio. Therefore it should pause when the pause menu is opened.
          */
-        audioSource.ignoreListenerPause =
-            false;
+        audioSource.ignoreListenerPause = false;
     }
 
 
@@ -70,86 +49,33 @@ public class TrapHazard : MonoBehaviour
     // TRIGGER
     // ==================================================
 
-    private void OnTriggerEnter2D(
-        Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // ----------------------------------------------
         // FIND PLAYER ROOT
-        // ----------------------------------------------
+        GameObject playerObject = other.attachedRigidbody != null ? other.attachedRigidbody.gameObject : other.gameObject;
 
-        GameObject playerObject =
-            other.attachedRigidbody != null
-                ? other.attachedRigidbody.gameObject
-                : other.gameObject;
-
-
-        // ----------------------------------------------
         // CHECK TAG
-        // ----------------------------------------------
-
         if (!playerObject.CompareTag(playerTag))
             return;
 
-
-        // ----------------------------------------------
         // FIND PLAYER DEATH
-        // ----------------------------------------------
-
-        PlayerDeath playerDeath =
-            playerObject.GetComponent<PlayerDeath>();
+        PlayerDeath playerDeath = playerObject.GetComponent<PlayerDeath>();
 
 
         if (playerDeath == null)
-        {
-            playerDeath =
-                other.GetComponentInParent<PlayerDeath>();
-        }
+            playerDeath = other.GetComponentInParent<PlayerDeath>();
 
 
-        if (playerDeath == null)
-        {
-            Debug.LogWarning(
-                "Trap touched Player but PlayerDeath was not found.",
-                this
-            );
-
-            return;
-        }
-
-
-        // ----------------------------------------------
-        // IMPORTANT
-        // ----------------------------------------------
-
-        /*
-         * Prevent multiple death events while
-         * the player is ALREADY dying.
-         *
-         * After PlayerDeath respawns the player,
-         * IsDead becomes false again.
-         *
-         * Therefore this same trap can kill
-         * the player again.
-         */
-        if (playerDeath.IsDead)
+        // To Check, Trap touched Player but PlayerDeath was not found.
+        if (playerDeath == null || playerDeath.IsDead)
             return;
 
-
-        // ----------------------------------------------
         // SOUND
-        // ----------------------------------------------
-
-        float soundDuration =
-            PlayTrapSound();
+        float soundDuration = PlayTrapSound();
 
 
-        // ----------------------------------------------
         // KILL PLAYER
-        // ----------------------------------------------
-
-        playerDeath.KillPlayer(
-            soundDuration
-        );
+        playerDeath.KillPlayer(soundDuration);
     }
 
 
@@ -159,46 +85,20 @@ public class TrapHazard : MonoBehaviour
 
     private float PlayTrapSound()
     {
-        if (audioSource == null ||
-            trapHitSound == null)
-        {
+        if (audioSource == null || trapHitSound == null)
             return 0f;
-        }
-
 
         if (randomizePitch)
-        {
-            audioSource.pitch =
-                Random.Range(
-                    minimumPitch,
-                    maximumPitch
-                );
-        }
+            audioSource.pitch = Random.Range(minimumPitch, maximumPitch);
         else
-        {
-            audioSource.pitch =
-                1f;
-        }
+            audioSource.pitch = 1f;
 
-
-        audioSource.PlayOneShot(
-            trapHitSound,
-            trapHitVolume
-        );
-
+        audioSource.PlayOneShot(trapHitSound, trapHitVolume);
 
         /*
-         * Calculate actual sound duration
-         * after pitch modification.
+         * Calculate actual sound duration after pitch modification.
          */
-        float soundDuration =
-            trapHitSound.length /
-            Mathf.Max(
-                Mathf.Abs(audioSource.pitch),
-                0.01f
-            );
-
-
+        float soundDuration = trapHitSound.length / Mathf.Max(Mathf.Abs(audioSource.pitch), 0.01f);
         return soundDuration;
     }
 
@@ -210,43 +110,17 @@ public class TrapHazard : MonoBehaviour
     private void OnValidate()
     {
         if (string.IsNullOrWhiteSpace(playerTag))
-        {
             playerTag = "Player";
-        }
 
-
-        trapHitVolume =
-            Mathf.Clamp01(
-                trapHitVolume
-            );
-
-
-        minimumPitch =
-            Mathf.Clamp(
-                minimumPitch,
-                0.5f,
-                1.5f
-            );
-
-
-        maximumPitch =
-            Mathf.Clamp(
-                maximumPitch,
-                0.5f,
-                1.5f
-            );
-
+        trapHitVolume = Mathf.Clamp01(trapHitVolume);
+        minimumPitch = Mathf.Clamp(minimumPitch, 0.5f, 1.5f);
+        maximumPitch = Mathf.Clamp(maximumPitch, 0.5f, 1.5f);
 
         if (minimumPitch > maximumPitch)
         {
-            float temp =
-                minimumPitch;
-
-            minimumPitch =
-                maximumPitch;
-
-            maximumPitch =
-                temp;
+            float temp = minimumPitch;
+            minimumPitch = maximumPitch;
+            maximumPitch = temp;
         }
     }
 }

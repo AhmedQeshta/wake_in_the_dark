@@ -78,8 +78,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -261179365
+  m_SortingLayer: 20
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4726182137476219290, guid: 3959f81c560b27a4e8690fd816a424b7, type: 3}
@@ -268,7 +268,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.18561316, y: -0.26603007}
+  m_Offset: {x: 0.17082214, y: -0.26233196}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -278,7 +278,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5661993, y: 0.54668474}
+  m_Size: {x: 0.6253662, y: 0.5836668}
   m_EdgeRadius: 0
 --- !u!82 &233400650872072927
 AudioSource:
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.478
-  m_ApplyToSortingLayers: 00000000cff22af591ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd8d0d440391825aa82fadf3dcb75487ebaf31b190594421da83a8c1830b3dc963
+  m_ApplyToSortingLayers: 00000000cff22af591ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd8d0d440391825aa82fadf3dcb75487ebaf31b190594421da83a8c1830b3dc9631bb86ef0
   m_ShapePath:
   - {x: 0.05916834, y: -0.3449831, z: 0}
   - {x: 0.100048065, y: -0.30093622, z: 0}

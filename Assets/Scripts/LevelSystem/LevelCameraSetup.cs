@@ -40,23 +40,8 @@ public class LevelCameraSetup : MonoBehaviour
     {
         ResolveReferences();
 
-        if (mainCamera == null)
-        {
-            Debug.LogError("LevelCameraSetup: Main Camera is missing.", this);
+        if (mainCamera == null || gameplayCamera == null || playerTarget == null)
             return;
-        }
-
-        if (gameplayCamera == null)
-        {
-            Debug.LogError("LevelCameraSetup: GameplayCamera is missing.", this);
-            return;
-        }
-
-        if (playerTarget == null)
-        {
-            Debug.LogError("LevelCameraSetup: Player was not found.", this);
-            return;
-        }
 
         mainCamera.rect = new Rect(0f, 0f, 1f, 1f);
         mainCamera.enabled = true;
@@ -69,7 +54,6 @@ public class LevelCameraSetup : MonoBehaviour
 
         ConfigureGameplayConfiner();
 
-        Debug.Log("Level camera setup complete: " + gameObject.scene.name, this);
     }
 
     private float CalculateRequiredMapSize()
@@ -116,7 +100,6 @@ public class LevelCameraSetup : MonoBehaviour
         if (gameplayConfiner != null)
             gameplayConfiner.InvalidateLensCache();
 
-        Debug.Log("GameplayCamera configured. Size: " + gameplaySize, this);
     }
 
     private void ConfigureGameplayConfiner()
@@ -177,21 +160,15 @@ public class LevelCameraSetup : MonoBehaviour
 
         foreach (GameObject root in scene.GetRootGameObjects())
         {
-            CinemachineCamera[] cameras =
-                root.GetComponentsInChildren<CinemachineCamera>(true);
+            CinemachineCamera[] cameras = root.GetComponentsInChildren<CinemachineCamera>(true);
 
             foreach (CinemachineCamera camera in cameras)
             {
                 if (camera == null)
                     continue;
 
-                if (string.Equals(
-                    camera.gameObject.name,
-                    objectName,
-                    System.StringComparison.OrdinalIgnoreCase))
-                {
+                if (string.Equals(camera.gameObject.name, objectName, System.StringComparison.OrdinalIgnoreCase))
                     return camera;
-                }
             }
         }
 
@@ -219,7 +196,6 @@ public class LevelCameraSetup : MonoBehaviour
     private void OnValidate()
     {
         mapPadding = Mathf.Max(0f, mapPadding);
-        gameplayMapSizeMultiplier =
-            Mathf.Clamp(gameplayMapSizeMultiplier, 0.5f, 1.2f);
+        gameplayMapSizeMultiplier = Mathf.Clamp(gameplayMapSizeMultiplier, 0.5f, 1.2f);
     }
 }
