@@ -47,6 +47,9 @@ TagManager:
   - name: bg_1
     uniqueID: 4113232591
     locked: 0
+  - name: Smoke_under
+    uniqueID: 856453977
+    locked: 0
   - name: decoration_under
     uniqueID: 4079931025
     locked: 0
@@ -103,6 +106,9 @@ TagManager:
     locked: 0
   - name: Lever_info
     uniqueID: 4033787931
+    locked: 0
+  - name: Smoke_over
+    uniqueID: 1727594923
     locked: 0
   m_RenderingLayers:
   - Default
