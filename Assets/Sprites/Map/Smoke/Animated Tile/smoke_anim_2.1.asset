@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: smoke_anim_2.1
+  m_EditorClassIdentifier: Unity.2D.Tilemap.Extras::UnityEngine.Tilemaps.AnimatedTile
+  m_AnimatedSprites:
+  - {fileID: 6730805163832067476, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: 31815849457588679, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -1146837991562115806, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: 2180588721165025153, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -1774022878, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -671281701, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -1238009484, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -1287740085, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -781093395, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -260512236, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -713521769, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: 438512630, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: 2026406364, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: -1229746056, guid: c338506e11003824d885b8935b57967f, type: 3}
+  - {fileID: 1649989980, guid: c338506e11003824d885b8935b57967f, type: 3}
+  m_MinSpeed: 4
+  m_MaxSpeed: 4
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0
+  m_TileAnimationFlags: 0

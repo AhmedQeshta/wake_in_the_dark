@@ -92,6 +92,9 @@ TagManager:
   - name: particle
     uniqueID: 3951514807
     locked: 0
+  - name: Smoke_over
+    uniqueID: 1727594923
+    locked: 0
   - name: map_over
     uniqueID: 2427531695
     locked: 0
@@ -106,9 +109,6 @@ TagManager:
     locked: 0
   - name: Lever_info
     uniqueID: 4033787931
-    locked: 0
-  - name: Smoke_over
-    uniqueID: 1727594923
     locked: 0
   m_RenderingLayers:
   - Default

@@ -17,7 +17,8 @@ GameObject:
   - component: {fileID: 7280110437066544009}
   - component: {fileID: 6790992965107109497}
   - component: {fileID: 8248812184403582645}
-  - component: {fileID: 7780255257428434671}
+  - component: {fileID: 5042983488134794985}
+  - component: {fileID: 7336675099815957090}
   m_Layer: 11
   m_Name: Wife
   m_TagString: wife
@@ -88,7 +89,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 54791565
-  m_SortingLayer: 13
+  m_SortingLayer: 14
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5226838838795628538, guid: 55cf54083d8a553488d675b706cac7de, type: 3}
@@ -124,7 +125,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -464,7 +465,7 @@ MonoBehaviour:
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.1
-  m_ApplyToSortingLayers: 00000000cff22af5d3576b5b3d5d36aebd6e19cd2fadf3dcb75487ebaf31b1908d0d4403
+  m_ApplyToSortingLayers: 0000000059730c3391ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd91825aa88d0d4403ab01f966af31b190594421da83a8c1832fadf3dc
   m_ShapePath:
   - {x: -0.36860085, y: -0.15099674, z: 0}
   - {x: -0.37479353, y: -0.15244263, z: 0}
@@ -614,24 +615,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2099e461adbafd14bab792ae6066bed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 4
+  speed: 4.5
   climbSpeed: 4
   jumpForce: 9
   jumpCutMultiplier: 0.48
-  groundCheck: {fileID: 7649064034796994811}
+  groundCheck: {fileID: 0}
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
   controlsEnabled: 1
---- !u!114 &7780255257428434671
+  useKinematicBodyDuringCutscene: 1
+  waitForEndOfFrameBeforeRestoringPhysics: 1
+--- !u!114 &5042983488134794985
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 183975322745990365}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fda8032f26b63049b62bb35f961010c, type: 3}
   m_Name: 
@@ -678,7 +681,55 @@ MonoBehaviour:
   - {fileID: 0}
   playerRenderers:
   - {fileID: 1453599545991659465}
-  uiManager: {fileID: 0}
+  UIManagerObj: {fileID: 0}
+--- !u!114 &7336675099815957090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183975322745990365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d3b10b50a86f4e4e8ddbb159da65a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CompanionFollower2D
+  playerTarget: {fileID: 0}
+  playerRigidbody: {fileID: 0}
+  playerTag: Player
+  autoFindPlayer: 1
+  startFollowingEnabled: 0
+  activationDistance: 4
+  moveSpeed: 4
+  followDistance: 1.6
+  stopDistance: 1.2
+  maxDistance: 7
+  catchUpSpeed: 4.5
+  followOnlyWhenPlayerMoves: 1
+  catchUpWhenPlayerStops: 0
+  playerMoveThreshold: 0.05
+  mirrorPlayerJump: 1
+  jumpForce: 9
+  jumpCutMultiplier: 0.48
+  jumpOnlyWhileFollowing: 1
+  groundCheck: {fileID: 7649064034796994811}
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  animator: {fileID: 6790992965107109497}
+  movingParameter: IsMoving
+  groundedParameter: IsGrounded
+  jumpingParameter: IsJumping
+  spriteRenderer: {fileID: 1453599545991659465}
+  spriteFacesRightByDefault: 1
+  facePlayerWhileFollowing: 1
+  faceMovementDirection: 1
+  facingDeadZone: 0.05
+  assignedWaypoint: {fileID: 0}
+  waypointMoveSpeed: 3.5
+  waypointStopDistance: 0.1
+  resumeFollowingAfterWaypoint: 0
 --- !u!1 &5965561043746784222
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,7 +782,7 @@ MonoBehaviour:
   m_Intensity: 12
   m_LightVolumeIntensity: 0.005
   m_LightVolumeEnabled: 1
-  m_ApplyToSortingLayers: 00000000cff22af591ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd8d0d440391825aa82fadf3dcb75487ebaf31b190594421da83a8c1830b3dc963
+  m_ApplyToSortingLayers: 0000000091ce2ef36b06633c3376e3c0d3576b5bbdb3728313c23b6667909959bd6e19cd8d0d440391825aa82fadf3dcb75487eb
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
