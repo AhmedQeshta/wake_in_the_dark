@@ -4,40 +4,47 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class DangerousLightZone : MonoBehaviour
 {
-    // ==================================================
-    // LIGHT EXPOSURE
-    // ==================================================
-    [Header("Light Exposure")]
-    [Tooltip("How long the player can stay inside THIS light before transforming into stone.")]
-    [SerializeField, Min(0.1f)] private float exposureDuration = 3f;
+    // SETTINGS
+    [Header("Settings")]
 
-
-    // ==================================================
-    // COLLIDER
-    // ==================================================
-    [Header("Collider")]
     [Tooltip("Automatically keep this Collider2D configured as a Trigger.")]
     [SerializeField] private bool forceIsTrigger = true;
 
 
-    // ==================================================
-    // PUBLIC VALUES
-    // ==================================================
+    [Tooltip("How long a character can stay inside THIS dangerous light before death.")]
+    [SerializeField, Min(0.1f)] private float exposureDuration = 3f;
+
+
     public float ExposureDuration => exposureDuration;
 
+    // CHARACTER FILTER
+    [Header("Character Filter")]
+    [Tooltip("Dangerous light affects Player 1.")]
+    [SerializeField] private bool affectPlayer1 = true;
+
+    [Tooltip("Dangerous light affects Wife / Player 2.")]
+    [SerializeField] private bool affectWife = true;
+
+
+    // STATE
     /*
-     * ** ---- STATE 
-     * Player may have multiple Collider2D components.
-     * Count them so one collider exiting does not stop exposure while another player collider is still inside.
+     * A character may have several Collider2D components.
+     *
+     * Count each collider so exposure only ends when the
+     * LAST collider for that character leaves this light.
      */
-    private readonly Dictionary<PlayerLightExposure, int> playerColliderCounts = new Dictionary<PlayerLightExposure, int>();
+    private readonly Dictionary<PlayerLightExposure, int> exposureColliderCounts = new Dictionary<PlayerLightExposure, int>();
+
+    /*
+     * Only used to avoid repeating the same setup warning
+     * every physics frame.
+     */
+    private readonly HashSet<PlayerDeath> warnedMissingExposure = new HashSet<PlayerDeath>();
 
     private Collider2D zoneCollider;
 
 
-    // ==================================================
     // AWAKE
-    // ==================================================
 
     private void Awake()
     {
@@ -46,81 +53,152 @@ public class DangerousLightZone : MonoBehaviour
     }
 
 
-    // ==================================================
     // ENTER
-    // ==================================================
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerLightExposure exposure = other.GetComponentInParent<PlayerLightExposure>();
-
+        PlayerLightExposure exposure = FindExposure(other);
 
         if (exposure == null)
+        {
+            WarnIfCharacterIsMissingExposure(other);
             return;
-
-
-        if (playerColliderCounts.TryGetValue(exposure, out int currentCount))
-        {
-            playerColliderCounts[exposure] = currentCount + 1;
         }
-        else
-        {
-            playerColliderCounts.Add(exposure, 1);
 
-            exposure.EnterDangerousLight(this);
-        }
+        PlayerDeath deathTarget = exposure.GetComponent<PlayerDeath>();
+
+        if (deathTarget != null && !CanAffectCharacter(deathTarget))
+
+
+            if (exposureColliderCounts.TryGetValue(exposure, out int currentCount)) { exposureColliderCounts[exposure] = currentCount + 1; }
+            else
+            {
+                exposureColliderCounts.Add(exposure, 1);
+                exposure.EnterDangerousLight(this);
+            }
     }
 
 
-    // ==================================================
     // EXIT
-    // ==================================================
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        PlayerLightExposure exposure = other.GetComponentInParent<PlayerLightExposure>();
+        PlayerLightExposure exposure = FindExposure(other);
 
-        if (exposure == null || !playerColliderCounts.TryGetValue(exposure, out int currentCount))
-            return;
+        if (exposure == null || !exposureColliderCounts.TryGetValue(exposure, out int currentCount)) return;
 
         currentCount--;
 
         if (currentCount <= 0)
         {
-            playerColliderCounts.Remove(exposure);
+            exposureColliderCounts.Remove(exposure);
             exposure.ExitDangerousLight(this);
         }
         else
         {
-            playerColliderCounts[exposure] = currentCount;
+            exposureColliderCounts[exposure] = currentCount;
         }
     }
 
 
-    // ==================================================
-    // DISABLE CLEANUP
-    // ==================================================
+    // FIND EXPOSURE COMPONENT
+
+    private PlayerLightExposure FindExposure(Collider2D other)
+    {
+        if (other == null)
+            return null;
+
+        PlayerLightExposure exposure = other.GetComponentInParent<PlayerLightExposure>();
+
+        if (exposure != null)
+            return exposure;
+
+        if (other.attachedRigidbody != null)
+        {
+            exposure = other.attachedRigidbody.GetComponent<PlayerLightExposure>();
+
+            if (exposure != null)
+                return exposure;
+
+            exposure = other.attachedRigidbody.GetComponentInParent<PlayerLightExposure>();
+        }
+
+        return exposure;
+    }
+
+
+    // CHARACTER FILTER
+
+    private bool CanAffectCharacter(PlayerDeath deathTarget)
+    {
+        if (deathTarget == null) return true;
+
+        switch (deathTarget.CharacterRole)
+        {
+            case PartyCharacterRole.Wife:
+                return affectWife;
+
+            case PartyCharacterRole.Player1:
+            default:
+                return affectPlayer1;
+        }
+    }
+
+
+    // MISSING EXPOSURE WARNING
+
+    private void WarnIfCharacterIsMissingExposure(Collider2D other)
+    {
+        PlayerDeath deathTarget = FindDeathTarget(other);
+
+        if (deathTarget == null || !CanAffectCharacter(deathTarget) || warnedMissingExposure.Contains(deathTarget))
+            return;
+
+        warnedMissingExposure.Add(deathTarget);
+    }
+
+
+    private PlayerDeath FindDeathTarget(Collider2D other)
+    {
+        if (other == null)
+            return null;
+
+        PlayerDeath death = other.GetComponentInParent<PlayerDeath>();
+        if (death != null)
+            return death;
+
+        if (other.attachedRigidbody != null)
+        {
+            death = other.attachedRigidbody.GetComponent<PlayerDeath>();
+            if (death != null)
+                return death;
+
+            death = other.attachedRigidbody.GetComponentInParent<PlayerDeath>();
+        }
+
+        return death;
+    }
+
+
+    // DISABLE
 
     private void OnDisable()
     {
-        if (playerColliderCounts.Count == 0)
-            return;
-
-        List<PlayerLightExposure> players = new List<PlayerLightExposure>(playerColliderCounts.Keys);
-
-        foreach (PlayerLightExposure exposure in players)
+        if (exposureColliderCounts.Count > 0)
         {
-            if (exposure != null)
-                exposure.ExitDangerousLight(this);
+            List<PlayerLightExposure> characters = new List<PlayerLightExposure>(exposureColliderCounts.Keys);
+
+            foreach (PlayerLightExposure exposure in characters)
+                if (exposure != null) exposure.ExitDangerousLight(this);
+
+            exposureColliderCounts.Clear();
         }
 
-        playerColliderCounts.Clear();
+        warnedMissingExposure.Clear();
     }
 
 
-    // ==================================================
-    // COLLIDER SETUP
-    // ==================================================
+    // COLLIDER
 
     private void ConfigureCollider()
     {
@@ -132,9 +210,7 @@ public class DangerousLightZone : MonoBehaviour
     }
 
 
-    // ==================================================
-    // RESET
-    // ==================================================
+    // RESET / VALIDATE
 
     private void Reset()
     {
@@ -143,13 +219,10 @@ public class DangerousLightZone : MonoBehaviour
     }
 
 
-    // ==================================================
-    // VALIDATE
-    // ==================================================
-
     private void OnValidate()
     {
         exposureDuration = Mathf.Max(0.1f, exposureDuration);
+
         zoneCollider = GetComponent<Collider2D>();
         ConfigureCollider();
     }

@@ -1,0 +1,919 @@
+fileFormatVersion: 2
+guid: 5f6c3af09ea278040a1b72a8fd2328cc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1848982593716999814
+    second: collectble_live_locka_anim_0
+  - first:
+      213: -7323197116475993041
+    second: collectble_live_locka_anim_1
+  - first:
+      213: 2028785948945810031
+    second: collectble_live_locka_anim_2
+  - first:
+      213: -4258954506833639490
+    second: collectble_live_locka_anim_3
+  - first:
+      213: 6702910753511002349
+    second: collectble_live_locka_anim_4
+  - first:
+      213: -999322516953990028
+    second: collectble_live_locka_anim_5
+  - first:
+      213: -8568258113550085072
+    second: collectble_live_locka_anim_6
+  - first:
+      213: 3714526785364534520
+    second: collectble_live_locka_anim_7
+  - first:
+      213: -7915266353280567351
+    second: collectble_live_locka_anim_8
+  - first:
+      213: 2885384926791090360
+    second: collectble_live_locka_anim_9
+  - first:
+      213: -3968806393727915003
+    second: collectble_live_locka_anim_10
+  - first:
+      213: -808889808471577056
+    second: collectble_live_locka_anim_11
+  - first:
+      213: 6290159964189701050
+    second: collectble_live_locka_anim_12
+  - first:
+      213: -4925858473834499052
+    second: collectble_live_locka_anim_13
+  - first:
+      213: 1295399693558387417
+    second: collectble_live_locka_anim_14
+  - first:
+      213: -4068450445624979954
+    second: collectble_live_locka_anim_15
+  - first:
+      213: 4257274411990574912
+    second: collectble_live_locka_anim_16
+  - first:
+      213: -8532482312398257654
+    second: collectble_live_locka_anim_17
+  - first:
+      213: -7212512797030143373
+    second: collectble_live_locka_anim_18
+  - first:
+      213: 4697875469844406572
+    second: collectble_live_locka_anim_19
+  - first:
+      213: -8481612642499359071
+    second: collectble_live_locka_anim_20
+  - first:
+      213: 3899689145634639237
+    second: collectble_live_locka_anim_21
+  - first:
+      213: -5339600517803280396
+    second: collectble_live_locka_anim_22
+  - first:
+      213: -7322242758781832132
+    second: collectble_live_locka_anim_23
+  - first:
+      213: -8142275511756751218
+    second: collectble_live_locka_anim_24
+  - first:
+      213: -8485216344626763633
+    second: collectble_live_locka_anim_25
+  - first:
+      213: 4880880978021009719
+    second: collectble_live_locka_anim_26
+  - first:
+      213: -5849375301557577872
+    second: collectble_live_locka_anim_27
+  - first:
+      213: 3325093875730596283
+    second: collectble_live_locka_anim_28
+  - first:
+      213: -8863383427601592934
+    second: collectble_live_locka_anim_29
+  - first:
+      213: 3216182978734784344
+    second: collectble_live_locka_anim_30
+  - first:
+      213: 157192011204722579
+    second: collectble_live_locka_anim_31
+  - first:
+      213: 1313297809906242470
+    second: collectble_live_locka_anim_32
+  - first:
+      213: 5215244961237228940
+    second: collectble_live_locka_anim_33
+  - first:
+      213: -8748758777386618619
+    second: collectble_live_locka_anim_34
+  - first:
+      213: 7903501333915236621
+    second: collectble_live_locka_anim_35
+  - first:
+      213: 5848314035016273122
+    second: collectble_live_locka_anim_36
+  - first:
+      213: -8136612264783548189
+    second: collectble_live_locka_anim_37
+  - first:
+      213: -2345449990535105793
+    second: collectble_live_locka_anim_38
+  - first:
+      213: 1556585841842753610
+    second: collectble_live_locka_anim_39
+  - first:
+      213: -7493513665010783147
+    second: collectble_live_locka_anim_40
+  - first:
+      213: 1455786017296943513
+    second: collectble_live_locka_anim_41
+  - first:
+      213: -7190173649961187789
+    second: collectble_live_locka_anim_42
+  - first:
+      213: 5521815048970979221
+    second: collectble_live_locka_anim_43
+  - first:
+      213: 1518446627776682935
+    second: collectble_live_locka_anim_44
+  - first:
+      213: -9065799158892516902
+    second: collectble_live_locka_anim_45
+  - first:
+      213: -2111783849418405168
+    second: collectble_live_locka_anim_46
+  - first:
+      213: 666641144248389842
+    second: collectble_live_locka_anim_47
+  - first:
+      213: 7918646036069072933
+    second: collectble_live_locka_anim_48
+  - first:
+      213: 315616576927731952
+    second: collectble_live_locka_anim_49
+  - first:
+      213: -3558569387923668439
+    second: collectble_live_locka_anim_50
+  - first:
+      213: -7476577552705728305
+    second: collectble_live_locka_anim_51
+  - first:
+      213: 8835714069782200566
+    second: collectble_live_locka_anim_52
+  - first:
+      213: 1775030920087578087
+    second: collectble_live_locka_anim_53
+  - first:
+      213: 8735725869107338712
+    second: collectble_live_locka_anim_54
+  - first:
+      213: -3770364148352706869
+    second: collectble_live_locka_anim_55
+  - first:
+      213: -8240074242245394166
+    second: collectble_live_locka_anim_56
+  - first:
+      213: 4026301532160093418
+    second: collectble_live_locka_anim_57
+  - first:
+      213: -7696149554288001268
+    second: collectble_live_locka_anim_58
+  - first:
+      213: -7603354898954437371
+    second: collectble_live_locka_anim_59
+  - first:
+      213: 434835575154602932
+    second: collectble_live_locka_anim_60
+  - first:
+      213: -8324193121773035640
+    second: collectble_live_locka_anim_61
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 128
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 686d1666fd7e8a910800000000000000
+      internalID: 1848982593716999814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_1
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 512
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f249844c507ce5a90800000000000000
+      internalID: -7323197116475993041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 512
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6208345212b72c10800000000000000
+      internalID: 2028785948945810031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_3
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 512
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb7c1a1e07725e4c0800000000000000
+      internalID: -4258954506833639490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de05b2811d5850d50800000000000000
+      internalID: 6702910753511002349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47c78e82771b122f0800000000000000
+      internalID: -999322516953990028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_6
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 384
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0341dfd64ae671980800000000000000
+      internalID: -8568258113550085072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_7
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 384
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f4a35e4e66ac8330800000000000000
+      internalID: 3714526785364534520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_8
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 384
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c73c164033572290800000000000000
+      internalID: -7915266353280567351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_9
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 384
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b046a1bd42fa0820800000000000000
+      internalID: 2885384926791090360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 256
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50c6c8fcc97fbe8c0800000000000000
+      internalID: -3968806393727915003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_11
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 256
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02e2e9f310f36c4f0800000000000000
+      internalID: -808889808471577056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_12
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 256
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab339e529232b4750800000000000000
+      internalID: 6290159964189701050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_13
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 256
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4143f3df0d5d3abb0800000000000000
+      internalID: -4925858473834499052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_14
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d292b0782f2af110800000000000000
+      internalID: 1295399693558387417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0e4e3210e5f987c0800000000000000
+      internalID: -4068450445624979954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_16
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 047ee0e8580e41b30800000000000000
+      internalID: 4257274411990574912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_17
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a02c23d3b88869980800000000000000
+      internalID: -8532482312398257654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_18
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a2f0b13d108eb90800000000000000
+      internalID: -7212512797030143373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_19
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c21e81379d4323140800000000000000
+      internalID: 4697875469844406572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ae0d593d324b4a80800000000000000
+      internalID: -8481612642499359071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_21
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58dcff3dd9a7e1630800000000000000
+      internalID: 3899689145634639237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_22
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f7f7d59e9de5e5b0800000000000000
+      internalID: -5339600517803280396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_23
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c34f1ab710b226a90800000000000000
+      internalID: -7322242758781832132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: collectble_live_locka_anim_24
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8e706acf83d00f80800000000000000
+      internalID: -8142275511756751218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 555a0d7ff10d3cc499aadf583b745881
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":128.0,"y":128.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      collectble_live_locka_anim_0: 1848982593716999814
+      collectble_live_locka_anim_1: -7323197116475993041
+      collectble_live_locka_anim_10: -3968806393727915003
+      collectble_live_locka_anim_11: -808889808471577056
+      collectble_live_locka_anim_12: 6290159964189701050
+      collectble_live_locka_anim_13: -4925858473834499052
+      collectble_live_locka_anim_14: 1295399693558387417
+      collectble_live_locka_anim_15: -4068450445624979954
+      collectble_live_locka_anim_16: 4257274411990574912
+      collectble_live_locka_anim_17: -8532482312398257654
+      collectble_live_locka_anim_18: -7212512797030143373
+      collectble_live_locka_anim_19: 4697875469844406572
+      collectble_live_locka_anim_2: 2028785948945810031
+      collectble_live_locka_anim_20: -8481612642499359071
+      collectble_live_locka_anim_21: 3899689145634639237
+      collectble_live_locka_anim_22: -5339600517803280396
+      collectble_live_locka_anim_23: -7322242758781832132
+      collectble_live_locka_anim_24: -8142275511756751218
+      collectble_live_locka_anim_3: -4258954506833639490
+      collectble_live_locka_anim_4: 6702910753511002349
+      collectble_live_locka_anim_5: -999322516953990028
+      collectble_live_locka_anim_6: -8568258113550085072
+      collectble_live_locka_anim_7: 3714526785364534520
+      collectble_live_locka_anim_8: -7915266353280567351
+      collectble_live_locka_anim_9: 2885384926791090360
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

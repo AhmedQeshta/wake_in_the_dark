@@ -14,11 +14,12 @@ GameObject:
   - component: {fileID: 7314704575944345664}
   - component: {fileID: 343665632975359672}
   - component: {fileID: 8833538178225736561}
-  - component: {fileID: 7280110437066544009}
   - component: {fileID: 6790992965107109497}
   - component: {fileID: 8248812184403582645}
   - component: {fileID: 5042983488134794985}
   - component: {fileID: 7336675099815957090}
+  - component: {fileID: 8185892161551823810}
+  - component: {fileID: 7280110437066544009}
   m_Layer: 11
   m_Name: Wife
   m_TagString: wife
@@ -445,142 +446,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.20101762, y: -0.009218454}
   m_Size: {x: 0.2863946, y: 0.8898312}
   m_Direction: 0
---- !u!114 &7280110437066544009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 183975322745990365}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
-  m_ShadowGroup: 0
-  m_Priority: 0
-  m_ComponentVersion: 5
-  m_HasRenderer: 1
-  m_UseRendererSilhouette: 1
-  m_CastsShadows: 1
-  m_SelfShadows: 0
-  m_AlphaCutoff: 0.1
-  m_ApplyToSortingLayers: 0000000059730c3391ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd91825aa88d0d4403ab01f966af31b190594421da83a8c1832fadf3dc
-  m_ShapePath:
-  - {x: -0.36860085, y: -0.15099674, z: 0}
-  - {x: -0.37479353, y: -0.15244263, z: 0}
-  - {x: -0.35123587, y: -0.121185064, z: 0}
-  - {x: -0.34014797, y: -0.12508684, z: 0}
-  - {x: -0.31749249, y: -0.13302773, z: 0}
-  - {x: -0.3151021, y: -0.11408156, z: 0}
-  - {x: -0.33891964, y: -0.09930378, z: 0}
-  - {x: -0.31874466, y: -0.124507904, z: 0}
-  - {x: -0.31067705, y: -0.10869956, z: 0}
-  - {x: -0.29891872, y: -0.096487164, z: 0}
-  - {x: -0.24938345, y: -0.087902665, z: 0}
-  - {x: -0.18239355, y: -0.068371475, z: 0}
-  - {x: -0.08132887, y: -0.033879727, z: 0}
-  - {x: -0.060124874, y: -0.02060458, z: 0}
-  - {x: -0.02974844, y: -0.011498183, z: 0}
-  - {x: -0.013692856, y: 0.007828832, z: 0}
-  - {x: 0.00880003, y: 0.02223885, z: 0}
-  - {x: 0.030287743, y: 0.048377603, z: 0}
-  - {x: 0.05148697, y: 0.08651143, z: 0}
-  - {x: 0.08925009, y: 0.13833484, z: 0}
-  - {x: 0.041463852, y: 0.19818029, z: 0}
-  - {x: 0.07409477, y: 0.30304366, z: 0}
-  - {x: -0.0066957474, y: 0.3492766, z: 0}
-  - {x: 0.103666306, y: 0.40620667, z: 0}
-  - {x: 0.15551805, y: 0.43296838, z: 0}
-  - {x: 0.20667458, y: 0.43063167, z: 0}
-  - {x: 0.2768922, y: 0.41146076, z: 0}
-  - {x: 0.3227787, y: 0.3777723, z: 0}
-  - {x: 0.35288525, y: 0.32759404, z: 0}
-  - {x: 0.354558, y: 0.23225538, z: 0}
-  - {x: 0.37630224, y: 0.20382103, z: 0}
-  - {x: 0.37630177, y: 0.16702366, z: 0}
-  - {x: 0.33322096, y: 0.14260662, z: 0}
-  - {x: 0.34891176, y: 0.05102843, z: 0}
-  - {x: 0.37498522, y: -0.05680284, z: 0}
-  - {x: 0.41004753, y: -0.2055772, z: 0}
-  - {x: 0.4003706, y: -0.24943638, z: 0}
-  - {x: 0.4148407, y: -0.417565, z: 0}
-  - {x: 0.3588729, y: -0.44672602, z: 0}
-  - {x: 0.3531394, y: -0.39737517, z: 0}
-  - {x: 0.30835247, y: -0.39059848, z: 0}
-  - {x: 0.32719946, y: -0.44563282, z: 0}
-  - {x: 0.37145376, y: -0.49298358, z: 0}
-  - {x: 0.30772066, y: -0.4982729, z: 0}
-  - {x: 0.12064028, y: -0.49988252, z: 0}
-  - {x: 0.123134136, y: -0.42802858, z: 0}
-  - {x: 0.11883736, y: -0.39611053, z: 0}
-  - {x: 0.0804739, y: -0.39726144, z: 0}
-  - {x: 0.08200884, y: -0.46976775, z: 0}
-  - {x: 0.024348736, y: -0.43653905, z: 0}
-  - {x: -0.0028700829, y: -0.45872027, z: 0}
-  - {x: 0.00826931, y: -0.4079134, z: 0}
-  - {x: -0.009755135, y: -0.38588786, z: 0}
-  - {x: -0.015526772, y: -0.35895228, z: 0}
-  - {x: -0.06514883, y: -0.3405642, z: 0}
-  - {x: -0.116752625, y: -0.3526826, z: 0}
-  - {x: -0.16723871, y: -0.40823907, z: 0}
-  - {x: -0.18769455, y: -0.36191005, z: 0}
-  - {x: -0.14479256, y: -0.37338698, z: 0}
-  - {x: -0.15085125, y: -0.36326945, z: 0}
-  - {x: -0.1683011, y: -0.36056054, z: 0}
-  - {x: -0.17642832, y: -0.35821563, z: 0}
-  - {x: -0.15805864, y: -0.37586105, z: 0}
-  - {x: -0.17302036, y: -0.34960103, z: 0}
-  - {x: -0.1710968, y: -0.33356786, z: 0}
-  - {x: -0.2256093, y: -0.33485055, z: 0}
-  - {x: -0.22430944, y: -0.32400787, z: 0}
-  - {x: -0.21919632, y: -0.31048024, z: 0}
-  - {x: -0.22149706, y: -0.2973945, z: 0}
-  - {x: -0.2201891, y: -0.2728536, z: 0}
-  - {x: -0.17722082, y: -0.27955532, z: 0}
-  - {x: -0.18898916, y: -0.25071216, z: 0}
-  - {x: -0.19979525, y: -0.2704004, z: 0}
-  - {x: -0.20635319, y: -0.231422, z: 0}
-  - {x: -0.20941639, y: -0.26059878, z: 0}
-  - {x: -0.20227337, y: -0.29040414, z: 0}
-  - {x: -0.23897266, y: -0.26419026, z: 0}
-  - {x: -0.22735167, y: -0.24521089, z: 0}
-  - {x: -0.23691034, y: -0.25780833, z: 0}
-  - {x: -0.23258829, y: -0.21407121, z: 0}
-  - {x: -0.26372814, y: -0.2263043, z: 0}
-  - {x: -0.3162508, y: -0.24157143, z: 0}
-  - {x: -0.32884216, y: -0.37127465, z: 0}
-  - {x: -0.36974335, y: -0.30031073, z: 0}
-  - {x: -0.38379526, y: -0.1958195, z: 0}
-  - {x: -0.36350298, y: -0.13671815, z: 0}
-  - {x: -0.3533659, y: -0.12856525, z: 0}
-  - {x: -0.3277688, y: -0.113491535, z: 0}
-  m_ShapePathHash: -1955122055
-  m_InstanceId: 0
-  m_ShadowShape2DComponent: {fileID: 0}
-  m_ShadowShape2DProvider:
-    rid: -2
-  m_ShadowCastingSource: 1
-  m_ShadowMesh:
-    m_Mesh: {fileID: 0}
-    m_LocalBounds:
-      m_Center: {x: 0.015522718, y: -0.03345707, z: 0}
-      m_Extent: {x: 0.39931798, y: 0.46642545, z: 0}
-    m_EdgeProcessing: 1
-    m_TrimEdge: 0.05
-    m_FlipX: 0
-    m_FlipY: 0
-    m_InitialTrim: 0
-  m_CastingOption: 1
-  m_PreviousTrimEdge: 0.05
-  m_PreviousEdgeProcessing: 1
-  m_PreviousShadowCastingSource: 1
-  m_PreviousShadowShape2DSource: {fileID: 0}
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
 --- !u!95 &6790992965107109497
 Animator:
   serializedVersion: 7
@@ -617,8 +482,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 4.5
   climbSpeed: 4
-  jumpForce: 9
-  jumpCutMultiplier: 0.48
+  jumpForce: 10
+  jumpCutMultiplier: 0.23
   groundCheck: {fileID: 0}
   groundCheckRadius: 0.2
   groundLayer:
@@ -639,6 +504,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fda8032f26b63049b62bb35f961010c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDeath
+  characterRole: 1
+  autoDetectCharacterRoleFromTag: 1
+  mainPlayerTag: Player
+  wifeTag: wife
   maxLives: 3
   livesUI: {fileID: 0}
   respawnPointLayer:
@@ -675,10 +544,11 @@ MonoBehaviour:
     m_RotationOrder: 4
   deathParticlePrefab: {fileID: 9141915087904640090, guid: 632706273b3d1a84fab7f718875a1e2f, type: 3}
   playerMovement: {fileID: 8248812184403582645}
+  companionFollower: {fileID: 7336675099815957090}
   playerRigidbody: {fileID: 3568939854841670296}
   playerAnimator: {fileID: 6790992965107109497}
   playerColliders:
-  - {fileID: 0}
+  - {fileID: 7314704575944345664}
   playerRenderers:
   - {fileID: 1453599545991659465}
   UIManagerObj: {fileID: 0}
@@ -701,15 +571,15 @@ MonoBehaviour:
   startFollowingEnabled: 0
   activationDistance: 4
   moveSpeed: 4
-  followDistance: 1.6
-  stopDistance: 1.2
-  maxDistance: 7
+  followDistance: 0.4
+  stopDistance: 0.2
+  maxDistance: 5
   catchUpSpeed: 4.5
   followOnlyWhenPlayerMoves: 1
   catchUpWhenPlayerStops: 0
   playerMoveThreshold: 0.05
   mirrorPlayerJump: 1
-  jumpForce: 9
+  jumpForce: 10
   jumpCutMultiplier: 0.48
   jumpOnlyWhileFollowing: 1
   groundCheck: {fileID: 7649064034796994811}
@@ -730,6 +600,126 @@ MonoBehaviour:
   waypointMoveSpeed: 3.5
   waypointStopDistance: 0.1
   resumeFollowingAfterWaypoint: 0
+--- !u!114 &8185892161551823810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183975322745990365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75831331860a0b646a654f7f8c8bf4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightExposure
+  exposureDuration: 3
+  resetExposureOnExit: 1
+  useStoneTransformationAnimation: 1
+  stoneTriggerName: TurnToStone
+  idleStateName: idle
+  freezePhysicsDuringTransformation: 1
+  animationEventFallbackDelay: 1.25
+  playerMovement: {fileID: 8248812184403582645}
+  companionFollower: {fileID: 0}
+  playerDeath: {fileID: 5042983488134794985}
+  playerRigidbody: {fileID: 0}
+  playerAnimator: {fileID: 6790992965107109497}
+--- !u!114 &7280110437066544009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183975322745990365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
+  m_ShadowGroup: 0
+  m_Priority: 0
+  m_ComponentVersion: 5
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_AlphaCutoff: 0.1
+  m_ApplyToSortingLayers: 0000000059730c3391ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd91825aa88d0d4403ab01f966af31b190594421da83a8c1832fadf3dc
+  m_ShapePath:
+  - {x: -0.2663028, y: -0.05406594, z: 0}
+  - {x: -0.17997724, y: -0.046619333, z: 0}
+  - {x: -0.076495096, y: 0.007207637, z: 0}
+  - {x: -0.03354001, y: 0.015649244, z: 0}
+  - {x: 0.007250232, y: 0.04430769, z: 0}
+  - {x: 0.056319956, y: 0.091345556, z: 0}
+  - {x: 0.08925009, y: 0.13833484, z: 0}
+  - {x: 0.041463852, y: 0.19818029, z: 0}
+  - {x: 0.07409477, y: 0.30304366, z: 0}
+  - {x: -0.006696196, y: 0.36861208, z: 0}
+  - {x: 0.081913926, y: 0.4013729, z: 0}
+  - {x: 0.15551805, y: 0.43296838, z: 0}
+  - {x: 0.20667458, y: 0.43063167, z: 0}
+  - {x: 0.2768922, y: 0.41146076, z: 0}
+  - {x: 0.3227787, y: 0.3777723, z: 0}
+  - {x: 0.35288525, y: 0.32759404, z: 0}
+  - {x: 0.354558, y: 0.23225538, z: 0}
+  - {x: 0.37630224, y: 0.20382103, z: 0}
+  - {x: 0.37630177, y: 0.16702366, z: 0}
+  - {x: 0.33322096, y: 0.14260662, z: 0}
+  - {x: 0.34891176, y: 0.05102843, z: 0}
+  - {x: 0.37498522, y: -0.05680284, z: 0}
+  - {x: 0.41004753, y: -0.2055772, z: 0}
+  - {x: 0.4003706, y: -0.24943638, z: 0}
+  - {x: 0.4148407, y: -0.417565, z: 0}
+  - {x: 0.3588729, y: -0.44672602, z: 0}
+  - {x: 0.3531394, y: -0.39737517, z: 0}
+  - {x: 0.30835247, y: -0.39059848, z: 0}
+  - {x: 0.32719946, y: -0.44563282, z: 0}
+  - {x: 0.37145376, y: -0.49298358, z: 0}
+  - {x: 0.30772066, y: -0.4982729, z: 0}
+  - {x: 0.12064028, y: -0.49988252, z: 0}
+  - {x: 0.123134136, y: -0.42802858, z: 0}
+  - {x: 0.11883736, y: -0.39611053, z: 0}
+  - {x: 0.0804739, y: -0.39726144, z: 0}
+  - {x: 0.08200884, y: -0.46976775, z: 0}
+  - {x: 0.024348736, y: -0.43653905, z: 0}
+  - {x: -0.0028700829, y: -0.45872027, z: 0}
+  - {x: 0.00826931, y: -0.4079134, z: 0}
+  - {x: -0.009755135, y: -0.38588786, z: 0}
+  - {x: -0.015526772, y: -0.35895228, z: 0}
+  - {x: -0.16182564, y: -0.36715034, z: 0}
+  - {x: -0.24894167, y: -0.279558, z: 0}
+  - {x: -0.3162508, y: -0.24157143, z: 0}
+  - {x: -0.32884216, y: -0.37127465, z: 0}
+  - {x: -0.4132481, y: -0.30997837, z: 0}
+  - {x: -0.39829713, y: -0.19581957, z: 0}
+  - {x: -0.33353418, y: -0.105540514, z: 0}
+  m_ShapePathHash: -1955122055
+  m_InstanceId: 0
+  m_ShadowShape2DComponent: {fileID: 0}
+  m_ShadowShape2DProvider:
+    rid: -2
+  m_ShadowCastingSource: 1
+  m_ShadowMesh:
+    m_Mesh: {fileID: 0}
+    m_LocalBounds:
+      m_Center: {x: 0.00079628825, y: -0.03345707, z: 0}
+      m_Extent: {x: 0.41404438, y: 0.46642545, z: 0}
+    m_EdgeProcessing: 1
+    m_TrimEdge: 0.04
+    m_FlipX: 0
+    m_FlipY: 0
+    m_InitialTrim: 0
+  m_CastingOption: 1
+  m_PreviousTrimEdge: 0.04
+  m_PreviousEdgeProcessing: 1
+  m_PreviousShadowCastingSource: 1
+  m_PreviousShadowShape2DSource: {fileID: 1453599545991659465}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &5965561043746784222
 GameObject:
   m_ObjectHideFlags: 0

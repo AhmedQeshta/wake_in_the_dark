@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -5,21 +7,15 @@ using UnityEngine.Video;
 
 public class LevelVideoIntroManager : MonoBehaviour
 {
-    // ==================================================
     // INSTANCE
-    // ==================================================
     public static LevelVideoIntroManager Instance { get; private set; }
 
-    // ==================================================
     // INTERNAL MODES
-    // ==================================================
     private enum PendingLoadMode { None, AlreadyLoadedLevel, NormalLevelLoad, LevelMenuLoad }
     private enum VideoFlowMode { None, LevelIntro, GameEnding }
 
 
-    // ==================================================
     // LEVEL VIDEOS
-    // ==================================================
 
     [Header("Level Videos")]
     [SerializeField]
@@ -36,9 +32,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     };
 
 
-    // ==================================================
     // GAME ENDING
-    // ==================================================
 
     [Header("Game Ending")]
     [Tooltip("Video shown AFTER the player finishes Level_Final.")]
@@ -54,9 +48,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private bool resetIntroVideoHistoryAfterEnding = true;
 
 
-    // ==================================================
     // UI
-    // ==================================================
 
     [Header("UI")]
 
@@ -82,9 +74,36 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private Button continueEndButton;
 
 
-    // ==================================================
+    // BUTTON TIMING
+    [Header("Button Timing")]
+
+    [Tooltip("Delay before Skip_btn becomes visible after the video actually starts playing.")]
+    [SerializeField, Min(0f)] private float skipAppearDelay = 2f;
+
+
+    [Tooltip("Countdown after Continue_btn appears. At 0, the button's normal OnClick is invoked automatically.")]
+    [SerializeField, Min(0f)] private float continueCountdownDuration = 5f;
+
+
+    [Tooltip("Countdown after Continue_End_btn appears. At 0, the button's normal OnClick is invoked automatically.")]
+    [SerializeField, Min(0f)] private float continueEndCountdownDuration = 5f;
+
+
+    [Tooltip("If enabled, reaching 0 automatically invokes the same Button.onClick as a manual click.")]
+    [SerializeField] private bool autoContinueWhenCountdownEnds = true;
+
+
+    [Header("Countdown Text")]
+
+    [Tooltip("TMP text placed behind/under Continue_btn. Displays 5, 4, 3, 2, 1, 0.")]
+    [SerializeField] private TMP_Text continueCountdownText;
+
+
+    [Tooltip("TMP text placed behind/under Continue_End_btn. Displays 5, 4, 3, 2, 1, 0.")]
+    [SerializeField] private TMP_Text continueEndCountdownText;
+
+
     // VIDEO PLAYER
-    // ==================================================
 
     [Header("Video Player")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -93,18 +112,14 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private AudioSource videoAudioSource;
 
 
-    // ==================================================
     // VIDEO AUDIO
-    // ==================================================
 
     [Header("Video Audio")]
     [SerializeField, Range(0f, 1f)] private float videoVolume = 1f;
     private const string VideoVolumeKey = "Settings.LevelIntroVideoVolume";
 
 
-    // ==================================================
     // LEVEL 1
-    // ==================================================
 
     [Header("Initial Already-Loaded Level")]
 
@@ -116,9 +131,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private UnityEvent onAlreadyLoadedLevelReady;
 
 
-    // ==================================================
     // REPLAY / SAVE
-    // ==================================================
 
     [Header("Replay")]
 
@@ -129,9 +142,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private string watchedKeyPrefix = "WakeInTheDark.LevelIntroVideoSeen.";
 
 
-    // ==================================================
     // OPTIONS
-    // ==================================================
 
     [Header("Options")]
 
@@ -144,15 +155,11 @@ public class LevelVideoIntroManager : MonoBehaviour
 
     [SerializeField] private bool debugLogs = true;
 
-    // ==================================================
     // REFERENCES
-    // ==================================================
     [Header("References")]
     [SerializeField] private LevelLoader levelLoader;
 
-    // ==================================================
     // STATE
-    // ==================================================
 
     private PendingLoadMode pendingLoadMode = PendingLoadMode.None;
     private VideoFlowMode videoFlowMode = VideoFlowMode.None;
@@ -161,6 +168,8 @@ public class LevelVideoIntroManager : MonoBehaviour
     private bool videoFinished;
     private PlayerMovement disabledPlayer;
     private bool disabledPlayerHadControls;
+    private Coroutine skipAppearRoutine;
+    private Coroutine continueCountdownRoutine;
 
     /*
      * True while an old level must remain silent during video playback and the following additive scene load.
@@ -168,9 +177,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     private bool keepWorldAudioMutedDuringLevelLoad;
 
 
-    // ==================================================
     // PUBLIC STATE
-    // ==================================================
 
     public bool IsBusy => isBusy;
     public string PendingSceneName => pendingSceneName;
@@ -179,9 +186,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     public bool KeepWorldAudioMutedDuringLevelLoad => keepWorldAudioMutedDuringLevelLoad;
 
 
-    // ==================================================
     // AWAKE
-    // ==================================================
 
     private void Awake()
     {
@@ -200,12 +205,11 @@ public class LevelVideoIntroManager : MonoBehaviour
 
         ConfigureVideoPlayer();
         ConfigureButtons();
+        ConfigureCountdownTexts();
         HideVideoMenuImmediate();
     }
 
-    // ==================================================
     // EVENTS
-    // ==================================================
     private void OnEnable()
     {
         SubscribeVideoEvents();
@@ -215,11 +219,10 @@ public class LevelVideoIntroManager : MonoBehaviour
     private void OnDisable()
     {
         UnsubscribeVideoEvents();
+        StopButtonTimers();
     }
 
-    // ==================================================
     // TRANSITION AUDIO ISOLATION
-    // ==================================================
     private void BeginTransitionAudioIsolation()
     {
         keepWorldAudioMutedDuringLevelLoad = true;
@@ -301,9 +304,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // BUTTONS
-    // ==================================================
 
     private void ConfigureButtons()
     {
@@ -327,9 +328,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // LEVEL 1
-    // ==================================================
 
     public void RequestInitialLoadedLevel()
     {
@@ -337,9 +336,37 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
+    // START MENU / CONTINUE GAME
+    /*
+     * Used by UIManager's "Start Game" button.
+     *
+     * If the saved continue level is already loaded behind the menu,
+     * use AlreadyLoadedLevel so the scene is not reloaded.
+     *
+     * If the saved continue level is a later level, play its intro
+     * video first (when applicable), then let LevelLoader replace the
+     * currently loaded level safely.
+     */
+    public void RequestStartLevel(string sceneName)
+    {
+        if (isBusy || string.IsNullOrWhiteSpace(sceneName))
+            return;
+
+
+        ResolveLevelLoader();
+
+
+        bool targetIsAlreadyLoaded = levelLoader != null && !string.IsNullOrWhiteSpace(levelLoader.CurrentLevelSceneName) && string.Equals(levelLoader.CurrentLevelSceneName, sceneName, System.StringComparison.OrdinalIgnoreCase);
+
+
+        PendingLoadMode mode = targetIsAlreadyLoaded ? PendingLoadMode.AlreadyLoadedLevel : PendingLoadMode.NormalLevelLoad;
+
+
+        RequestLevelVideo(sceneName, mode);
+    }
+
+
     // NORMAL LEVEL REQUEST
-    // ==================================================
 
     public void RequestLevel(string sceneName)
     {
@@ -347,9 +374,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // LEVEL MENU REQUEST
-    // ==================================================
 
     public void RequestLevelFromMenu(string sceneName)
     {
@@ -357,9 +382,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // LEVEL VIDEO REQUEST
-    // ==================================================
 
     private void RequestLevelVideo(string sceneName, PendingLoadMode loadMode)
     {
@@ -412,9 +435,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // GAME ENDING
-    // ==================================================
 
     public void PlayGameEnding()
     {
@@ -446,9 +467,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // START VIDEO FLOW
-    // ==================================================
 
     private void StartVideoFlow(VideoClip clip)
     {
@@ -485,9 +504,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VIDEO PREPARED
-    // ==================================================
 
     private void HandleVideoPrepared(VideoPlayer source)
     {
@@ -495,12 +512,16 @@ public class LevelVideoIntroManager : MonoBehaviour
             return;
 
         source.Play();
+
+        /*
+         * Skip timing begins when the actual video starts,
+         * not while VideoPlayer is still preparing.
+         */
+        StartSkipAppearTimer();
     }
 
 
-    // ==================================================
     // VIDEO FINISHED
-    // ==================================================
 
     private void HandleVideoFinished(VideoPlayer source)
     {
@@ -517,9 +538,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VIDEO ERROR
-    // ==================================================
 
     private void HandleVideoError(VideoPlayer source, string message)
     {
@@ -534,14 +553,14 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // SKIP
-    // ==================================================
 
     public void SkipVideo()
     {
         if (!isBusy)
             return;
+
+        StopSkipAppearTimer();
 
         if (videoPlayer != null)
             videoPlayer.Stop();
@@ -557,22 +576,25 @@ public class LevelVideoIntroManager : MonoBehaviour
             ShowFinishedButton();
             return;
         }
+
         // ----------------------------------------------
         // LEVEL INTRO:
         // Skip -> enter level immediately.
         // ----------------------------------------------
+
         CompleteLevelIntroRequest();
     }
 
 
-    // ==================================================
     // CONTINUE BUTTON
-    // ==================================================
 
     public void ContinueToLevel()
     {
         if (!isBusy || !videoFinished || videoFlowMode != VideoFlowMode.LevelIntro)
             return;
+
+        StopContinueCountdown();
+
         CompleteLevelIntroRequest();
     }
 
@@ -581,13 +603,14 @@ public class LevelVideoIntroManager : MonoBehaviour
     {
         if (!isBusy || !videoFinished || videoFlowMode != VideoFlowMode.GameEnding)
             return;
+
+        StopContinueCountdown();
+
         CompleteGameEnding();
     }
 
 
-    // ==================================================
     // COMPLETE LEVEL INTRO
-    // ==================================================
 
     private void CompleteLevelIntroRequest()
     {
@@ -678,9 +701,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // COMPLETE GAME ENDING
-    // ==================================================
 
     private void CompleteGameEnding()
     {
@@ -727,9 +748,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // PLAYER CONTROL
-    // ==================================================
 
     private void DisableCurrentPlayerControls()
     {
@@ -764,9 +783,7 @@ public class LevelVideoIntroManager : MonoBehaviour
         disabledPlayerHadControls = false;
     }
 
-    // ==================================================
     // VIDEO LOOKUP
-    // ==================================================
     private LevelVideoEntry FindEntry(string sceneName)
     {
         if (levelVideos == null)
@@ -785,9 +802,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // WATCHED SAVE
-    // ==================================================
 
     public bool HasSeenVideo(string sceneName)
     {
@@ -849,9 +864,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VIDEO AUDIO
-    // ==================================================
 
     public void SetVideoVolume(float value)
     {
@@ -882,9 +895,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // UI
-    // ==================================================
 
     private void ShowVideoMenu()
     {
@@ -914,12 +925,18 @@ public class LevelVideoIntroManager : MonoBehaviour
 
     private void SetPlayingButtonState()
     {
-        bool showSkip = videoFlowMode != VideoFlowMode.GameEnding || allowEndingSkip;
+        StopButtonTimers();
+        HideCountdownTexts();
 
+        /*
+         * Skip starts hidden.
+         * HandleVideoPrepared() starts the 2-second (configurable)
+         * reveal timer when the video actually begins playing.
+         */
         if (skipButton != null)
         {
-            skipButton.gameObject.SetActive(showSkip);
-            skipButton.interactable = showSkip;
+            skipButton.gameObject.SetActive(false);
+            skipButton.interactable = false;
         }
 
         if (continueButton != null)
@@ -932,8 +949,13 @@ public class LevelVideoIntroManager : MonoBehaviour
 
     private void ShowFinishedButton()
     {
+        StopSkipAppearTimer();
+
         if (skipButton != null)
+        {
             skipButton.gameObject.SetActive(false);
+            skipButton.interactable = false;
+        }
 
         bool isEnding = videoFlowMode == VideoFlowMode.GameEnding;
 
@@ -948,6 +970,246 @@ public class LevelVideoIntroManager : MonoBehaviour
             continueEndButton.gameObject.SetActive(isEnding);
             continueEndButton.interactable = isEnding;
         }
+
+        /*
+         * Start the countdown only AFTER the correct Continue button appears.
+         * The player can still click the button early.
+         */
+        StartContinueCountdown(isEnding);
+    }
+
+
+    // SKIP APPEAR TIMER
+
+    private void StartSkipAppearTimer()
+    {
+        StopSkipAppearTimer();
+
+        bool skipAllowed = videoFlowMode != VideoFlowMode.GameEnding || allowEndingSkip;
+
+        if (!skipAllowed || !isBusy || videoFinished || skipButton == null)
+            return;
+
+        if (skipAppearDelay <= 0f)
+        {
+            ShowSkipButtonNow();
+            return;
+        }
+
+        skipAppearRoutine = StartCoroutine(SkipAppearRoutine());
+    }
+
+
+    private IEnumerator SkipAppearRoutine()
+    {
+        float remaining = skipAppearDelay;
+
+        while (remaining > 0f)
+        {
+            if (!isBusy || videoFinished)
+            {
+                skipAppearRoutine = null;
+                yield break;
+            }
+
+            remaining -= Time.unscaledDeltaTime;
+
+            yield return null;
+        }
+
+        skipAppearRoutine = null;
+
+        if (!isBusy || videoFinished)
+            yield break;
+
+        ShowSkipButtonNow();
+    }
+
+
+    private void ShowSkipButtonNow()
+    {
+        bool skipAllowed = videoFlowMode != VideoFlowMode.GameEnding || allowEndingSkip;
+
+        if (skipButton == null || !skipAllowed || !isBusy || videoFinished)
+            return;
+
+        skipButton.gameObject.SetActive(true);
+        skipButton.interactable = true;
+    }
+
+
+    private void StopSkipAppearTimer()
+    {
+        if (skipAppearRoutine == null)
+            return;
+
+        StopCoroutine(skipAppearRoutine);
+        skipAppearRoutine = null;
+    }
+
+
+    // CONTINUE COUNTDOWN
+
+    private void StartContinueCountdown(bool isEnding)
+    {
+        StopContinueCountdown();
+        HideCountdownTexts();
+
+        Button targetButton = isEnding ? continueEndButton : continueButton;
+        TMP_Text targetText = isEnding ? continueEndCountdownText : continueCountdownText;
+        float duration = isEnding ? continueEndCountdownDuration : continueCountdownDuration;
+
+        if (targetButton == null)
+            return;
+
+        if (duration <= 0f)
+        {
+            SetCountdownText(targetText, 0, true);
+
+            if (autoContinueWhenCountdownEnds)
+                targetButton.onClick.Invoke();
+
+            return;
+        }
+
+        continueCountdownRoutine = StartCoroutine(ContinueCountdownRoutine(targetButton, targetText, duration, isEnding));
+    }
+
+
+    private IEnumerator ContinueCountdownRoutine(Button targetButton, TMP_Text targetText, float duration, bool isEnding)
+    {
+        float remaining = Mathf.Max(0f, duration);
+
+        SetCountdownText(targetText, Mathf.CeilToInt(remaining), true);
+
+        while (remaining > 0f)
+        {
+            if (!IsCountdownStillValid(targetButton, isEnding))
+            {
+                SetCountdownText(targetText, 0, false);
+
+                continueCountdownRoutine = null;
+
+                yield break;
+            }
+
+            yield return null;
+
+            remaining -= Time.unscaledDeltaTime;
+
+            int displaySeconds = Mathf.Max(0, Mathf.CeilToInt(remaining));
+
+            SetCountdownText(targetText, displaySeconds, true);
+        }
+
+        /*
+         * Let 0 render for one frame before auto-continuing.
+         */
+        SetCountdownText(targetText, 0, true);
+
+        yield return null;
+
+        if (!IsCountdownStillValid(targetButton, isEnding))
+        {
+            SetCountdownText(targetText, 0, false);
+            continueCountdownRoutine = null;
+
+            yield break;
+        }
+
+        /*
+         * Clear the coroutine reference BEFORE invoking the Button.
+         * ContinueToLevel / ContinueAfterGameEnding can safely call
+         * StopContinueCountdown() without trying to stop this coroutine itself.
+         */
+        continueCountdownRoutine = null;
+
+        SetCountdownText(targetText, 0, false);
+
+        if (autoContinueWhenCountdownEnds)
+        {
+            /*
+             * This is intentionally Button.onClick.Invoke().
+             * It performs the exact same action as a real button click,
+             * including LevelVideoIntroManager's runtime listener and
+             * any additional Button OnClick events you add later.
+             */
+            targetButton.onClick.Invoke();
+        }
+    }
+
+
+    private bool IsCountdownStillValid(Button targetButton, bool isEnding)
+    {
+        if (!isBusy || !videoFinished || targetButton == null || !targetButton.gameObject.activeInHierarchy)
+            return false;
+
+        if (isEnding)
+            return videoFlowMode == VideoFlowMode.GameEnding;
+
+        return
+            videoFlowMode == VideoFlowMode.LevelIntro;
+    }
+
+
+    private void StopContinueCountdown()
+    {
+        if (continueCountdownRoutine != null)
+        {
+            StopCoroutine(continueCountdownRoutine);
+
+            continueCountdownRoutine = null;
+        }
+
+        HideCountdownTexts();
+    }
+
+
+    private void StopButtonTimers()
+    {
+        StopSkipAppearTimer();
+        StopContinueCountdown();
+    }
+
+
+    // COUNTDOWN TEXT
+
+    private void ConfigureCountdownTexts()
+    {
+        if (continueCountdownText != null)
+        {
+            continueCountdownText.raycastTarget = false;
+
+            continueCountdownText.gameObject.SetActive(false);
+        }
+
+        if (continueEndCountdownText != null)
+        {
+            continueEndCountdownText.raycastTarget = false;
+
+            continueEndCountdownText.gameObject.SetActive(false);
+        }
+    }
+
+
+    private void HideCountdownTexts()
+    {
+        if (continueCountdownText != null)
+            continueCountdownText.gameObject.SetActive(false);
+
+        if (continueEndCountdownText != null)
+            continueEndCountdownText.gameObject.SetActive(false);
+    }
+
+
+    private void SetCountdownText(TMP_Text textComponent, int seconds, bool visible)
+    {
+        if (textComponent == null)
+            return;
+
+        textComponent.raycastTarget = false;
+        textComponent.text = Mathf.Max(0, seconds).ToString();
+        textComponent.gameObject.SetActive(visible);
     }
 
 
@@ -962,6 +1224,9 @@ public class LevelVideoIntroManager : MonoBehaviour
 
     private void HideVideoMenuImmediate()
     {
+        StopButtonTimers();
+        HideCountdownTexts();
+
         if (skipButton != null)
             skipButton.gameObject.SetActive(false);
 
@@ -995,9 +1260,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // LEVEL LOADER
-    // ==================================================
 
     private void ResolveLevelLoader()
     {
@@ -1011,9 +1274,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VIDEO PLAYER CONFIG
-    // ==================================================
 
     private void ConfigureVideoPlayer()
     {
@@ -1039,9 +1300,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CLEAR REQUEST
-    // ==================================================
 
     private void ClearRequest()
     {
@@ -1059,13 +1318,15 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VALIDATE
-    // ==================================================
 
     private void OnValidate()
     {
         videoVolume = Mathf.Clamp01(videoVolume);
+
+        skipAppearDelay = Mathf.Max(0f, skipAppearDelay);
+        continueCountdownDuration = Mathf.Max(0f, continueCountdownDuration);
+        continueEndCountdownDuration = Mathf.Max(0f, continueEndCountdownDuration);
 
         if (string.IsNullOrWhiteSpace(initialLoadedSceneName))
             initialLoadedSceneName = "Level_01";
@@ -1076,12 +1337,12 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CLEANUP
-    // ==================================================
 
     private void OnDestroy()
     {
+        StopButtonTimers();
+
         if (skipButton != null)
             skipButton.onClick.RemoveListener(SkipVideo);
 

@@ -137,6 +137,52 @@ public class LevelProgressManager : MonoBehaviour
 
 
     // ==================================================
+    // CONTINUE LEVEL
+    // ==================================================
+
+    /*
+     * highestUnlockedLevelIndex is also the correct "Continue" level.
+     *
+     * Example:
+     * New game                  -> index 0 -> Level_01
+     * Finish Level_01           -> index 1 -> Level_02
+     * Finish Level_02           -> index 2 -> Level_03
+     * Finish Level_03           -> index 3 -> Level_04
+     *
+     * Because CompleteLevelAndUnlockNext() saves the NEXT unlocked
+     * level immediately, this survives closing and reopening the game.
+     */
+    public string ContinueLevelSceneName =>
+        GetContinueLevelSceneName();
+
+
+    public string GetContinueLevelSceneName()
+    {
+        return
+            GetLevelSceneName(
+                highestUnlockedLevelIndex
+            );
+    }
+
+
+    public string GetLevelSceneName(
+        int levelIndex)
+    {
+        if (!IsValidLevelIndex(
+                levelIndex))
+        {
+            return null;
+        }
+
+
+        return
+            levelSceneNames[
+                levelIndex
+            ];
+    }
+
+
+    // ==================================================
     // COMPLETE LEVEL
     // ==================================================
 

@@ -18,8 +18,8 @@ GameObject:
   - component: {fileID: 1401224878516418264}
   - component: {fileID: 6163549835358402812}
   - component: {fileID: 8294564211951165626}
-  - component: {fileID: 6020596757241972175}
   - component: {fileID: 8188498520775472835}
+  - component: {fileID: 6020596757241972175}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -89,11 +89,11 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -588010193
-  m_SortingLayer: 14
+  m_SortingLayer: 15
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: e31fc23bf6943754bbc928f2415db30d, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.92219096, b: 0.8443396, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -697,6 +697,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fda8032f26b63049b62bb35f961010c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDeath
+  characterRole: 0
+  autoDetectCharacterRoleFromTag: 1
+  mainPlayerTag: Player
+  wifeTag: wife
   maxLives: 3
   livesUI: {fileID: 0}
   respawnPointLayer:
@@ -733,13 +737,38 @@ MonoBehaviour:
     m_RotationOrder: 4
   deathParticlePrefab: {fileID: 9141915087904640090, guid: 632706273b3d1a84fab7f718875a1e2f, type: 3}
   playerMovement: {fileID: 6163549835358402812}
+  companionFollower: {fileID: 0}
   playerRigidbody: {fileID: 5421154199165526628}
   playerAnimator: {fileID: 8013107175085263912}
   playerColliders:
   - {fileID: 0}
   playerRenderers:
   - {fileID: 8588449367700071739}
-  uiManager: {fileID: 0}
+  UIManagerObj: {fileID: 0}
+--- !u!114 &8188498520775472835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7365514453692275947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75831331860a0b646a654f7f8c8bf4ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightExposure
+  exposureDuration: 3
+  resetExposureOnExit: 1
+  useStoneTransformationAnimation: 1
+  stoneTriggerName: TurnToStone
+  idleStateName: idle
+  freezePhysicsDuringTransformation: 1
+  animationEventFallbackDelay: 0.5
+  playerMovement: {fileID: 6163549835358402812}
+  companionFollower: {fileID: 0}
+  playerDeath: {fileID: 8294564211951165626}
+  playerRigidbody: {fileID: 0}
+  playerAnimator: {fileID: 8013107175085263912}
 --- !u!114 &6020596757241972175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,31 +791,16 @@ MonoBehaviour:
   m_AlphaCutoff: 0.1
   m_ApplyToSortingLayers: 00000000cff22af591ce2ef3d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd8d0d44032fadf3dcb75487ebaf31b190594421da83a8c1830b3dc963
   m_ShapePath:
-  - {x: -0.42821693, y: -0.27469236, z: 0}
-  - {x: -0.42944336, y: -0.18251991, z: 0}
-  - {x: -0.40470982, y: -0.1360259, z: 0}
-  - {x: -0.3535223, y: -0.08388615, z: 0}
-  - {x: -0.3349905, y: -0.07164198, z: 0}
-  - {x: -0.32011223, y: -0.06801131, z: 0}
-  - {x: -0.3069582, y: -0.06409237, z: 0}
-  - {x: -0.2931862, y: -0.05984199, z: 0}
-  - {x: -0.28662872, y: -0.05548078, z: 0}
-  - {x: -0.2721777, y: -0.056875795, z: 0}
-  - {x: -0.23035812, y: -0.05007848, z: 0}
-  - {x: -0.13623142, y: -0.028940648, z: 0}
-  - {x: -0.10962868, y: -0.018905222, z: 0}
-  - {x: -0.09402084, y: -0.010860205, z: 0}
-  - {x: -0.07717228, y: 0.00074642897, z: 0}
-  - {x: -0.055318832, y: 0.019275904, z: 0}
-  - {x: -0.033293724, y: 0.051073045, z: 0}
-  - {x: -0.017445564, y: 0.07348648, z: 0}
-  - {x: -0.011014938, y: 0.11168599, z: 0}
-  - {x: 0.0006313324, y: 0.14477986, z: 0}
+  - {x: -0.23623466, y: -0.08366073, z: 0}
+  - {x: -0.20283604, y: -0.07811068, z: 0}
+  - {x: -0.14100552, y: -0.038969565, z: 0}
+  - {x: -0.071190834, y: 0.0035191793, z: 0}
+  - {x: -0.010890961, y: 0.068966374, z: 0}
   - {x: 0.010987282, y: 0.19415113, z: 0}
   - {x: 0.06432629, y: 0.24137884, z: 0}
   - {x: 0.06084919, y: 0.28727725, z: 0}
-  - {x: 0.0868969, y: 0.3569937, z: 0}
-  - {x: 0.029438019, y: 0.38304162, z: 0}
+  - {x: 0.08460331, y: 0.3468002, z: 0}
+  - {x: 0.038612366, y: 0.40088025, z: 0}
   - {x: 0.09302521, y: 0.42058128, z: 0}
   - {x: 0.14052486, y: 0.4374358, z: 0}
   - {x: 0.18445683, y: 0.44057184, z: 0}
@@ -830,39 +844,17 @@ MonoBehaviour:
   - {x: 0.024010658, y: -0.42688745, z: 0}
   - {x: 0.025026321, y: -0.4465328, z: 0}
   - {x: 0.0005264282, y: -0.44902784, z: 0}
-  - {x: -0.014850616, y: -0.42851043, z: 0}
-  - {x: -0.025061607, y: -0.42221248, z: 0}
-  - {x: -0.05067253, y: -0.3980556, z: 0}
-  - {x: -0.056257248, y: -0.38441235, z: 0}
-  - {x: -0.055381775, y: -0.368424, z: 0}
-  - {x: -0.05872059, y: -0.36556494, z: 0}
-  - {x: -0.06085205, y: -0.36654615, z: 0}
-  - {x: -0.061353683, y: -0.36326534, z: 0}
-  - {x: -0.063183784, y: -0.35953087, z: 0}
-  - {x: -0.066547394, y: -0.35313946, z: 0}
-  - {x: -0.074131966, y: -0.3464393, z: 0}
-  - {x: -0.08457565, y: -0.34067798, z: 0}
-  - {x: -0.09726524, y: -0.34452856, z: 0}
-  - {x: -0.12082577, y: -0.33875668, z: 0}
-  - {x: -0.13455963, y: -0.35345882, z: 0}
-  - {x: -0.16487217, y: -0.35779077, z: 0}
-  - {x: -0.19180775, y: -0.36099738, z: 0}
-  - {x: -0.19308949, y: -0.35137767, z: 0}
-  - {x: -0.20546722, y: -0.3511355, z: 0}
-  - {x: -0.22967815, y: -0.34465444, z: 0}
-  - {x: -0.2277689, y: -0.3439244, z: 0}
-  - {x: -0.23863506, y: -0.33690125, z: 0}
-  - {x: -0.2332573, y: -0.3375991, z: 0}
-  - {x: -0.25499153, y: -0.31279135, z: 0}
-  - {x: -0.266613, y: -0.2628404, z: 0}
-  - {x: -0.28813076, y: -0.23636317, z: 0}
-  - {x: -0.31990623, y: -0.2264548, z: 0}
-  - {x: -0.34370422, y: -0.23177642, z: 0}
-  - {x: -0.3554201, y: -0.25744975, z: 0}
-  - {x: -0.36625195, y: -0.28433132, z: 0}
-  - {x: -0.37757874, y: -0.34906298, z: 0}
-  - {x: -0.3968935, y: -0.34346092, z: 0}
-  - {x: -0.4029541, y: -0.32595825, z: 0}
+  - {x: -0.0596323, y: -0.36143416, z: 0}
+  - {x: -0.116971016, y: -0.3334019, z: 0}
+  - {x: -0.17430878, y: -0.29262787, z: 0}
+  - {x: -0.24999714, y: -0.33849874, z: 0}
+  - {x: -0.30045414, y: -0.22127323, z: 0}
+  - {x: -0.3486185, y: -0.24420863, z: 0}
+  - {x: -0.3761406, y: -0.353789, z: 0}
+  - {x: -0.41513062, y: -0.3283052, z: 0}
+  - {x: -0.42659855, y: -0.16520889, z: 0}
+  - {x: -0.37155342, y: -0.11169293, z: 0}
+  - {x: -0.29816055, y: -0.08366073, z: 0}
   m_ShapePathHash: 1310782715
   m_InstanceId: 0
   m_ShadowShape2DComponent: {fileID: 0}
@@ -872,15 +864,15 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -0.029764652, y: -0.029619664, z: 0}
-      m_Extent: {x: 0.3996787, y: 0.4701915, z: 0}
+      m_Center: {x: -0.028342247, y: -0.029619664, z: 0}
+      m_Extent: {x: 0.3982563, y: 0.4701915, z: 0}
     m_EdgeProcessing: 1
-    m_TrimEdge: 0.05
+    m_TrimEdge: 0.12
     m_FlipX: 0
     m_FlipY: 0
     m_InitialTrim: 0
   m_CastingOption: 1
-  m_PreviousTrimEdge: 0.05
+  m_PreviousTrimEdge: 0.12
   m_PreviousEdgeProcessing: 1
   m_PreviousShadowCastingSource: 1
   m_PreviousShadowShape2DSource: {fileID: 8588449367700071739}
@@ -889,25 +881,6 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
---- !u!114 &8188498520775472835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7365514453692275947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75831331860a0b646a654f7f8c8bf4ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerLightExposure
-  stoneTriggerName: TurnToStone
-  freezePhysicsDuringTransformation: 1
-  animationEventFallbackDelay: 0.5
-  playerMovement: {fileID: 6163549835358402812}
-  playerDeath: {fileID: 8294564211951165626}
-  playerRb: {fileID: 0}
-  playerAnimator: {fileID: 8013107175085263912}
 --- !u!1 &7927681820503638062
 GameObject:
   m_ObjectHideFlags: 0

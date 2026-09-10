@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup settingsMenuGroup;
     [SerializeField] private CanvasGroup levelsMenuGroup;
     [SerializeField] private CanvasGroup backgroundGroup;
+    [SerializeField] private CanvasGroup howToPlayMenuGroup;
 
 
     // ==================================================
@@ -31,6 +32,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button levelsButton;
     [SerializeField] private Button settingsButton;
 
+    [SerializeField] private Button howToPlayButton;
 
     // ==================================================
     // SETTINGS MENU
@@ -46,6 +48,16 @@ public class UIManager : MonoBehaviour
 
     [Header("Levels Menu")]
     [SerializeField] private Button levelsBackButton;
+
+
+
+
+    // ==================================================
+    // HOW TO PLAY MENU
+    // ==================================================
+
+    [Header("How To Play Menu")]
+    [SerializeField] private Button howToPlayBackButton;
 
 
     // ==================================================
@@ -155,7 +167,7 @@ public class UIManager : MonoBehaviour
 
         // SUBMENUS HIDDEN
         SetCanvasImmediate(settingsMenuGroup, false);
-
+        SetCanvasImmediate(howToPlayMenuGroup, false);
 
         SetCanvasImmediate(levelsMenuGroup, false);
 
@@ -259,6 +271,10 @@ public class UIManager : MonoBehaviour
         if (settingsButton != null)
             settingsButton.onClick.AddListener(OpenSettings);
 
+        // HOW TO PLAY
+        if (howToPlayButton != null)
+            howToPlayButton.onClick.AddListener(OpenHowToPlayButton);
+
         // SETTINGS BACK
         if (settingsBackButton != null)
             settingsBackButton.onClick.AddListener(CloseSettings);
@@ -266,6 +282,10 @@ public class UIManager : MonoBehaviour
         // LEVELS BACK
         if (levelsBackButton != null)
             levelsBackButton.onClick.AddListener(CloseLevels);
+
+        // HOW TO PLAY BACK
+        if (howToPlayBackButton != null)
+            howToPlayBackButton.onClick.AddListener(CloseHowToPlay);
     }
 
 
@@ -318,7 +338,7 @@ public class UIManager : MonoBehaviour
 
 
     // ==================================================
-    // START GAME WITH LEVEL 1 VIDEO
+    // START / CONTINUE GAME WITH INTRO VIDEO
     // ==================================================
 
     private void StartGameWithIntroVideo()
@@ -326,29 +346,112 @@ public class UIManager : MonoBehaviour
         if (gameStarted || isTransitioning)
             return;
 
+
+
         /*
-         * Level_01 is already loaded by Bootstrap.
-         * Therefore:
-         * Start button 
-         * => LevelVideoIntroManager 
-         * => Level_01 intro video
-         * =>  Skip OR Continue => StartGameAfterIntroVideo() => normal gameplay
+         * Bootstrap initially loads Level_01 behind the Start Menu.
+         *
+         * However, the Start button is now a CONTINUE button:
+         *
+         * New game
+         *     -> Level_01
+         *
+         * Finish Level_01
+         *     -> saved continue level = Level_02
+         *
+         * Finish Level_03, close game, reopen
+         *     -> saved continue level = Level_04
+         *
+         * Wait for Bootstrap's initial additive level load to finish first.
+         * This prevents a fast Start click from racing LevelLoader.
          */
+        StartCoroutine(StartGameFromSavedProgressRoutine());
+    }
+
+
+    private IEnumerator StartGameFromSavedProgressRoutine()
+    {
+        LevelLoader loader = LevelLoader.Instance;
+
+
+        while (loader != null && loader.IsLoading)
+        {
+            yield return null;
+        }
+
+
+        if (gameStarted || isTransitioning)
+            yield break;
+
+        string continueSceneName = ResolveSavedContinueSceneName();
+
+
+        if (string.IsNullOrWhiteSpace(continueSceneName))
+            continueSceneName = initialMenuLevelSceneName;
+
+
+        // ----------------------------------------------
+        // NORMAL PATH: VIDEO MANAGER EXISTS
+        // ----------------------------------------------
+
         if (LevelVideoIntroManager.Instance != null)
         {
-            LevelVideoIntroManager.Instance.RequestInitialLoadedLevel();
+            LevelVideoIntroManager.Instance.RequestStartLevel(continueSceneName);
+            yield break;
+        }
+
+
+        // ----------------------------------------------
+        // FALLBACK: NO VIDEO MANAGER
+        // ----------------------------------------------
+
+        StartSavedLevelWithoutVideo(continueSceneName);
+    }
+
+
+    private string ResolveSavedContinueSceneName()
+    {
+        if (LevelProgressManager.Instance != null)
+        {
+            string savedSceneName = LevelProgressManager.Instance.GetContinueLevelSceneName();
+
+            if (!string.IsNullOrWhiteSpace(savedSceneName))
+                return savedSceneName;
+        }
+
+
+        /*
+         * If progression manager is unexpectedly missing,
+         * prefer the level that Bootstrap already has loaded.
+         */
+        if (LevelLoader.Instance != null && !string.IsNullOrWhiteSpace(LevelLoader.Instance.CurrentLevelSceneName))
+            return LevelLoader.Instance.CurrentLevelSceneName;
+
+        return string.IsNullOrWhiteSpace(initialMenuLevelSceneName) ? "Level_01" : initialMenuLevelSceneName;
+    }
+
+
+    private void StartSavedLevelWithoutVideo(string sceneName)
+    {
+        LevelLoader loader = LevelLoader.Instance;
+
+
+        if (loader != null && !string.IsNullOrWhiteSpace(sceneName) && !string.Equals(loader.CurrentLevelSceneName, sceneName, System.StringComparison.OrdinalIgnoreCase))
+        { /*  * Later saved level:  * unload the current Level_XX and load the saved one  * through the existing additive LevelLoader.  */
+            loader.LoadLevel(sceneName);
             return;
         }
 
+
         /*
-         * Safe fallback: if the video manager is missing, keep the old behavior.
+         * Saved level is already loaded (normally Level_01).
          */
         StartGame();
     }
 
 
     // ==================================================
-    // START GAME AFTER LEVEL 1 VIDEO
+    // START GAME AFTER ALREADY-LOADED LEVEL VIDEO
     // ==================================================
     /*
      * Assign this public method to:
@@ -560,6 +663,33 @@ public class UIManager : MonoBehaviour
 
 
     // ==================================================
+    // CLOSE HOW TO PLAY
+    // ==================================================
+    private void CloseHowToPlay()
+    {
+        if (isTransitioning)
+            return;
+
+        StartCoroutine(CloseHowToPlayRoutine());
+    }
+
+
+    private IEnumerator CloseHowToPlayRoutine()
+    {
+        isTransitioning = true;
+
+        // HOW TO PLAY OUT
+        yield return FadeCanvasInternal(howToPlayMenuGroup, false);
+
+        // START / PAUSE MENU BACK
+        yield return FadeCanvasInternal(mainMenuGroup, true);
+
+        isTransitioning = false;
+    }
+
+
+
+    // ==================================================
     // LEVELS OPEN CHECK
     // ==================================================
     private bool IsLevelsOpen()
@@ -596,6 +726,37 @@ public class UIManager : MonoBehaviour
 
         isTransitioning = false;
     }
+
+
+    // ==================================================
+    // OPEN HOW TO PLAY
+    // ==================================================
+
+    private void OpenHowToPlayButton()
+    {
+        if (isTransitioning)
+            return;
+
+        /*
+         * Levels can't remain underneath.
+         */
+        SetCanvasImmediate(levelsMenuGroup, false);
+        StartCoroutine(OpenHowToPlayRoutine());
+    }
+
+    private IEnumerator OpenHowToPlayRoutine()
+    {
+        isTransitioning = true;
+
+        // MAIN MENU OUT
+        yield return FadeCanvasInternal(mainMenuGroup, false);
+
+        // HOW TO PLAY IN
+        yield return FadeCanvasInternal(howToPlayMenuGroup, true);
+
+        isTransitioning = false;
+    }
+
 
 
     // ==================================================

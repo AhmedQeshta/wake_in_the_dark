@@ -5,9 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerMovement : MonoBehaviour
 {
-    // ==================================================
     // MOVEMENT
-    // ==================================================
 
     [Header("Movement")]
     [SerializeField] private float speed = 5f;
@@ -15,34 +13,26 @@ public class PlayerMovement : MonoBehaviour
     [Header("Climbing")]
     [SerializeField] private float climbSpeed = 4f;
 
-    // ==================================================
     // JUMP
-    // ==================================================
 
     [Header("Jump")]
     [SerializeField] private float jumpForce = 11f;
     [SerializeField, Range(0.1f, 1f)] private float jumpCutMultiplier = 0.35f;
 
-    // ==================================================
     // GROUND CHECK
-    // ==================================================
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
 
-    // ==================================================
     // CONTROLS
-    // ==================================================
 
     [Header("Controls")]
     [Tooltip("When false, normal gameplay input is ignored.")]
     [SerializeField] private bool controlsEnabled = true;
 
-    // ==================================================
     // CUTSCENE CONTROL
-    // ==================================================
 
     [Header("Cutscene Control")]
 
@@ -53,24 +43,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool waitForEndOfFrameBeforeRestoringPhysics = true;
 
 
-    // ==================================================
     // COMPONENTS
-    // ==================================================
     private Rigidbody2D rb;
     private Animator animator;
 
 
-    // ==================================================
     // NORMAL GAMEPLAY PHYSICS
-    // ==================================================
     private float defaultGravity;
     private RigidbodyType2D defaultBodyType;
     private RigidbodyInterpolation2D defaultInterpolation;
     private bool defaultSimulated;
 
-    // ==================================================
     // INPUT / MOVEMENT STATE
-    // ==================================================
 
     private float horizontal;
     private float vertical;
@@ -82,25 +66,19 @@ public class PlayerMovement : MonoBehaviour
     private bool jumpQueued;
     private bool jumpCutApplied;
 
-    // ==================================================
     // CLIMBING STATE
-    // ==================================================
 
     private bool isTouchingLadder;
     private bool isClimbing;
     private Transform currentLadder;
 
-    // ==================================================
     // CUTSCENE STATE
-    // ==================================================
 
     private bool cutsceneControlActive;
     private bool controlsWereEnabledBeforeCutscene;
     private Coroutine endCutsceneRoutine;
 
-    // ==================================================
     // ANIMATOR HASHES
-    // ==================================================
 
     private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
 
@@ -112,16 +90,12 @@ public class PlayerMovement : MonoBehaviour
 
     private static readonly int ClimbSpeedYHash = Animator.StringToHash("ClimbSpeedY");
 
-    // ==================================================
     // PUBLIC STATE
-    // ==================================================
 
     public bool ControlsEnabled => controlsEnabled;
     public bool CutsceneControlActive => cutsceneControlActive;
 
-    // ==================================================
     // AWAKE
-    // ==================================================
 
     private void Awake()
     {
@@ -134,9 +108,7 @@ public class PlayerMovement : MonoBehaviour
         defaultSimulated = rb.simulated;
     }
 
-    // ==================================================
     // UPDATE
-    // ==================================================
 
     private void Update()
     {
@@ -161,9 +133,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateAnimations();
     }
 
-    // ==================================================
     // FIXED UPDATE
-    // ==================================================
 
     private void FixedUpdate()
     {
@@ -178,9 +148,7 @@ public class PlayerMovement : MonoBehaviour
         MovePlayer();
     }
 
-    // ==================================================
     // INPUT
-    // ==================================================
 
     private void ReadInput()
     {
@@ -188,9 +156,7 @@ public class PlayerMovement : MonoBehaviour
         vertical = Input.GetAxisRaw("Vertical");
     }
 
-    // ==================================================
     // CLIMBING
-    // ==================================================
 
     private void HandleClimbState()
     {
@@ -209,9 +175,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // ==================================================
     // JUMP INPUT
-    // ==================================================
 
     private void HandleJumpInput()
     {
@@ -234,9 +198,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // ==================================================
     // EXECUTE JUMP
-    // ==================================================
 
     private void ExecuteJump()
     {
@@ -253,9 +215,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = false;
     }
 
-    // ==================================================
     // MOVEMENT
-    // ==================================================
 
     private void MovePlayer()
     {
@@ -276,9 +236,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // ==================================================
     // LADDER TRIGGERS
-    // ==================================================
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -299,9 +257,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // ==================================================
     // GROUND CHECK
-    // ==================================================
 
     private void CheckGround()
     {
@@ -322,9 +278,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // ==================================================
     // FLIP
-    // ==================================================
 
     private void HandleFlip()
     {
@@ -343,9 +297,7 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = scale;
     }
 
-    // ==================================================
     // ANIMATION
-    // ==================================================
 
     private void UpdateAnimations()
     {
@@ -362,9 +314,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat(ClimbSpeedYHash, isClimbing ? Mathf.Abs(vertical) : 0f);
     }
 
-    // ==================================================
     // NORMAL CONTROL ENABLE / DISABLE
-    // ==================================================
 
     public void DisableControls()
     {
@@ -404,9 +354,7 @@ public class PlayerMovement : MonoBehaviour
         controlsEnabled = true;
     }
 
-    // ==================================================
     // BEGIN CUTSCENE CONTROL
-    // ==================================================
     public void BeginCutsceneControl()
     {
         if (cutsceneControlActive)
@@ -452,9 +400,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    // ==================================================
     // END CUTSCENE CONTROL
-    // ==================================================
 
     public void EndCutsceneControl()
     {
@@ -519,9 +465,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    // ==================================================
     // RESTORE GAMEPLAY PHYSICS
-    // ==================================================
 
     private void RestoreGameplayPhysics()
     {
@@ -537,9 +481,7 @@ public class PlayerMovement : MonoBehaviour
         Physics2D.SyncTransforms();
     }
 
-    // ==================================================
     // CLEAR INPUT STATE
-    // ==================================================
 
     private void ClearInputState()
     {
@@ -550,9 +492,7 @@ public class PlayerMovement : MonoBehaviour
         jumpCutApplied = false;
     }
 
-    // ==================================================
     // FORCE END CUTSCENE
-    // ==================================================
 
     public void ForceEndCutsceneControl()
     {
@@ -579,9 +519,7 @@ public class PlayerMovement : MonoBehaviour
         UpdateAnimations();
     }
 
-    // ==================================================
     // GIZMOS
-    // ==================================================
     private void OnDrawGizmosSelected()
     {
         if (groundCheck == null)

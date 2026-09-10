@@ -79,7 +79,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -261179365
-  m_SortingLayer: 20
+  m_SortingLayer: 22
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4726182137476219290, guid: 3959f81c560b27a4e8690fd816a424b7, type: 3}
@@ -199,7 +199,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -853971267
-  m_SortingLayer: 11
+  m_SortingLayer: 12
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4019044711555393839, guid: 2c56d7936009bb24db9cb2633944eae7, type: 3}
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.478
-  m_ApplyToSortingLayers: 00000000cff22af591ce2ef33b4245056b06633c3376e3c0d3576b5bbdb372833d5d36ae13c23b6667909959bd6e19cd8d0d440391825aa82fadf3dcb75487ebaf31b190594421da83a8c1830b3dc9631bb86ef0
+  m_ApplyToSortingLayers: 000000003d5d36ae13c23b6667909959bd6e19cdaf31b190594421da83a8c183ab01f9668d0d44032fadf3dcb75487eb
   m_ShapePath:
   - {x: 0.05916834, y: -0.3449831, z: 0}
   - {x: 0.100048065, y: -0.30093622, z: 0}
@@ -454,30 +454,31 @@ MonoBehaviour:
   - {x: 0.05741644, y: -0.4004104, z: 0}
   m_ShapePathHash: -2030219443
   m_InstanceId: 0
-  m_ShadowShape2DComponent: {fileID: 0}
+  m_ShadowShape2DComponent: {fileID: 8132315131191985946}
   m_ShadowShape2DProvider:
-    rid: -2
-  m_ShadowCastingSource: 1
+    rid: 973910208081559552
+  m_ShadowCastingSource: 2
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 0.17321396, y: -0.26939464, z: 0}
-      m_Extent: {x: 0.22159576, y: 0.23688102, z: 0}
+      m_Center: {x: 0.18236542, y: -0.26171875, z: 0}
+      m_Extent: {x: 0.17388153, y: 0.1882782, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0.05
     m_FlipX: 0
     m_FlipY: 0
-    m_InitialTrim: 0
+    m_InitialTrim: 0.05
   m_CastingOption: 2
   m_PreviousTrimEdge: 0.05
   m_PreviousEdgeProcessing: 1
-  m_PreviousShadowCastingSource: 1
+  m_PreviousShadowCastingSource: 2
   m_PreviousShadowShape2DSource: {fileID: 8132315131191985946}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 973910208081559552
+      type: {class: ShadowShape2DProvider_SpriteRenderer, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
+      data: 
 --- !u!1 &5551592588002342567
 GameObject:
   m_ObjectHideFlags: 0
