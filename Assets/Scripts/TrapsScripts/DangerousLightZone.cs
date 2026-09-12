@@ -65,17 +65,21 @@ public class DangerousLightZone : MonoBehaviour
             return;
         }
 
-        PlayerDeath deathTarget = exposure.GetComponent<PlayerDeath>();
+        PlayerDeath deathTarget = exposure.GetComponentInParent<PlayerDeath>();
 
         if (deathTarget != null && !CanAffectCharacter(deathTarget))
+            return;
 
 
-            if (exposureColliderCounts.TryGetValue(exposure, out int currentCount)) { exposureColliderCounts[exposure] = currentCount + 1; }
-            else
-            {
-                exposureColliderCounts.Add(exposure, 1);
-                exposure.EnterDangerousLight(this);
-            }
+        if (exposureColliderCounts.TryGetValue(exposure, out int currentCount))
+        {
+            exposureColliderCounts[exposure] = currentCount + 1;
+        }
+        else
+        {
+            exposureColliderCounts.Add(exposure, 1);
+            exposure.EnterDangerousLight(this);
+        }
     }
 
 

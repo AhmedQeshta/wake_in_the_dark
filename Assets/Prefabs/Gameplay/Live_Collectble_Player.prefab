@@ -174,8 +174,8 @@ MonoBehaviour:
   animator: {fileID: 7592115336187956612}
   pickupTriggerName: Pickup
   pickupAnimationFallbackDelay: 2
-  pickupSound: {fileID: 0}
-  pickupVolume: 1
+  pickupSound: {fileID: 8300000, guid: 3e0e0078f1dfbae4786487fbd53155c1, type: 3}
+  pickupVolume: 0.75
   randomizePitch: 0
   minimumPitch: 0.95
   maximumPitch: 1.05

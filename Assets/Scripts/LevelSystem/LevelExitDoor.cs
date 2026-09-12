@@ -42,6 +42,14 @@ public class LevelExitDoor : MonoBehaviour
     [SerializeField] private LevelLoader levelLoader;
 
 
+    [Tooltip(
+        "Optional. Persistent HUD warning UI. " +
+        "Leave empty to use WifeRequiredExitUI.Instance automatically."
+    )]
+    [SerializeField]
+    private WifeRequiredExitUI wifeRequiredExitUI;
+
+
     // PLAYER
     [Header("Player")]
     [SerializeField] private string playerTag = "Player";
@@ -71,6 +79,7 @@ public class LevelExitDoor : MonoBehaviour
     private void Awake()
     {
         ResolveLoader();
+        ResolveWifeRequiredUI();
     }
 
 
@@ -105,6 +114,13 @@ public class LevelExitDoor : MonoBehaviour
 
         playerCollidersInside.Remove(other);
         wifeCollidersInside.Remove(other);
+
+        /*
+         * Refresh immediately:
+         * - Player leaves -> hide the warning.
+         * - Wife leaves while Player remains -> show the warning.
+         */
+        TryEnterDoor();
     }
 
 
@@ -131,14 +147,55 @@ public class LevelExitDoor : MonoBehaviour
     private void TryEnterDoor()
     {
         if (transitionStarted)
+        {
+            HideWifeRequiredWarning();
             return;
+        }
 
         CleanupColliderSet(playerCollidersInside);
         CleanupColliderSet(wifeCollidersInside);
 
-        // PLAYER 1 IS ALWAYS REQUIRED OR OPTIONAL WIFE REQUIREMENT or DOOR MUST BE OPEN IF REQUIRED
-        if (!IsPlayerInside || (requireWife && !IsWifeInside) || !IsDoorOpen())
+
+        // --------------------------------------------------
+        // PLAYER 1 MUST BE INSIDE
+        // --------------------------------------------------
+
+        if (!IsPlayerInside)
+        {
+            HideWifeRequiredWarning();
             return;
+        }
+
+
+        // --------------------------------------------------
+        // DOOR MUST BE OPEN FIRST
+        // --------------------------------------------------
+
+        if (!IsDoorOpen())
+        {
+            /*
+             * Do not show a Wife warning while the door itself is
+             * still closed. This keeps the feedback unambiguous.
+             */
+            HideWifeRequiredWarning();
+            return;
+        }
+
+
+        // --------------------------------------------------
+        // WIFE REQUIRED BUT NOT AT THE EXIT
+        // --------------------------------------------------
+
+        if (requireWife &&
+            !IsWifeInside)
+        {
+            ShowWifeRequiredWarning();
+            return;
+        }
+
+
+        // Requirement satisfied.
+        HideWifeRequiredWarning();
 
 
         // EXIT
@@ -311,6 +368,102 @@ public class LevelExitDoor : MonoBehaviour
     }
 
 
+    // WIFE REQUIRED WARNING
+    private void ShowWifeRequiredWarning()
+    {
+        ResolveWifeRequiredUI();
+
+        if (wifeRequiredExitUI == null)
+            return;
+
+        wifeRequiredExitUI.ShowWarning(
+            FindWifeTransform()
+        );
+    }
+
+
+    private void HideWifeRequiredWarning()
+    {
+        ResolveWifeRequiredUI();
+
+        if (wifeRequiredExitUI != null)
+            wifeRequiredExitUI.HideWarning();
+    }
+
+
+    private void ResolveWifeRequiredUI()
+    {
+        if (wifeRequiredExitUI != null)
+            return;
+
+        wifeRequiredExitUI =
+            WifeRequiredExitUI.Instance;
+
+        if (wifeRequiredExitUI == null)
+        {
+            wifeRequiredExitUI =
+                FindAnyObjectByType<WifeRequiredExitUI>();
+        }
+    }
+
+
+    private Transform FindWifeTransform()
+    {
+        if (string.IsNullOrWhiteSpace(wifeTag))
+            return null;
+
+
+        /*
+         * Prefer the tagged Wife root.
+         */
+        try
+        {
+            GameObject wifeObject =
+                GameObject.FindGameObjectWithTag(
+                    wifeTag
+                );
+
+            if (wifeObject != null)
+                return wifeObject.transform;
+        }
+        catch (UnityException)
+        {
+            /*
+             * If the tag was removed accidentally, fall through
+             * to the CompanionFollower2D search.
+             */
+        }
+
+
+        /*
+         * Scene-local fallback.
+         */
+        CompanionFollower2D[] companions =
+            FindObjectsByType<CompanionFollower2D>(
+                FindObjectsSortMode.None
+            );
+
+
+        foreach (CompanionFollower2D companion
+                 in companions)
+        {
+            if (companion == null)
+                continue;
+
+            if (companion.gameObject.scene !=
+                gameObject.scene)
+            {
+                continue;
+            }
+
+            return companion.transform;
+        }
+
+
+        return null;
+    }
+
+
     // LOADER
     private void ResolveLoader()
     {
@@ -347,6 +500,20 @@ public class LevelExitDoor : MonoBehaviour
         transitionStarted = false;
         playerCollidersInside.Clear();
         wifeCollidersInside.Clear();
+
+        HideWifeRequiredWarning();
+    }
+
+
+    // DISABLE
+    private void OnDisable()
+    {
+        /*
+         * The HUD lives in Bootstrap and survives level unloads.
+         * Never leave the persistent warning visible after this
+         * level/exit object is disabled.
+         */
+        HideWifeRequiredWarning();
     }
 
 

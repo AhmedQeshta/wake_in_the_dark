@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
@@ -34,6 +35,10 @@ public class AnimatedTileTrigger : MonoBehaviour
     [SerializeField] private AnimationEndBehavior endBehavior = AnimationEndBehavior.FreezeOnLastFrame;
 
 
+
+    [Tooltip("Disable the light after activation.")]
+    [SerializeField] private Light2D[] lightToDisable;
+
     // ==================================================
     // TRIGGER OPTIONS
     // ==================================================
@@ -51,6 +56,8 @@ public class AnimatedTileTrigger : MonoBehaviour
 
     [Tooltip("Disable the trigger collider after activation.")]
     [SerializeField] private bool disableTriggerAfterActivation = true;
+
+
 
 
     // ==================================================
@@ -156,6 +163,16 @@ public class AnimatedTileTrigger : MonoBehaviour
         ApplyAnimatedTiles();
 
 
+        if (lightToDisable != null && lightToDisable.Length > 0)
+        {
+            yield return new WaitForSeconds(animationDuration / 2f);
+            foreach (Light2D light in lightToDisable)
+            {
+                if (light != null)
+                    light.enabled = false;
+            }
+        }
+
         if (disableTriggerAfterActivation && triggerCollider != null)
             triggerCollider.enabled = false;
 
@@ -165,7 +182,7 @@ public class AnimatedTileTrigger : MonoBehaviour
             yield break;
         }
 
-        yield return new WaitForSeconds(animationDuration);
+        yield return new WaitForSeconds(animationDuration / 2f);
         ApplyEndBehavior();
         animationRoutine = null;
     }
