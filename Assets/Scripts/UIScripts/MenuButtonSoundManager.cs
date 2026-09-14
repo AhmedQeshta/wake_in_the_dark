@@ -26,6 +26,7 @@ public class MenuButtonSoundManager : MonoBehaviour
   private void Awake()
   {
     ResolveAudioSource();
+    ConfigureAudioSource();
     RegisterButtons();
   }
 
@@ -91,12 +92,34 @@ public class MenuButtonSoundManager : MonoBehaviour
     if (audioSource == null || clickSound == null)
       return;
 
-    audioSource.pitch = randomizePitch
-        ? Random.Range(minimumPitch, maximumPitch)
-        : 1f;
+    /*
+     * The Bootstrap Start/Pause menu intentionally uses
+     * AudioListener.pause = true.
+     * UI click audio must ignore that pause.
+     */
+    ConfigureAudioSource();
+
+    audioSource.pitch = randomizePitch ? Random.Range(minimumPitch, maximumPitch) : 1f;
 
     audioSource.PlayOneShot(clickSound, clickVolume);
   }
+
+  private void ConfigureAudioSource()
+  {
+    if (audioSource == null)
+      return;
+
+    audioSource.playOnAwake = false;
+    audioSource.loop = false;
+    audioSource.spatialBlend = 0f;
+
+    /*
+     * Required because UIManager pauses the global AudioListener
+     * while the Start/Pause menu is open.
+     */
+    audioSource.ignoreListenerPause = true;
+  }
+
 
   private void ResolveAudioSource()
   {
@@ -108,7 +131,7 @@ public class MenuButtonSoundManager : MonoBehaviour
     if (audioSource == null)
     {
       Debug.LogWarning(
-          "MenuButtonSoundManager: Assign the UI_Manager AudioSource in the Inspector.",
+          "MenuButtonSoundManager: Assign the dedicated UI_ClickAudioSource in the Inspector.",
           this
       );
     }

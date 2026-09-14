@@ -225,14 +225,62 @@ public class LevelProgressManager : MonoBehaviour
 
 
     // ==================================================
-    // RESET AFTER ENDING
+    // RESET ALL SAVED DATA
     // ==================================================
-
     public void ResetProgress()
     {
+        /*
+         * 1. Clear every persistent PlayerPrefs key.
+         */
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+
+
+        /*
+         * 2. Reset in-memory level progression.
+         *
+         * SaveProgress() writes only the new default progression
+         * (Level_01 / index 0) back to PlayerPrefs.
+         */
         highestUnlockedLevelIndex = 0;
 
         SaveProgress();
+
+
+        /*
+         * 3. PlayerPrefs.DeleteAll() cannot clear static runtime
+         * collections. StoryTimelineOnce keeps a small session cache,
+         * so clear/re-arm it explicitly.
+         */
+        StoryTimelineOnce.ResetAllStoryRuntimeState();
+
+
+        /*
+         * 4. Re-apply AudioMixer defaults immediately.
+         * Without this, PlayerPrefs would be reset but the currently
+         * running mixer could keep the old values until restart.
+         */
+        if (GameAudioMixerSettings.Instance != null)
+            GameAudioMixerSettings.Instance.LoadAndApplyAll();
+
+
+        /*
+         * 5. Refresh the visible Settings sliders, if that UI is
+         * already alive in Bootstrap.
+         */
+        AudioSettingsUI audioSettingsUI = FindAnyObjectByType<AudioSettingsUI>();
+
+        if (audioSettingsUI != null)
+            audioSettingsUI.LoadValues();
+
+
+        /*
+         * 6. Level-video watched state is read directly from
+         * PlayerPrefs, so DeleteAll() has already reset every intro.
+         *
+         * No scene reload is required for this.
+         */
+
 
         ProgressChanged?.Invoke();
     }
@@ -247,6 +295,7 @@ public class LevelProgressManager : MonoBehaviour
     {
         if (LevelCount <= 0)
             return;
+
         highestUnlockedLevelIndex = LevelCount - 1;
         SaveProgress();
         ProgressChanged?.Invoke();
@@ -254,7 +303,7 @@ public class LevelProgressManager : MonoBehaviour
     }
 
 
-    [ContextMenu("DEBUG - Reset Progress")]
+    [ContextMenu("DEBUG - Reset ALL Progress + PlayerPrefs")]
     private void DebugResetProgress()
     {
         ResetProgress();

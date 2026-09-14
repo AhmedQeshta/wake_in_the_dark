@@ -5,68 +5,43 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
-    // ==================================================
     // INSTANCE
-    // ==================================================
-
     public static AudioManager Instance { get; private set; }
 
 
-    // ==================================================
     // MUSIC SOURCES
-    // ==================================================
-
     [Header("Music Sources")]
-
     [SerializeField] private AudioSource musicSourceA;
-
-
     [SerializeField] private AudioSource musicSourceB;
 
 
-    // ==================================================
     // LEVEL DETECTION
-    // ==================================================
 
     [Header("Level Detection")]
-
-    [SerializeField]
-    private string levelScenePrefix = "Level_";
+    [SerializeField] private string levelScenePrefix = "Level_";
 
 
-    // ==================================================
     // DEFAULTS
-    // ==================================================
 
     [Header("Defaults")]
 
-    [SerializeField, Range(0f, 1f)]
-    private float defaultMusicVolume = 0.6f;
+    [SerializeField, Range(0f, 1f)] private float defaultMusicVolume = 0.6f;
 
 
-    [SerializeField, Min(0f)]
-    private float defaultCrossfadeDuration = 0.8f;
+    [SerializeField, Min(0f)] private float defaultCrossfadeDuration = 0.8f;
 
 
-    // ==================================================
     // USER MUSIC VOLUME
-    // ==================================================
 
     [Header("User Music Volume")]
 
-    [Tooltip(
-        "Compatibility/fallback user value for level music. " +
-        "When GameAudioMixerSettings exists, the AudioMixer applies this setting and the AudioSource keeps only the level's artistic/base volume."
-    )]
-    [SerializeField, Range(0f, 1f)]
-    private float levelMusicVolume = 1f;
+    [Tooltip("Compatibility/fallback user value for level music. When GameAudioMixerSettings exists, the AudioMixer applies this setting and the AudioSource keeps only the level's artistic/base volume.")]
+    [SerializeField, Range(0f, 1f)] private float levelMusicVolume = 1f;
 
     private const string LevelMusicVolumeKey = "Settings.LevelMusicVolume";
 
 
-    // ==================================================
     // STATE
-    // ==================================================
 
     private AudioSource activeMusicSource;
 
@@ -94,9 +69,14 @@ public class AudioManager : MonoBehaviour
     private bool transitionSilenceActive;
 
 
-    // ==================================================
+    /*
+     * True when the already-loaded level music was started early
+     * specifically so it can play underneath its intro video.
+     */
+    private bool levelMusicPrestartedForIntro;
+
+
     // PUBLIC
-    // ==================================================
 
     public bool GameplayMusicEnabled => gameplayMusicEnabled;
 
@@ -104,25 +84,16 @@ public class AudioManager : MonoBehaviour
     public AudioClip CurrentMusicClip => activeMusicSource != null ? activeMusicSource.clip : null;
 
 
-    public float LevelMusicVolume =>
-        GameAudioMixerSettings.Instance != null
-            ? GameAudioMixerSettings.Instance.LevelMusicVolume
-            : levelMusicVolume;
+    public float LevelMusicVolume => GameAudioMixerSettings.Instance != null ? GameAudioMixerSettings.Instance.LevelMusicVolume : levelMusicVolume;
 
 
     public bool TransitionSilenceActive => transitionSilenceActive;
 
 
-    // ==================================================
     // AWAKE
-    // ==================================================
-
     private void Awake()
     {
-        // ----------------------------------------------
         // SINGLE INSTANCE
-        // ----------------------------------------------
-
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -131,17 +102,11 @@ public class AudioManager : MonoBehaviour
 
         Instance = this;
 
-        // ----------------------------------------------
         // USER MUSIC VOLUME
-        // ----------------------------------------------
-
         levelMusicVolume = Mathf.Clamp01(PlayerPrefs.GetFloat(LevelMusicVolumeKey, levelMusicVolume));
 
 
-        // ----------------------------------------------
         // SOURCES
-        // ----------------------------------------------
-
         ConfigureMusicSource(musicSourceA);
         ConfigureMusicSource(musicSourceB);
 
@@ -150,9 +115,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // ENABLE / DISABLE
-    // ==================================================
 
     private void OnEnable()
     {
@@ -166,9 +129,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // START
-    // ==================================================
 
     private void Start()
     {
@@ -181,9 +142,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // SCENE LOADED
-    // ==================================================
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode loadMode)
     {
@@ -194,9 +153,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // FIND LEVEL SETTINGS
-    // ==================================================
 
     private void FindLevelMusicSettings(Scene scene)
     {
@@ -218,16 +175,11 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // USER LEVEL MUSIC VOLUME
-    // ==================================================
 
     public void SetLevelMusicVolume(float volume)
     {
-        levelMusicVolume =
-            Mathf.Clamp01(
-                volume
-            );
+        levelMusicVolume = Mathf.Clamp01(volume);
 
 
         if (GameAudioMixerSettings.Instance != null)
@@ -237,9 +189,7 @@ public class AudioManager : MonoBehaviour
              * The level AudioSources keep the artistic/base volume
              * from LevelMusicSettings so volume is not applied twice.
              */
-            GameAudioMixerSettings.Instance.SetLevelMusicVolume(
-                levelMusicVolume
-            );
+            GameAudioMixerSettings.Instance.SetLevelMusicVolume(levelMusicVolume);
         }
         else
         {
@@ -247,10 +197,7 @@ public class AudioManager : MonoBehaviour
              * Backward-compatible fallback when the mixer settings
              * component is missing.
              */
-            PlayerPrefs.SetFloat(
-                LevelMusicVolumeKey,
-                levelMusicVolume
-            );
+            PlayerPrefs.SetFloat(LevelMusicVolumeKey, levelMusicVolume);
 
             PlayerPrefs.Save();
         }
@@ -262,61 +209,35 @@ public class AudioManager : MonoBehaviour
 
     private void ApplyLevelMusicVolumeImmediately()
     {
-        float baseVolume =
-            currentLevelSettings != null
-                ? currentLevelSettings.MusicVolume
-                : defaultMusicVolume;
+        float baseVolume = currentLevelSettings != null ? currentLevelSettings.MusicVolume : defaultMusicVolume;
+        float sourceMultiplier = GameAudioMixerSettings.Instance != null ? 1f : levelMusicVolume;
+        float finalSourceVolume = baseVolume * sourceMultiplier;
 
+        if (activeMusicSource != null && activeMusicSource.clip != null)
+            activeMusicSource.volume = finalSourceVolume;
 
-        float sourceMultiplier =
-            GameAudioMixerSettings.Instance != null
-                ? 1f
-                : levelMusicVolume;
+        if (inactiveMusicSource != null && inactiveMusicSource.isPlaying)
+            inactiveMusicSource.volume = Mathf.Min(inactiveMusicSource.volume, finalSourceVolume);
 
-
-        float finalSourceVolume =
-            baseVolume *
-            sourceMultiplier;
-
-
-        if (activeMusicSource != null &&
-            activeMusicSource.clip != null)
-        {
-            activeMusicSource.volume =
-                finalSourceVolume;
-        }
-
-
-        if (inactiveMusicSource != null &&
-            inactiveMusicSource.isPlaying)
-        {
-            inactiveMusicSource.volume =
-                Mathf.Min(
-                    inactiveMusicSource.volume,
-                    finalSourceVolume
-                );
-        }
     }
 
 
-    // ==================================================
     // START GAMEPLAY MUSIC
-    // ==================================================
 
     public void StartGameplayMusic()
     {
         /*
-         * The new level is now officially ready for gameplay.
-         *
-         * Release the temporary transition silence first.
-         * UIManager also resumes the listener, but doing it here
-         * makes AudioManager safe when called from another system.
+         * Gameplay is officially active now.
          */
         transitionSilenceActive = false;
+
         AudioListener.pause = false;
+
+        SetMusicSourcesIgnoreListenerPause(false);
 
 
         gameplayMusicEnabled = true;
+
 
         /*
          * If no settings were found yet,
@@ -328,19 +249,66 @@ public class AudioManager : MonoBehaviour
 
             if (IsLevelScene(activeScene))
                 currentLevelSettings = FindComponentInScene<LevelMusicSettings>(activeScene);
+
         }
 
-        PlayCurrentLevelMusic();
+
+        /*
+         * If this exact music was already started underneath
+         * the intro video, do NOT restart it when gameplay begins.
+         */
+        bool musicWasPrestarted = levelMusicPrestartedForIntro;
+        levelMusicPrestartedForIntro = false;
+
+        PlayCurrentLevelMusic(false, !musicWasPrestarted);
     }
 
 
-    // ==================================================
+    // START LOADED LEVEL MUSIC DURING INTRO VIDEO
+    public bool StartLoadedLevelMusicForIntro(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+            return false;
+
+
+        Scene levelScene = SceneManager.GetSceneByName(sceneName);
+
+        if (!IsLevelScene(levelScene))
+            return false;
+
+        LevelMusicSettings settings = FindComponentInScene<LevelMusicSettings>(levelScene);
+
+
+        if (settings == null)
+            return false;
+
+
+        currentLevelSettings = settings;
+
+
+        levelMusicPrestartedForIntro = true;
+
+
+        /*
+         * Force playback even though normal gameplay is not active yet.
+         * RestartOnReload is intentionally ignored here.
+         */
+        PlayCurrentLevelMusic(true, false);
+
+
+        return activeMusicSource != null && activeMusicSource.clip != null;
+    }
+
+
     // STOP GAMEPLAY MUSIC
-    // ==================================================
 
     public void StopGameplayMusic(bool immediate = false)
     {
         gameplayMusicEnabled = false;
+
+        levelMusicPrestartedForIntro = false;
+
+        SetMusicSourcesIgnoreListenerPause(false);
 
 
         if (musicTransitionRoutine != null)
@@ -362,163 +330,101 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VIDEO / LEVEL TRANSITION AUDIO
-    // ==================================================
-
-    /// <summary>
-    /// Stops all currently loaded audio except the supplied VideoPlayer
-    /// AudioSource, then pauses the AudioListener.
-    ///
-    /// Use this immediately before:
-    /// - a level intro video
-    /// - the final ending video
-    /// - loading the next level after a skipped/already-seen video
-    ///
-    /// The next level's music will NOT start when SceneManager.sceneLoaded
-    /// fires because gameplayMusicEnabled is false.
-    ///
-    /// UIManager.OnLevelLoadFinished() eventually calls StartGameplayMusic(),
-    /// which releases the listener pause and starts only the new level music.
-    /// </summary>
-    public void BeginVideoTransition(
-        AudioSource allowedVideoAudioSource = null)
+    public void BeginVideoTransition(AudioSource allowedVideoAudioSource = null, bool keepCurrentLevelMusicPlaying = false)
     {
         transitionSilenceActive = true;
 
 
-        // ----------------------------------------------
-        // LEVEL MUSIC OFF
-        // ----------------------------------------------
-
-        gameplayMusicEnabled = false;
-
-
-        if (musicTransitionRoutine != null)
+        if (keepCurrentLevelMusicPlaying)
         {
-            StopCoroutine(
-                musicTransitionRoutine
-            );
+            /*
+             * Level_01 is already loaded behind Bootstrap.
+             * Keep its persistent music source alive and let it
+             * ignore AudioListener.pause while the intro video plays.
+             */
+            SetMusicSourcesIgnoreListenerPause(true);
+        }
+        else
+        {
+            gameplayMusicEnabled = false;
+            levelMusicPrestartedForIntro = false;
 
-            musicTransitionRoutine = null;
+            if (musicTransitionRoutine != null)
+            {
+                StopCoroutine(musicTransitionRoutine);
+                musicTransitionRoutine = null;
+            }
+
+            StopSource(musicSourceA);
+            StopSource(musicSourceB);
+
+            SetMusicSourcesIgnoreListenerPause(false);
         }
 
 
-        StopSource(
-            musicSourceA
-        );
-
-        StopSource(
-            musicSourceB
-        );
-
-
-        // ----------------------------------------------
-        // ALL CURRENTLY LOADED AUDIO OFF
-        // ----------------------------------------------
-
-        StopAllLoadedAudioExcept(
-            allowedVideoAudioSource
-        );
+        /*
+         * Stop world/menu/VFX audio.
+         *
+         * When requested, preserve:
+         * - VideoPlayer AudioSource
+         * - MusicSource_A
+         * - MusicSource_B
+         */
+        StopAllLoadedAudioExcept(allowedVideoAudioSource, keepCurrentLevelMusicPlaying ? musicSourceA : null, keepCurrentLevelMusicPlaying ? musicSourceB : null);
 
 
-        // ----------------------------------------------
-        // KEEP ANY NEWLY-STARTED WORLD AUDIO SILENT
-        // DURING THE VIDEO / ADDITIVE LEVEL LOAD.
-        // ----------------------------------------------
-
+        /*
+         * Newly-started world audio remains paused.
+         *
+         * VideoPlayer source already uses ignoreListenerPause = true.
+         * Preserved level-music sources temporarily do the same.
+         */
         AudioListener.pause = true;
     }
 
-
-    /// <summary>
-    /// Stops every AudioSource that belongs to a currently loaded scene,
-    /// except the supplied source.
-    ///
-    /// This includes:
-    /// - old level ambience
-    /// - Timeline audio
-    /// - platform / trap / lever sounds
-    /// - Bootstrap menu music
-    /// - persistent level music sources
-    ///
-    /// The VideoPlayer AudioSource is passed as the exception.
-    /// </summary>
-    public void StopAllLoadedAudioExcept(
-        AudioSource exception = null)
+    public void StopAllLoadedAudioExcept(AudioSource exceptionA = null, AudioSource exceptionB = null, AudioSource exceptionC = null)
     {
-        AudioSource[] sources =
-            FindObjectsByType<AudioSource>(
-                FindObjectsInactive.Include,
-                FindObjectsSortMode.None
-            );
+        AudioSource[] sources = FindObjectsByType<AudioSource>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
 
         foreach (AudioSource source in sources)
         {
-            if (source == null ||
-                source == exception)
-            {
+            if (source == null || source == exceptionA || source == exceptionB || source == exceptionC)
                 continue;
-            }
 
 
-            Scene sourceScene =
-                source.gameObject.scene;
+            Scene sourceScene = source.gameObject.scene;
 
 
-            /*
-             * Ignore prefab/assets that are not part of a loaded scene.
-             */
-            if (!sourceScene.IsValid() ||
-                !sourceScene.isLoaded)
-            {
+            if (!sourceScene.IsValid() || !sourceScene.isLoaded)
                 continue;
-            }
-
 
             source.Stop();
         }
     }
 
-
-    /// <summary>
-    /// Emergency/cancel helper.
-    ///
-    /// Normally LevelVideoIntroManager keeps transition silence active until
-    /// UIManager starts gameplay or restores the Bootstrap menu.
-    /// </summary>
-    public void CancelVideoTransitionSilence(
-        bool restartGameplayMusic = false)
+    public void CancelVideoTransitionSilence(bool restartGameplayMusic = false)
     {
         transitionSilenceActive = false;
-
         AudioListener.pause = false;
-
+        SetMusicSourcesIgnoreListenerPause(false);
 
         if (restartGameplayMusic)
-        {
             StartGameplayMusic();
-        }
+
     }
 
 
-    // ==================================================
     // PLAY CURRENT LEVEL
-    // ==================================================
 
-    private void PlayCurrentLevelMusic()
+    private void PlayCurrentLevelMusic(bool forcePlayback = false, bool allowRestartOnReload = true)
     {
-        if (!gameplayMusicEnabled)
+        if ((!gameplayMusicEnabled && !forcePlayback) || currentLevelSettings == null)
             return;
 
 
-        if (currentLevelSettings == null)
-            return;
-
-
-        AudioClip newClip =
-            currentLevelSettings.MusicClip;
+        AudioClip newClip = currentLevelSettings.MusicClip;
 
 
         if (newClip == null)
@@ -536,23 +442,14 @@ public class AudioManager : MonoBehaviour
          * If GameAudioMixerSettings is missing, preserve the old
          * source-volume multiplier as a safe fallback.
          */
-        float sourceUserMultiplier =
-            GameAudioMixerSettings.Instance != null
-                ? 1f
-                : levelMusicVolume;
-
-
-        float targetVolume =
-            currentLevelSettings.MusicVolume *
-            sourceUserMultiplier;
-
-
+        float sourceUserMultiplier = GameAudioMixerSettings.Instance != null ? 1f : levelMusicVolume;
+        float targetVolume = currentLevelSettings.MusicVolume * sourceUserMultiplier;
         float transitionDuration = currentLevelSettings.CrossfadeDuration;
 
 
-        // ==================================================
+
         // SAME MUSIC
-        // ==================================================
+
 
         if (activeMusicSource != null && activeMusicSource.clip == newClip)
         {
@@ -563,9 +460,10 @@ public class AudioManager : MonoBehaviour
              * Resetting a level does not need
              * to restart the song unless requested.
              */
-            if (currentLevelSettings.RestartOnReload)
+            if (allowRestartOnReload && currentLevelSettings.RestartOnReload)
             {
                 RestartCurrentTrack(newClip, targetVolume, transitionDuration, currentLevelSettings.Loop);
+
                 return;
             }
 
@@ -579,22 +477,21 @@ public class AudioManager : MonoBehaviour
         }
 
 
-        // ==================================================
+
         // NEW LEVEL MUSIC
-        // ==================================================
+
 
         CrossfadeTo(newClip, targetVolume, transitionDuration, currentLevelSettings.Loop);
     }
 
 
-    // ==================================================
     // CROSSFADE
-    // ==================================================
 
     private void CrossfadeTo(AudioClip newClip, float targetVolume, float duration, bool loop)
     {
         if (musicTransitionRoutine != null)
             StopCoroutine(musicTransitionRoutine);
+
         musicTransitionRoutine = StartCoroutine(CrossfadeRoutine(newClip, targetVolume, duration, loop));
     }
 
@@ -610,28 +507,15 @@ public class AudioManager : MonoBehaviour
         AudioSource newSource = inactiveMusicSource;
 
 
-        // ----------------------------------------------
         // PREPARE NEW SOURCE
-        // ----------------------------------------------
-
         newSource.Stop();
-
-
         newSource.clip = newClip;
-
-
         newSource.loop = loop;
-
-
         newSource.volume = 0f;
-
-
         newSource.Play();
 
 
-        // ----------------------------------------------
         // INSTANT
-        // ----------------------------------------------
 
         if (duration <= 0f)
         {
@@ -647,9 +531,7 @@ public class AudioManager : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
         // CROSSFADE
-        // ----------------------------------------------
 
         float elapsed = 0f;
 
@@ -672,9 +554,7 @@ public class AudioManager : MonoBehaviour
         }
 
 
-        // ----------------------------------------------
         // FINISH
-        // ----------------------------------------------
 
         if (oldSource != null)
         {
@@ -694,9 +574,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // RESTART CURRENT TRACK
-    // ==================================================
 
     private void RestartCurrentTrack(AudioClip clip, float targetVolume, float duration, bool loop)
     {
@@ -749,9 +627,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // FADE OUT
-    // ==================================================
 
     private void FadeOutMusic(float duration)
     {
@@ -807,9 +683,27 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
+    // MUSIC LISTENER-PAUSE MODE
+
+    private void SetMusicSourcesIgnoreListenerPause(
+        bool ignorePause)
+    {
+        if (musicSourceA != null)
+        {
+            musicSourceA.ignoreListenerPause =
+                ignorePause;
+        }
+
+
+        if (musicSourceB != null)
+        {
+            musicSourceB.ignoreListenerPause =
+                ignorePause;
+        }
+    }
+
+
     // SOURCE SETUP
-    // ==================================================
 
     private void ConfigureMusicSource(AudioSource source)
     {
@@ -851,9 +745,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // LEVEL CHECK
-    // ==================================================
 
     private bool IsLevelScene(Scene scene)
     {
@@ -863,9 +755,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // FIND COMPONENT IN SCENE
-    // ==================================================
 
     private T FindComponentInScene<T>(Scene scene) where T : Component
     {
@@ -891,9 +781,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CLEANUP
-    // ==================================================
 
     private void OnDestroy()
     {
@@ -902,9 +790,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VALIDATION
-    // ==================================================
 
     private void OnValidate()
     {

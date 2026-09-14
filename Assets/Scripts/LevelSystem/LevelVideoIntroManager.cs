@@ -163,14 +163,11 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private UnityEvent onAlreadyLoadedLevelReady;
 
 
-    // REPLAY / SAVE
+    // PLAY ONCE / SAVE
 
-    [Header("Replay")]
+    [Header("Play Once")]
 
-    [Tooltip("OFF = show each level intro only the first time. ON = show it on every replay.")]
-    [SerializeField] private bool showVideoOnReplay = false;
-
-
+    [Tooltip("Each level intro is shown only once. Reset Progress clears this watched history so the intros can play again on a new game.")]
     [SerializeField] private string watchedKeyPrefix = "WakeInTheDark.LevelIntroVideoSeen.";
 
 
@@ -184,6 +181,15 @@ public class LevelVideoIntroManager : MonoBehaviour
 
     [Tooltip("Disable the current PlayerMovement while a video is open.")]
     [SerializeField] private bool disableCurrentPlayerControlsDuringVideo = true;
+
+
+    [Tooltip(
+        "When the requested level is ALREADY LOADED (Level_01 behind Bootstrap), " +
+        "start that level's music and keep it playing underneath the Level Video Intro. " +
+        "Later levels still start their music after their scene is actually loaded."
+    )]
+    [SerializeField] private bool playLoadedLevelMusicDuringIntro = true;
+
 
     [SerializeField] private bool debugLogs = true;
 
@@ -260,7 +266,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     }
 
     // TRANSITION AUDIO ISOLATION
-    private void BeginTransitionAudioIsolation()
+    private void BeginTransitionAudioIsolation(bool keepLoadedLevelMusicPlaying = false)
     {
         keepWorldAudioMutedDuringLevelLoad = true;
 
@@ -275,7 +281,8 @@ public class LevelVideoIntroManager : MonoBehaviour
          */
         if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.BeginVideoTransition(videoAudioSource);
+            AudioManager.Instance.BeginVideoTransition(videoAudioSource, keepLoadedLevelMusicPlaying);
+
             return;
         }
 
@@ -436,7 +443,13 @@ public class LevelVideoIntroManager : MonoBehaviour
         // REPLAY
         // ----------------------------------------------
 
-        if (!showVideoOnReplay && HasSeenVideo(sceneName))
+        /*
+         * Every level intro is permanently one-time until Reset Progress.
+         *
+         * Death/reload, revisiting a level, and reopening the game all
+         * skip an intro that has already been completed or skipped.
+         */
+        if (HasSeenVideo(sceneName))
         {
             BeginTransitionAudioIsolation();
             CompleteLevelIntroRequest();
@@ -465,8 +478,14 @@ public class LevelVideoIntroManager : MonoBehaviour
         }
 
 
-        BeginTransitionAudioIsolation();
+        bool keepLoadedLevelMusic =
+            false;
 
+
+        if (playLoadedLevelMusicDuringIntro && loadMode == PendingLoadMode.AlreadyLoadedLevel && AudioManager.Instance != null)
+            keepLoadedLevelMusic = AudioManager.Instance.StartLoadedLevelMusicForIntro(sceneName);
+
+        BeginTransitionAudioIsolation(keepLoadedLevelMusic);
 
         StartVideoFlow(entry.videoClip);
     }
@@ -542,7 +561,19 @@ public class LevelVideoIntroManager : MonoBehaviour
         SetPlayingButtonState();
 
         videoPlayer.Stop();
+
+        /*
+         * Set source mode before audio routing. Changing VideoPlayer.source
+         * can reset audio-control state on some Unity versions.
+         */
+        videoPlayer.source = VideoSource.VideoClip;
         videoPlayer.clip = clip;
+
+        /*
+         * IMPORTANT: configure controlled audio tracks BEFORE Prepare().
+         */
+        ConfigureVideoAudioRouting();
+
         videoPlayer.Prepare();
     }
 
@@ -553,6 +584,9 @@ public class LevelVideoIntroManager : MonoBehaviour
     {
         if (!isBusy || source != videoPlayer)
             return;
+
+        ConfigurePreparedVideoAudio(source);
+
 
         source.Play();
 
@@ -788,15 +822,30 @@ public class LevelVideoIntroManager : MonoBehaviour
         // RESET NEW-GAME PROGRESSION
         // ----------------------------------------------
 
+        bool didFullProgressReset = false;
+
+
         if (resetProgressAfterEnding && LevelProgressManager.Instance != null)
+        {
+            /*
+             * ResetProgress now performs the complete new-game reset:
+             * all PlayerPrefs, story history, intro history and settings.
+             */
             LevelProgressManager.Instance.ResetProgress();
+
+            didFullProgressReset = true;
+        }
 
 
         // ----------------------------------------------
         // RESET INTRO VIDEO HISTORY
         // ----------------------------------------------
 
-        if (resetIntroVideoHistoryAfterEnding)
+        /*
+         * Only run the targeted intro reset if a full PlayerPrefs reset
+         * was NOT already performed above.
+         */
+        if (resetIntroVideoHistoryAfterEnding && !didFullProgressReset)
             ResetAllWatchedVideos();
 
         // ----------------------------------------------
@@ -897,6 +946,7 @@ public class LevelVideoIntroManager : MonoBehaviour
             {
                 if (entry == null || string.IsNullOrWhiteSpace(entry.sceneName))
                     continue;
+
                 PlayerPrefs.DeleteKey(GetWatchedKey(entry.sceneName));
             }
         }
@@ -1646,18 +1696,96 @@ public class LevelVideoIntroManager : MonoBehaviour
         videoPlayer.isLooping = false;
         videoPlayer.waitForFirstFrame = true;
 
+
         /*
-         * Bootstrap's menu uses Time.timeScale = 0. Videos must continue to advance there.
+         * Bootstrap's menu uses Time.timeScale = 0.
          */
         videoPlayer.timeUpdateMode = VideoTimeUpdateMode.UnscaledGameTime;
 
-        if (videoAudioSource != null)
+
+        ConfigureVideoAudioRouting();
+    }
+
+
+    private void ConfigureVideoAudioRouting()
+    {
+        if (videoPlayer == null)
+            return;
+
+
+        /*
+         * Direct mode bypasses the AudioSource and therefore bypasses
+         * the Video_Audio AudioMixerGroup.
+         */
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+
+        /*
+         * Unity only decodes/routes the audio tracks controlled by the
+         * VideoPlayer. If this is 0, the embedded video audio is silent.
+         *
+         * Configure this BEFORE Prepare().
+         */
+        videoPlayer.controlledAudioTrackCount = 1;
+
+
+        videoPlayer.EnableAudioTrack(0, true);
+
+
+        if (videoAudioSource == null)
         {
-            videoAudioSource.playOnAwake = false;
-            videoAudioSource.loop = false;
-            videoAudioSource.ignoreListenerPause = true;
-            ApplyVideoVolume();
+            if (debugLogs)
+            {
+                Debug.LogWarning(
+                    "LevelVideoIntroManager: Video Audio Source is not assigned.",
+                    this
+                );
+            }
+
+            return;
         }
+
+        videoAudioSource.enabled = true;
+        videoAudioSource.mute = false;
+        videoAudioSource.playOnAwake = false;
+        videoAudioSource.loop = false;
+        videoAudioSource.spatialBlend = 0f;
+
+        /*
+         * World audio is paused during videos, but video audio must remain
+         * audible.
+         */
+        videoAudioSource.ignoreListenerPause = true;
+
+
+        videoPlayer.SetTargetAudioSource(0, videoAudioSource);
+
+
+        ApplyVideoVolume();
+    }
+
+
+    private void ConfigurePreparedVideoAudio(
+        VideoPlayer source)
+    {
+        if (source == null || source.audioTrackCount == 0 || videoAudioSource == null)
+            return;
+
+
+        source.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+
+        source.EnableAudioTrack(0, true);
+        source.SetTargetAudioSource(0, videoAudioSource);
+
+
+        videoAudioSource.ignoreListenerPause = true;
+
+        videoAudioSource.mute = false;
+
+
+        ApplyVideoVolume();
+
     }
 
 

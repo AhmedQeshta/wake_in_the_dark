@@ -998,7 +998,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 0 %
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
   m_sharedMaterial: {fileID: -4973913316998742735, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
@@ -4465,10 +4465,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_06
-  lockedVisual: {fileID: 1577666896}
+  lockedRoot: {fileID: 1577666896}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!1 &473159915
 GameObject:
   m_ObjectHideFlags: 0
@@ -5384,7 +5388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 0 %
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
   m_sharedMaterial: {fileID: -4973913316998742735, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
@@ -6247,10 +6251,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_03
-  lockedVisual: {fileID: 1690282569}
+  lockedRoot: {fileID: 1690282569}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!1 &581241301
 GameObject:
   m_ObjectHideFlags: 0
@@ -6305,10 +6313,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_07
-  lockedVisual: {fileID: 217053782}
+  lockedRoot: {fileID: 217053782}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!114 &581241304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6570,7 +6582,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 0 %
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
   m_sharedMaterial: {fileID: -4973913316998742735, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
@@ -6826,7 +6838,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -7829,7 +7841,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 0 %
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
   m_sharedMaterial: {fileID: -4973913316998742735, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
@@ -9293,10 +9305,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_04
-  lockedVisual: {fileID: 332409118}
+  lockedRoot: {fileID: 332409118}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!1 &964837161
 GameObject:
   m_ObjectHideFlags: 0
@@ -9383,7 +9399,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -11301,10 +11317,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_01
-  lockedVisual: {fileID: 658092906}
+  lockedRoot: {fileID: 658092906}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!1 &1077626076
 GameObject:
   m_ObjectHideFlags: 0
@@ -11730,7 +11750,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.7
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -11973,7 +11993,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12216,7 +12236,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.8
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12793,7 +12813,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 0 %
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
   m_sharedMaterial: {fileID: -4973913316998742735, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
@@ -14467,7 +14487,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.5
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -14805,10 +14825,10 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  showVideoOnReplay: 1
   watchedKeyPrefix: WakeInTheDark.LevelIntroVideoSeen.
   continueIfVideoMissing: 1
   disableCurrentPlayerControlsDuringVideo: 1
+  playLoadedLevelMusicDuringIntro: 1
   debugLogs: 1
   levelLoader: {fileID: 7215242784873707147}
 --- !u!1 &1436065552
@@ -15128,10 +15148,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_Final
-  lockedVisual: {fileID: 1336912354}
+  lockedRoot: {fileID: 1336912354}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!114 &1494973615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15362,7 +15386,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50%
+  m_text: 0 %
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
   m_sharedMaterial: {fileID: -4973913316998742735, guid: aaa1b8ef9ac8b4140ac96f834f02de2c, type: 2}
@@ -18094,10 +18118,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_02
-  lockedVisual: {fileID: 163003644}
+  lockedRoot: {fileID: 163003644}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!1 &1776260872
 GameObject:
   m_ObjectHideFlags: 0
@@ -18156,7 +18184,7 @@ VideoPlayer:
   m_DataSource: 0
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
-  m_AudioOutputMode: 2
+  m_AudioOutputMode: 1
   m_TargetAudioSources:
   - {fileID: 0}
   m_DirectAudioVolumes:
@@ -19485,10 +19513,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelectButton
   sceneName: Level_05
-  lockedVisual: {fileID: 68052301}
+  lockedRoot: {fileID: 68052301}
+  autoFindLockedRoot: 1
+  lockedRootName: bg_Locked_Icon
   disableIfCurrentLevel: 1
   disableIfSceneMissing: 1
+  useLevelVideoIntroManager: 1
   levelLoader: {fileID: 0}
+  levelProgressManager: {fileID: 0}
 --- !u!1 &2003859654
 GameObject:
   m_ObjectHideFlags: 0

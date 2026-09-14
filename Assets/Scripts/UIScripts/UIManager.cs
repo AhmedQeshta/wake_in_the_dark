@@ -4,15 +4,11 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    // ==================================================
     // INSTANCE
-    // ==================================================
     public static UIManager Instance { get; private set; }
 
 
-    // ==================================================
     // CANVAS GROUPS
-    // ==================================================
     [Header("Canvas Groups")]
     [SerializeField] private CanvasGroup mainMenuGroup;
     [SerializeField] private CanvasGroup settingsMenuGroup;
@@ -21,9 +17,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup howToPlayMenuGroup;
 
 
-    // ==================================================
     // MAIN MENU BUTTONS
-    // ==================================================
 
     [Header("Main Menu Buttons")]
     [SerializeField] private Button startButton;
@@ -34,17 +28,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Button howToPlayButton;
 
-    // ==================================================
     // SETTINGS MENU
-    // ==================================================
 
     [Header("Settings Menu")]
     [SerializeField] private Button settingsBackButton;
 
 
-    // ==================================================
     // LEVELS MENU
-    // ==================================================
 
     [Header("Levels Menu")]
     [SerializeField] private Button levelsBackButton;
@@ -52,47 +42,43 @@ public class UIManager : MonoBehaviour
 
 
 
-    // ==================================================
     // HOW TO PLAY MENU
-    // ==================================================
 
     [Header("How To Play Menu")]
     [SerializeField] private Button howToPlayBackButton;
 
 
-    // ==================================================
     // MENU AUDIO
-    // ==================================================
 
     [Header("Menu Audio")]
     [Tooltip("Music used only while the Start / Pause menu is visible.")]
     [SerializeField] private AudioSource menuAudioSource;
 
-    // ==================================================
     // UI ANIMATION
-    // ==================================================
 
     [Header("UI Animation")]
     [SerializeField, Min(0.01f)] private float menuFadeDuration = 0.25f;
     [SerializeField, Min(0.01f)] private float backgroundFadeDuration = 0.4f;
 
 
-    // ==================================================
     // GAME ENDING
-    // ==================================================
 
     [Header("Game Ending")]
     [Tooltip("Level that should be loaded behind the Bootstrap main menu after the game ending.")]
     [SerializeField] private string initialMenuLevelSceneName = "Level_01";
 
 
-    // ==================================================
     // STATE
-    // ==================================================
 
     private bool gameStarted;
     private bool menuOpen;
     private bool isTransitioning;
+
+
+    // PUBLIC MENU STATE
+    public bool GameStarted => gameStarted;
+
+    public bool IsInitialMainMenu => !gameStarted;
 
 
     /*
@@ -101,9 +87,7 @@ public class UIManager : MonoBehaviour
     private bool returningToMainMenuAfterEnding;
     private Coroutine backgroundFadeRoutine;
 
-    // ==================================================
     // SESSION
-    // ==================================================
     /*
      * Used mainly if Bootstrap itself is reloaded.
      *
@@ -112,9 +96,7 @@ public class UIManager : MonoBehaviour
     private static bool sessionStarted;
 
 
-    // ==================================================
     // RESET STATIC STATE
-    // ==================================================
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticState()
@@ -124,9 +106,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // AWAKE
-    // ==================================================
 
     private void Awake()
     {
@@ -181,9 +161,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    // ==================================================
     // START
-    // ==================================================
     private void Start()
     {
         /*
@@ -204,9 +182,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // UPDATE
-    // ==================================================
 
     private void Update()
     {
@@ -239,9 +215,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // BUTTON LISTENERS
-    // ==================================================
 
     private void SetupButtonListeners()
     {
@@ -289,9 +263,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // INITIAL MENU
-    // ==================================================
 
     private void ShowInitialMenu()
     {
@@ -337,9 +309,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // START / CONTINUE GAME WITH INTRO VIDEO
-    // ==================================================
 
     private void StartGameWithIntroVideo()
     {
@@ -450,9 +420,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // START GAME AFTER ALREADY-LOADED LEVEL VIDEO
-    // ==================================================
     /*
      * Assign this public method to:
      * LevelVideoIntroManager -> On Already Loaded Level Ready
@@ -463,9 +431,21 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
+    /*
+     * Used by the Levels menu when the selected level is already
+     * loaded behind the initial Bootstrap menu (normally Level_01)
+     * and no LevelVideoIntroManager is available.
+     */
+    public void StartAlreadyLoadedLevelFromLevelsMenu()
+    {
+        if (gameStarted || isTransitioning)
+            return;
+
+        StartGame();
+    }
+
+
     // START GAME
-    // ==================================================
     private void StartGame()
     {
         // CURSOR
@@ -506,9 +486,9 @@ public class UIManager : MonoBehaviour
         // GAMEPLAY
         Time.timeScale = 1f;
 
-        // ==================================================
+
         // LEVEL 1 CINEMACHINE INTRO
-        // ==================================================
+
         if (LevelLoader.Instance != null)
             LevelLoader.Instance.PlayCurrentLevelIntro();
 
@@ -520,9 +500,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // PAUSE GAME
-    // ==================================================
 
     private void PauseGame()
     {
@@ -566,9 +544,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // RESUME GAME
-    // ==================================================
 
     private void ResumeGame()
     {
@@ -605,9 +581,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // OPEN LEVELS
-    // ==================================================
 
     private void OpenLevels()
     {
@@ -636,9 +610,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CLOSE LEVELS
-    // ==================================================
     private void CloseLevels()
     {
         if (isTransitioning)
@@ -662,9 +634,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CLOSE HOW TO PLAY
-    // ==================================================
     private void CloseHowToPlay()
     {
         if (isTransitioning)
@@ -689,18 +659,14 @@ public class UIManager : MonoBehaviour
 
 
 
-    // ==================================================
     // LEVELS OPEN CHECK
-    // ==================================================
     private bool IsLevelsOpen()
     {
         return levelsMenuGroup != null && levelsMenuGroup.alpha > 0.5f;
     }
 
 
-    // ==================================================
     // OPEN SETTINGS
-    // ==================================================
     private void OpenSettings()
     {
         if (isTransitioning)
@@ -728,9 +694,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // OPEN HOW TO PLAY
-    // ==================================================
 
     private void OpenHowToPlayButton()
     {
@@ -759,9 +723,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    // ==================================================
     // CLOSE SETTINGS
-    // ==================================================
     private void CloseSettings()
     {
         if (isTransitioning)
@@ -785,9 +747,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // SETTINGS OPEN CHECK
-    // ==================================================
 
     private bool IsSettingsOpen()
     {
@@ -795,9 +755,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // RESET LEVEL
-    // ==================================================
 
     private void ResetLevel()
     {
@@ -814,9 +772,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // FINAL PLAYER DEATH
-    // ==================================================
 
     public void ReloadAfterPlayerDeath()
     {
@@ -831,9 +787,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // PREPARE FOR LEVEL CHANGE
-    // ==================================================
 
     /*
      * Called by LevelLoader BEFORE:
@@ -859,9 +813,9 @@ public class UIManager : MonoBehaviour
 
         backgroundFadeRoutine = null;
 
-        // ==================================================
+
         // HIDE ALL MENUS IMMEDIATELY
-        // ==================================================
+
         SetCanvasImmediate(mainMenuGroup, false);
         SetCanvasImmediate(settingsMenuGroup, false);
         SetCanvasImmediate(levelsMenuGroup, false);
@@ -894,9 +848,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // LEVEL LOAD FINISHED
-    // ==================================================
 
     /*
      * Called by LevelLoader after:
@@ -940,9 +892,9 @@ public class UIManager : MonoBehaviour
         ResumeGameAudio();
 
 
-        // ==================================================
+
         // MENUS HIDDEN
-        // ==================================================
+
         SetCanvasImmediate(mainMenuGroup, false);
         SetCanvasImmediate(settingsMenuGroup, false);
         SetCanvasImmediate(levelsMenuGroup, false);
@@ -955,9 +907,9 @@ public class UIManager : MonoBehaviour
         StopMenuAudio();
 
 
-        // ==================================================
+
         // CURRENT LEVEL MUSIC
-        // ==================================================
+
         /*
          * AudioManager already detected the new
          * LevelMusicSettings when the scene loaded.
@@ -972,9 +924,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // RETURN TO MAIN MENU AFTER GAME ENDING
-    // ==================================================
 
     public void ReturnToMainMenuAfterGameEnding()
     {
@@ -1061,9 +1011,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // START GAMEPLAY IMMEDIATE
-    // ==================================================
 
     /*
      * Mainly used if Bootstrap/UIManager itself
@@ -1104,9 +1052,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // BUTTON VISIBILITY
-    // ==================================================
 
     private void SetMenuButtons(bool showStart, bool showPause, bool showReset)
     {
@@ -1121,9 +1067,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // STANDARD CANVAS FADE
-    // ==================================================
     private IEnumerator FadeCanvas(CanvasGroup group, bool show)
     {
         if (group == null)
@@ -1135,9 +1079,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // INTERNAL CANVAS FADE
-    // ==================================================
     private IEnumerator FadeCanvasInternal(CanvasGroup group, bool show)
     {
         if (group == null)
@@ -1193,9 +1135,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // BACKGROUND FADE
-    // ==================================================
     private void FadeBackground(bool show)
     {
         if (backgroundGroup == null)
@@ -1240,9 +1180,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CANVAS IMMEDIATE
-    // ==================================================
 
     private void SetCanvasImmediate(CanvasGroup group, bool show)
     {
@@ -1254,9 +1192,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VIDEO / TRANSITION AUDIO
-    // ==================================================
 
     public void PrepareForVideoPlayback()
     {
@@ -1301,9 +1237,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // GAME AUDIO
-    // ==================================================
     private void PauseGameAudio()
     {
         /*
@@ -1327,9 +1261,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // MENU MUSIC
-    // ==================================================
 
     private void PlayMenuAudio()
     {
@@ -1354,9 +1286,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // STATIC GAMEPLAY STATE
-    // ==================================================
     public static void MarkGameplayStarted()
     {
         sessionStarted = true;
@@ -1367,9 +1297,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // CLEANUP
-    // ==================================================
 
     private void OnDestroy()
     {
@@ -1387,9 +1315,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    // ==================================================
     // VALIDATION
-    // ==================================================
     private void OnValidate()
     {
         if (string.IsNullOrWhiteSpace(initialMenuLevelSceneName))
