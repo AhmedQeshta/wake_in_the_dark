@@ -4,279 +4,292 @@ using UnityEngine.UI;
 
 public class AudioSettingsUI : MonoBehaviour
 {
-    // ==================================================
-    // PLAYER PREF KEYS
-    // ==================================================
-
-    private const string MenuMusicVolumeKey = "Settings.MenuMusicVolume";
-
-    private const string LevelMusicVolumeKey = "Settings.LevelMusicVolume";
-
-    private const string VideoVolumeKey = "Settings.LevelIntroVideoVolume";
+    // MIXER SETTINGS
+    [Header("Mixer Settings")]
+    [Tooltip("Persistent GameAudioMixerSettings component. Leave empty to auto-find the singleton.")]
+    [SerializeField] private GameAudioMixerSettings mixerSettings;
 
 
-    // ==================================================
+    // MASTER
+    [Header("Master")]
+    [SerializeField] private Slider masterVolumeSlider;
+    [SerializeField] private TMP_Text masterVolumeValueText;
+
+
     // MENU MUSIC
-    // ==================================================
-
     [Header("Menu Music")]
-
-    [Tooltip("AudioSource used by UIManager for menu music.")]
-    [SerializeField] private AudioSource menuMusicSource;
-
     [SerializeField] private Slider menuMusicSlider;
-
     [SerializeField] private TMP_Text menuMusicValueText;
 
 
-    // ==================================================
     // LEVEL MUSIC
-    // ==================================================
-
     [Header("Level Music")]
-
     [SerializeField] private Slider levelMusicSlider;
-
     [SerializeField] private TMP_Text levelMusicValueText;
 
 
-    // ==================================================
+    // END GAME MUSIC
+    [Header("End Game Music")]
+    [SerializeField] private Slider endGameMusicSlider;
+    [SerializeField] private TMP_Text endGameMusicValueText;
+
+
     // VIDEO AUDIO
-    // ==================================================
-
     [Header("Video Audio")]
-
-    [Tooltip("Volume slider for the videos shown before each level.")]
     [SerializeField] private Slider videoVolumeSlider;
-
-    [Tooltip("Percentage text shown beside the video volume slider.")]
     [SerializeField] private TMP_Text videoVolumeValueText;
 
 
-    // ==================================================
-    // AWAKE
-    // ==================================================
+    // VFX
+    [Header("VFX")]
+    [SerializeField] private Slider vfxVolumeSlider;
+    [SerializeField] private TMP_Text vfxVolumeValueText;
 
+
+    // FALLBACK DEFAULTS
+    [Header("Fallback Defaults")]
+    [SerializeField, Range(0f, 1f)] private float defaultMasterVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float defaultMenuMusicVolume = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float defaultLevelMusicVolume = 1f;
+    [SerializeField, Range(0f, 1f)] private float defaultEndGameMusicVolume = 0.7f;
+    [SerializeField, Range(0f, 1f)] private float defaultVideoVolume = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float defaultVFXVolume = 0.8f;
+
+
+    // AWAKE
     private void Awake()
     {
+        ConfigureSlider(masterVolumeSlider);
         ConfigureSlider(menuMusicSlider);
         ConfigureSlider(levelMusicSlider);
+        ConfigureSlider(endGameMusicSlider);
         ConfigureSlider(videoVolumeSlider);
+        ConfigureSlider(vfxVolumeSlider);
 
+        ResolveMixerSettings();
         LoadValues();
-
         SetupListeners();
-
-
-        /*
-         * Menu music can be applied immediately because
-         * its AudioSource is referenced directly.
-         */
-        ApplyMenuMusicVolume(menuMusicSlider != null ? menuMusicSlider.value : GetSavedMenuVolume());
     }
 
 
-    // ==================================================
     // START
-    // ==================================================
-
     private void Start()
-    {
-        ApplyLevelMusicVolume(levelMusicSlider != null ? levelMusicSlider.value : GetSavedLevelVolume());
-        ApplyVideoVolume(videoVolumeSlider != null ? videoVolumeSlider.value : GetSavedVideoVolume());
+    { /*  
+        * Handles any Awake execution-order difference between  
+        * Audio Settings UI and Game Audio Mixer Settings. 
+     */
+        if (mixerSettings == null)
+        {
+            ResolveMixerSettings();
+            LoadValues();
+        }
     }
 
 
-    // ==================================================
+    // RESOLVE
+    private void ResolveMixerSettings()
+    {
+        if (mixerSettings != null)
+            return;
+
+        mixerSettings = GameAudioMixerSettings.Instance;
+
+        if (mixerSettings == null)
+            mixerSettings = FindAnyObjectByType<GameAudioMixerSettings>();
+    }
+
+
     // LOAD VALUES
-    // ==================================================
-
-    private void LoadValues()
+    public void LoadValues()
     {
-        float menuVolume = GetSavedMenuVolume();
+        float master = GetCurrentOrSaved(mixerSettings != null ? mixerSettings.MasterVolume : -1f, GameAudioMixerSettings.MasterVolumeKey, defaultMasterVolume);
+        float menu = GetCurrentOrSaved(mixerSettings != null ? mixerSettings.MenuMusicVolume : -1f, GameAudioMixerSettings.MenuMusicVolumeKey, defaultMenuMusicVolume);
+        float level = GetCurrentOrSaved(mixerSettings != null ? mixerSettings.LevelMusicVolume : -1f, GameAudioMixerSettings.LevelMusicVolumeKey, defaultLevelMusicVolume);
+        float endGame = GetCurrentOrSaved(mixerSettings != null ? mixerSettings.EndGameMusicVolume : -1f, GameAudioMixerSettings.EndGameMusicVolumeKey, defaultEndGameMusicVolume);
+        float video = GetCurrentOrSaved(mixerSettings != null ? mixerSettings.VideoVolume : -1f, GameAudioMixerSettings.VideoVolumeKey, defaultVideoVolume);
+        float vfx = GetCurrentOrSaved(mixerSettings != null ? mixerSettings.VFXVolume : -1f, GameAudioMixerSettings.VFXVolumeKey, defaultVFXVolume);
 
-        float levelVolume = GetSavedLevelVolume();
+        SetSliderWithoutNotify(masterVolumeSlider, master);
+        SetSliderWithoutNotify(menuMusicSlider, menu);
+        SetSliderWithoutNotify(levelMusicSlider, level);
+        SetSliderWithoutNotify(endGameMusicSlider, endGame);
+        SetSliderWithoutNotify(videoVolumeSlider, video);
+        SetSliderWithoutNotify(vfxVolumeSlider, vfx);
 
-        float videoVolume = GetSavedVideoVolume();
-
-
-        if (menuMusicSlider != null)
-            menuMusicSlider.SetValueWithoutNotify(menuVolume);
-
-        if (levelMusicSlider != null)
-            levelMusicSlider.SetValueWithoutNotify(levelVolume);
-
-        if (videoVolumeSlider != null)
-            videoVolumeSlider.SetValueWithoutNotify(videoVolume);
-
-
-        UpdatePercentageText(menuMusicValueText, menuVolume);
-        UpdatePercentageText(levelMusicValueText, levelVolume);
-        UpdatePercentageText(videoVolumeValueText, videoVolume);
+        UpdatePercentageText(masterVolumeValueText, master);
+        UpdatePercentageText(menuMusicValueText, menu);
+        UpdatePercentageText(levelMusicValueText, level);
+        UpdatePercentageText(endGameMusicValueText, endGame);
+        UpdatePercentageText(videoVolumeValueText, video);
+        UpdatePercentageText(vfxVolumeValueText, vfx);
     }
 
 
-    // ==================================================
-    // GET SAVED MENU VOLUME
-    // ==================================================
-
-    private float GetSavedMenuVolume()
-    {
-        /*
-         * On the first launch, keep the current volume
-         * configured on the menu AudioSource.
-         */
-        float defaultValue = menuMusicSource != null ? menuMusicSource.volume : 1f;
-
-
-        return Mathf.Clamp01(PlayerPrefs.GetFloat(MenuMusicVolumeKey, defaultValue));
-    }
-
-
-    // ==================================================
-    // GET SAVED LEVEL VOLUME
-    // ==================================================
-
-    private float GetSavedLevelVolume()
-    {
-        if (AudioManager.Instance != null)
-            return Mathf.Clamp01(AudioManager.Instance.LevelMusicVolume);
-
-        return Mathf.Clamp01(PlayerPrefs.GetFloat(LevelMusicVolumeKey, 1f));
-    }
-
-
-    // ==================================================
-    // GET SAVED VIDEO VOLUME
-    // ==================================================
-
-    private float GetSavedVideoVolume()
-    {
-        if (LevelVideoIntroManager.Instance != null)
-            return Mathf.Clamp01(LevelVideoIntroManager.Instance.VideoVolume);
-
-
-        return Mathf.Clamp01(PlayerPrefs.GetFloat(VideoVolumeKey, 1f));
-    }
-
-
-    // ==================================================
     // LISTENERS
-    // ==================================================
-
     private void SetupListeners()
     {
+        if (masterVolumeSlider != null)
+            masterVolumeSlider.onValueChanged.AddListener(OnMasterVolumeChanged);
+
         if (menuMusicSlider != null)
-            menuMusicSlider.onValueChanged.AddListener(OnMenuMusicSliderChanged);
+            menuMusicSlider.onValueChanged.AddListener(OnMenuMusicChanged);
 
         if (levelMusicSlider != null)
-            levelMusicSlider.onValueChanged.AddListener(OnLevelMusicSliderChanged);
+            levelMusicSlider.onValueChanged.AddListener(OnLevelMusicChanged);
+
+        if (endGameMusicSlider != null)
+            endGameMusicSlider.onValueChanged.AddListener(OnEndGameMusicChanged);
 
         if (videoVolumeSlider != null)
-            videoVolumeSlider.onValueChanged.AddListener(OnVideoVolumeSliderChanged);
+            videoVolumeSlider.onValueChanged.AddListener(OnVideoVolumeChanged);
+
+        if (vfxVolumeSlider != null)
+            vfxVolumeSlider.onValueChanged.AddListener(OnVFXVolumeChanged);
     }
 
 
-    // ==================================================
-    // MENU MUSIC
-    // ==================================================
-
-    private void OnMenuMusicSliderChanged(float value)
-    {
-        ApplyMenuMusicVolume(value);
-        PlayerPrefs.SetFloat(MenuMusicVolumeKey, Mathf.Clamp01(value));
-        PlayerPrefs.Save();
-    }
-
-
-    private void ApplyMenuMusicVolume(float value)
+    // MASTER
+    private void OnMasterVolumeChanged(float value)
     {
         value = Mathf.Clamp01(value);
 
-        if (menuMusicSource != null)
-            menuMusicSource.volume = value;
+        if (mixerSettings != null)
+            mixerSettings.SetMasterVolume(value);
+        else
+            SaveFallback(GameAudioMixerSettings.MasterVolumeKey, value);
+
+
+        UpdatePercentageText(masterVolumeValueText, value);
+    }
+
+
+    // MENU MUSIC
+    private void OnMenuMusicChanged(float value)
+    {
+        value = Mathf.Clamp01(value);
+
+        if (mixerSettings != null)
+            mixerSettings.SetMenuMusicVolume(value);
+        else
+            SaveFallback(GameAudioMixerSettings.MenuMusicVolumeKey, value);
+
 
         UpdatePercentageText(menuMusicValueText, value);
     }
 
 
-    // ==================================================
     // LEVEL MUSIC
-    // ==================================================
-
-    private void OnLevelMusicSliderChanged(float value)
-    {
-        ApplyLevelMusicVolume(value);
-    }
-
-
-    private void ApplyLevelMusicVolume(float value)
+    private void OnLevelMusicChanged(float value)
     {
         value = Mathf.Clamp01(value);
 
+        if (mixerSettings != null)
+            mixerSettings.SetLevelMusicVolume(value);
+        else
+            SaveFallback(GameAudioMixerSettings.LevelMusicVolumeKey, value);
+
+
+        /*  
+          * Keep AudioManager's public compatibility state synchronized.  
+          * In the mixer version AudioManager no longer multiplies the  
+            * AudioSource by this user value, so this does NOT double-volume.
+        */
 
         if (AudioManager.Instance != null)
-        {
             AudioManager.Instance.SetLevelMusicVolume(value);
-        }
-        else
-        {
-            /*
-             * Fallback if AudioManager is not ready.
-             */
-            PlayerPrefs.SetFloat(LevelMusicVolumeKey, value);
-            PlayerPrefs.Save();
-        }
-
 
         UpdatePercentageText(levelMusicValueText, value);
     }
 
 
-    // ==================================================
-    // VIDEO AUDIO
-    // ==================================================
+    // END GAME MUSIC
 
-    private void OnVideoVolumeSliderChanged(float value)
-    {
-        ApplyVideoVolume(value);
-    }
-
-
-    private void ApplyVideoVolume(float value)
+    private void OnEndGameMusicChanged(float value)
     {
         value = Mathf.Clamp01(value);
 
+        if (mixerSettings != null)
+            mixerSettings.SetEndGameMusicVolume(value);
+        else
+            SaveFallback(GameAudioMixerSettings.EndGameMusicVolumeKey, value);
 
-        /*
-        * This method:
-        * - changes the current VideoPlayer AudioSource volume
-        * - saves the value to PlayerPrefs
-        * - and on the else Fallback if LevelVideoIntroManager has not completed Awake yet.
+
+        UpdatePercentageText(endGameMusicValueText, value);
+    }
+
+
+    // VIDEO
+
+    private void OnVideoVolumeChanged(float value)
+    {
+        value = Mathf.Clamp01(value);
+
+        if (mixerSettings != null)
+            mixerSettings.SetVideoVolume(value);
+        else
+            SaveFallback(GameAudioMixerSettings.VideoVolumeKey, value);
+
+        /*  
+          * Keep LevelVideoIntroManager's public compatibility state  
+          * synchronized. Its AudioSource remains at full/base volume  
+          * while the mixer applies the user's setting.  
         */
 
         if (LevelVideoIntroManager.Instance != null)
-        {
             LevelVideoIntroManager.Instance.SetVideoVolume(value);
-        }
-        else
-        {
-            PlayerPrefs.SetFloat(VideoVolumeKey, value);
-            PlayerPrefs.Save();
-        }
-
 
         UpdatePercentageText(videoVolumeValueText, value);
     }
 
 
-    // ==================================================
-    // PERCENTAGE TEXT
-    // ==================================================
+    // VFX
 
-    private void UpdatePercentageText(TMP_Text text, float value)
+    private void OnVFXVolumeChanged(float value)
     {
-        if (text == null) return;
+        value = Mathf.Clamp01(value);
+
+        if (mixerSettings != null)
+            mixerSettings.SetVFXVolume(value);
+        else
+            SaveFallback(GameAudioMixerSettings.VFXVolumeKey, value);
+
+
+        UpdatePercentageText(vfxVolumeValueText, value);
+    }
+
+
+    // HELPERS
+
+    private static float GetCurrentOrSaved(float currentValue, string key, float defaultValue)
+    {
+        if (currentValue >= 0f)
+            return Mathf.Clamp01(currentValue);
+
+        return Mathf.Clamp01(PlayerPrefs.GetFloat(key, Mathf.Clamp01(defaultValue)));
+    }
+
+
+    private static void SaveFallback(string key, float value)
+    {
+        PlayerPrefs.SetFloat(key, Mathf.Clamp01(value));
+
+        PlayerPrefs.Save();
+    }
+
+
+    private static void SetSliderWithoutNotify(Slider slider, float value)
+    {
+        if (slider == null)
+            return;
+
+        slider.SetValueWithoutNotify(Mathf.Clamp01(value));
+    }
+
+
+    private static void UpdatePercentageText(TMP_Text text, float value)
+    {
+        if (text == null)
+            return;
 
         int percent = Mathf.RoundToInt(Mathf.Clamp01(value) * 100f);
 
@@ -284,11 +297,7 @@ public class AudioSettingsUI : MonoBehaviour
     }
 
 
-    // ==================================================
-    // SLIDER SETUP
-    // ==================================================
-
-    private void ConfigureSlider(Slider slider)
+    private static void ConfigureSlider(Slider slider)
     {
         if (slider == null)
             return;
@@ -299,20 +308,39 @@ public class AudioSettingsUI : MonoBehaviour
     }
 
 
-    // ==================================================
+    // VALIDATE
+
+    private void OnValidate()
+    {
+        defaultMasterVolume = Mathf.Clamp01(defaultMasterVolume);
+        defaultMenuMusicVolume = Mathf.Clamp01(defaultMenuMusicVolume);
+        defaultLevelMusicVolume = Mathf.Clamp01(defaultLevelMusicVolume);
+        defaultEndGameMusicVolume = Mathf.Clamp01(defaultEndGameMusicVolume);
+        defaultVideoVolume = Mathf.Clamp01(defaultVideoVolume);
+        defaultVFXVolume = Mathf.Clamp01(defaultVFXVolume);
+    }
+
+
     // CLEANUP
-    // ==================================================
 
     private void OnDestroy()
     {
+        if (masterVolumeSlider != null)
+            masterVolumeSlider.onValueChanged.RemoveListener(OnMasterVolumeChanged);
+
         if (menuMusicSlider != null)
-            menuMusicSlider.onValueChanged.RemoveListener(OnMenuMusicSliderChanged);
+            menuMusicSlider.onValueChanged.RemoveListener(OnMenuMusicChanged);
 
         if (levelMusicSlider != null)
-            levelMusicSlider.onValueChanged.RemoveListener(OnLevelMusicSliderChanged);
+            levelMusicSlider.onValueChanged.RemoveListener(OnLevelMusicChanged);
+
+        if (endGameMusicSlider != null)
+            endGameMusicSlider.onValueChanged.RemoveListener(OnEndGameMusicChanged);
 
         if (videoVolumeSlider != null)
-            videoVolumeSlider.onValueChanged.RemoveListener(OnVideoVolumeSliderChanged);
+            videoVolumeSlider.onValueChanged.RemoveListener(OnVideoVolumeChanged);
 
+        if (vfxVolumeSlider != null)
+            vfxVolumeSlider.onValueChanged.RemoveListener(OnVFXVolumeChanged);
     }
 }

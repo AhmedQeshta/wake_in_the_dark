@@ -53,8 +53,11 @@ public class CompanionFollower2D : MonoBehaviour
     [SerializeField] private string jumpingParameter = "IsJumping";
 
     [Header("Facing")]
-    [Tooltip("Only the visual sprite is flipped. Physics objects and child transforms are not flipped.")]
     [SerializeField] private SpriteRenderer spriteRenderer;
+
+    [Tooltip("Transform mirrored on X when Wife changes facing. For your current Wife prefab assign the Wife ROOT here. This mirrors the sprite, ShadowCaster2D, Collider2D offsets, LandCheck, and attached visual children together.")]
+    [SerializeField] private Transform facingFlipRoot;
+
     [SerializeField] private bool spriteFacesRightByDefault = true;
     [SerializeField] private bool facePlayerWhileFollowing = true;
     [SerializeField] private bool faceMovementDirection = true;
@@ -82,6 +85,9 @@ public class CompanionFollower2D : MonoBehaviour
     private int groundedHash;
     private int jumpingHash;
 
+    private float facingScaleXMagnitude = 1f;
+    private int currentFacingScaleSign = 1;
+
     public bool IsFollowing => mode == CompanionMode.Following;
     public bool IsGrounded => grounded;
     public bool IsActivated => activated;
@@ -97,13 +103,16 @@ public class CompanionFollower2D : MonoBehaviour
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
 
+        if (facingFlipRoot == null)
+            facingFlipRoot = transform;
+
+        CacheFacingScale();
+
         CacheAnimatorHashes();
         ResolvePlayer();
 
         followPermission = startFollowingEnabled;
-        mode = followPermission
-            ? CompanionMode.WaitingForActivation
-            : CompanionMode.Disabled;
+        mode = followPermission ? CompanionMode.WaitingForActivation : CompanionMode.Disabled;
     }
 
     private void Update()
@@ -188,18 +197,13 @@ public class CompanionFollower2D : MonoBehaviour
             return;
         }
 
-        float deltaX =
-            playerTarget.position.x - transform.position.x;
+        float deltaX = playerTarget.position.x - transform.position.x;
 
-        float distance =
-            Mathf.Abs(deltaX);
+        float distance = Mathf.Abs(deltaX);
 
-        bool playerMoving =
-            IsPlayerMovingHorizontally();
+        bool playerMoving = IsPlayerMovingHorizontally();
 
-        if (followOnlyWhenPlayerMoves &&
-            !playerMoving &&
-            !(catchUpWhenPlayerStops && distance > maxDistance))
+        if (followOnlyWhenPlayerMoves && !playerMoving && !(catchUpWhenPlayerStops && distance > maxDistance))
         {
             StopHorizontalMovement();
             return;
@@ -219,15 +223,9 @@ public class CompanionFollower2D : MonoBehaviour
             return;
         }
 
-        float speed =
-            distance > maxDistance
-                ? catchUpSpeed
-                : moveSpeed;
+        float speed = distance > maxDistance ? catchUpSpeed : moveSpeed;
 
-        MoveHorizontally(
-            Mathf.Sign(deltaX),
-            speed
-        );
+        MoveHorizontally(Mathf.Sign(deltaX), speed);
     }
 
     private bool IsPlayerMovingHorizontally()
@@ -238,9 +236,7 @@ public class CompanionFollower2D : MonoBehaviour
         return Mathf.Abs(playerRigidbody.linearVelocity.x) > playerMoveThreshold;
     }
 
-    private void MoveHorizontally(
-        float direction,
-        float speed)
+    private void MoveHorizontally(float direction, float speed)
     {
         if (Mathf.Abs(direction) < 0.01f)
         {
@@ -248,19 +244,12 @@ public class CompanionFollower2D : MonoBehaviour
             return;
         }
 
-        rb.linearVelocity =
-            new Vector2(
-                direction * speed,
-                rb.linearVelocity.y
-            );
+        rb.linearVelocity = new Vector2(direction * speed, rb.linearVelocity.y);
 
         moving = true;
 
-        if (faceMovementDirection &&
-            mode == CompanionMode.Waypoint)
-        {
+        if (faceMovementDirection && mode == CompanionMode.Waypoint)
             FaceDirection(direction);
-        }
     }
 
     private void StopHorizontalMovement()
@@ -268,11 +257,7 @@ public class CompanionFollower2D : MonoBehaviour
         if (rb == null)
             return;
 
-        rb.linearVelocity =
-            new Vector2(
-                0f,
-                rb.linearVelocity.y
-            );
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
         moving = false;
     }
@@ -282,8 +267,7 @@ public class CompanionFollower2D : MonoBehaviour
         if (!mirrorPlayerJump)
             return;
 
-        if (jumpOnlyWhileFollowing &&
-            mode != CompanionMode.Following)
+        if (jumpOnlyWhileFollowing && mode != CompanionMode.Following)
         {
             ClearPendingJumpInput();
             return;
@@ -295,20 +279,14 @@ public class CompanionFollower2D : MonoBehaviour
             return;
         }
 
-        if (Input.GetButtonDown("Jump") &&
-            grounded)
+        if (Input.GetButtonDown("Jump") && grounded)
         {
             jumpQueued = true;
             jumpCutApplied = false;
         }
 
-        if (Input.GetButtonUp("Jump") &&
-            !grounded &&
-            rb.linearVelocity.y > 0f &&
-            !jumpCutApplied)
-        {
+        if (Input.GetButtonUp("Jump") && !grounded && rb.linearVelocity.y > 0f && !jumpCutApplied)
             jumpCutQueued = true;
-        }
 
         if (grounded)
             jumpCutApplied = false;
@@ -334,29 +312,19 @@ public class CompanionFollower2D : MonoBehaviour
 
         jumpCutQueued = false;
 
-        if (grounded ||
-            rb.linearVelocity.y <= 0f ||
-            jumpCutApplied)
+        if (grounded || rb.linearVelocity.y <= 0f || jumpCutApplied)
         {
             return;
         }
 
-        rb.linearVelocity =
-            new Vector2(
-                rb.linearVelocity.x,
-                rb.linearVelocity.y * jumpCutMultiplier
-            );
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutMultiplier);
 
         jumpCutApplied = true;
     }
 
     private void ExecuteJump()
     {
-        rb.linearVelocity =
-            new Vector2(
-                rb.linearVelocity.x,
-                jumpForce
-            );
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
         grounded = false;
     }
@@ -384,16 +352,9 @@ public class CompanionFollower2D : MonoBehaviour
             return;
         }
 
-        bool touchingGround =
-            Physics2D.OverlapCircle(
-                groundCheck.position,
-                groundCheckRadius,
-                groundLayer
-            ) != null;
+        bool touchingGround = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer) != null;
 
-        grounded =
-            touchingGround &&
-            rb.linearVelocity.y <= 0.1f;
+        grounded = touchingGround && rb.linearVelocity.y <= 0.1f;
 
         if (grounded)
             jumpCutApplied = false;
@@ -404,55 +365,82 @@ public class CompanionFollower2D : MonoBehaviour
         if (spriteRenderer == null)
             return;
 
-        if (mode == CompanionMode.Following &&
-            facePlayerWhileFollowing &&
-            playerTarget != null)
+        if (mode == CompanionMode.Following && facePlayerWhileFollowing && playerTarget != null)
         {
-            float deltaX =
-                playerTarget.position.x - transform.position.x;
+            float deltaX = playerTarget.position.x - transform.position.x;
 
             if (Mathf.Abs(deltaX) > facingDeadZone)
-            {
-                FaceDirection(
-                    Mathf.Sign(deltaX)
-                );
-            }
+                FaceDirection(Mathf.Sign(deltaX));
 
             return;
         }
 
-        if (mode == CompanionMode.Waypoint &&
-            faceMovementDirection &&
-            assignedWaypoint != null)
+        if (mode == CompanionMode.Waypoint && faceMovementDirection && assignedWaypoint != null)
         {
-            float deltaX =
-                assignedWaypoint.position.x - transform.position.x;
+            float deltaX = assignedWaypoint.position.x - transform.position.x;
 
             if (Mathf.Abs(deltaX) > facingDeadZone)
-            {
-                FaceDirection(
-                    Mathf.Sign(deltaX)
-                );
-            }
+                FaceDirection(Mathf.Sign(deltaX));
+
         }
     }
 
-    private void FaceDirection(
-        float direction)
+    private void FaceDirection(float direction)
     {
-        if (spriteRenderer == null ||
-            Mathf.Abs(direction) < 0.01f)
+        if (facingFlipRoot == null || Mathf.Abs(direction) < 0.01f)
+            return;
+        bool wantsRight = direction > 0f;
+        int desiredScaleSign;
+        if (spriteFacesRightByDefault)
+            desiredScaleSign = wantsRight ? 1 : -1;
+        else
+            desiredScaleSign = wantsRight ? -1 : 1;
+
+        if (currentFacingScaleSign == desiredScaleSign)
         {
+            if (spriteRenderer != null && spriteRenderer.flipX)
+                spriteRenderer.flipX = false;
+
             return;
         }
+        Vector3 scale = facingFlipRoot.localScale;
+        scale.x = facingScaleXMagnitude * desiredScaleSign;
+        facingFlipRoot.localScale = scale;
 
-        bool wantsRight =
-            direction > 0f;
+        /* 
+         * Root scale now owns facing.
+         * Keep SpriteRenderer.flipX OFF to avoid a double flip.
+        */
+        if (spriteRenderer != null)
+            spriteRenderer.flipX = false;
 
-        spriteRenderer.flipX =
-            spriteFacesRightByDefault
-                ? !wantsRight
-                : wantsRight;
+
+        currentFacingScaleSign = desiredScaleSign;
+
+        /* 
+         * Make collider geometry update immediately.
+        */
+        Physics2D.SyncTransforms();
+    }
+
+
+    private void CacheFacingScale()
+    {
+        if (facingFlipRoot == null)
+            facingFlipRoot = transform;
+
+
+        facingScaleXMagnitude = Mathf.Abs(facingFlipRoot.localScale.x);
+
+        if (facingScaleXMagnitude < 0.0001f)
+            facingScaleXMagnitude = 1f;
+
+
+        currentFacingScaleSign = facingFlipRoot.localScale.x < 0f ? -1 : 1;
+
+        if (spriteRenderer != null && spriteRenderer.flipX)
+            spriteRenderer.flipX = false;
+
     }
 
     private void CacheAnimatorHashes()
@@ -467,20 +455,9 @@ public class CompanionFollower2D : MonoBehaviour
         if (animator == null)
             return;
 
-        animator.SetBool(
-            movingHash,
-            moving && grounded
-        );
-
-        animator.SetBool(
-            groundedHash,
-            grounded
-        );
-
-        animator.SetBool(
-            jumpingHash,
-            !grounded
-        );
+        animator.SetBool(movingHash, moving && grounded);
+        animator.SetBool(groundedHash, grounded);
+        animator.SetBool(jumpingHash, !grounded);
     }
 
     public void EnableFollowing()
@@ -523,10 +500,7 @@ public class CompanionFollower2D : MonoBehaviour
     {
         if (assignedWaypoint == null)
         {
-            Debug.LogWarning(
-                "CompanionFollower2D: Assigned Waypoint is missing.",
-                this
-            );
+            Debug.LogWarning("CompanionFollower2D: Assigned Waypoint is missing.", this);
             return;
         }
 
@@ -638,5 +612,8 @@ public class CompanionFollower2D : MonoBehaviour
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (facingFlipRoot == null)
+            facingFlipRoot = transform;
     }
 }

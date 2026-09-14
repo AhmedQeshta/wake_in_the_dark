@@ -90,7 +90,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 54791565
-  m_SortingLayer: 14
+  m_SortingLayer: 17
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5226838838795628538, guid: 55cf54083d8a553488d675b706cac7de, type: 3}
@@ -590,6 +590,7 @@ MonoBehaviour:
   groundedParameter: IsGrounded
   jumpingParameter: IsJumping
   spriteRenderer: {fileID: 1453599545991659465}
+  facingFlipRoot: {fileID: 6062337602242704376}
   spriteFacesRightByDefault: 1
   facePlayerWhileFollowing: 1
   faceMovementDirection: 1
@@ -618,9 +619,9 @@ MonoBehaviour:
   freezePhysicsDuringTransformation: 1
   animationEventFallbackDelay: 1.25
   playerMovement: {fileID: 8248812184403582645}
-  companionFollower: {fileID: 0}
+  companionFollower: {fileID: 7336675099815957090}
   playerDeath: {fileID: 5042983488134794985}
-  playerRigidbody: {fileID: 0}
+  playerRigidbody: {fileID: 3568939854841670296}
   playerAnimator: {fileID: 6790992965107109497}
 --- !u!114 &7280110437066544009
 MonoBehaviour:
@@ -692,7 +693,7 @@ MonoBehaviour:
   - {x: -0.4132481, y: -0.30997837, z: 0}
   - {x: -0.39829713, y: -0.19581957, z: 0}
   - {x: -0.33353418, y: -0.105540514, z: 0}
-  m_ShapePathHash: -1955122055
+  m_ShapePathHash: 184949991
   m_InstanceId: 0
   m_ShadowShape2DComponent: {fileID: 0}
   m_ShadowShape2DProvider:

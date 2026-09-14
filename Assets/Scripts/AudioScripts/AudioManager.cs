@@ -54,7 +54,10 @@ public class AudioManager : MonoBehaviour
 
     [Header("User Music Volume")]
 
-    [Tooltip("Global user multiplier for level music. 1 = use the level's configured volume, 0 = mute.")]
+    [Tooltip(
+        "Compatibility/fallback user value for level music. " +
+        "When GameAudioMixerSettings exists, the AudioMixer applies this setting and the AudioSource keeps only the level's artistic/base volume."
+    )]
     [SerializeField, Range(0f, 1f)]
     private float levelMusicVolume = 1f;
 
@@ -101,7 +104,10 @@ public class AudioManager : MonoBehaviour
     public AudioClip CurrentMusicClip => activeMusicSource != null ? activeMusicSource.clip : null;
 
 
-    public float LevelMusicVolume => levelMusicVolume;
+    public float LevelMusicVolume =>
+        GameAudioMixerSettings.Instance != null
+            ? GameAudioMixerSettings.Instance.LevelMusicVolume
+            : levelMusicVolume;
 
 
     public bool TransitionSilenceActive => transitionSilenceActive;
@@ -218,13 +224,36 @@ public class AudioManager : MonoBehaviour
 
     public void SetLevelMusicVolume(float volume)
     {
-        levelMusicVolume = Mathf.Clamp01(volume);
+        levelMusicVolume =
+            Mathf.Clamp01(
+                volume
+            );
 
 
-        PlayerPrefs.SetFloat(LevelMusicVolumeKey, levelMusicVolume);
+        if (GameAudioMixerSettings.Instance != null)
+        {
+            /*
+             * The AudioMixer now owns the user's level-music volume.
+             * The level AudioSources keep the artistic/base volume
+             * from LevelMusicSettings so volume is not applied twice.
+             */
+            GameAudioMixerSettings.Instance.SetLevelMusicVolume(
+                levelMusicVolume
+            );
+        }
+        else
+        {
+            /*
+             * Backward-compatible fallback when the mixer settings
+             * component is missing.
+             */
+            PlayerPrefs.SetFloat(
+                LevelMusicVolumeKey,
+                levelMusicVolume
+            );
 
-
-        PlayerPrefs.Save();
+            PlayerPrefs.Save();
+        }
 
 
         ApplyLevelMusicVolumeImmediately();
@@ -233,35 +262,40 @@ public class AudioManager : MonoBehaviour
 
     private void ApplyLevelMusicVolumeImmediately()
     {
-        /*
-         * Level Music Settings contains the artistic/base
-         * volume for each level.
-         *
-         * The user's setting is a multiplier on top.
-         *
-         * Example:
-         * Level volume = 0.7
-         * User slider  = 0.5
-         * Final volume = 0.35
-         */
-        float baseVolume = currentLevelSettings != null ? currentLevelSettings.MusicVolume : defaultMusicVolume;
+        float baseVolume =
+            currentLevelSettings != null
+                ? currentLevelSettings.MusicVolume
+                : defaultMusicVolume;
 
 
-        float finalVolume = baseVolume * levelMusicVolume;
+        float sourceMultiplier =
+            GameAudioMixerSettings.Instance != null
+                ? 1f
+                : levelMusicVolume;
 
 
-        if (activeMusicSource != null && activeMusicSource.clip != null)
-            activeMusicSource.volume = finalVolume;
+        float finalSourceVolume =
+            baseVolume *
+            sourceMultiplier;
 
 
-        /*
-         * Usually the inactive source is silent.
-         * If a crossfade happens to be running while
-         * the setting changes, keep it inside the new
-         * user volume limit too.
-         */
-        if (inactiveMusicSource != null && inactiveMusicSource.isPlaying)
-            inactiveMusicSource.volume = Mathf.Min(inactiveMusicSource.volume, finalVolume);
+        if (activeMusicSource != null &&
+            activeMusicSource.clip != null)
+        {
+            activeMusicSource.volume =
+                finalSourceVolume;
+        }
+
+
+        if (inactiveMusicSource != null &&
+            inactiveMusicSource.isPlaying)
+        {
+            inactiveMusicSource.volume =
+                Mathf.Min(
+                    inactiveMusicSource.volume,
+                    finalSourceVolume
+                );
+        }
     }
 
 
@@ -494,7 +528,23 @@ public class AudioManager : MonoBehaviour
         }
 
 
-        float targetVolume = currentLevelSettings.MusicVolume * levelMusicVolume;
+        /*
+         * Mixer version:
+         * - AudioSource volume = artistic/base level volume.
+         * - AudioMixer LevelMusicVolume = user's setting.
+         *
+         * If GameAudioMixerSettings is missing, preserve the old
+         * source-volume multiplier as a safe fallback.
+         */
+        float sourceUserMultiplier =
+            GameAudioMixerSettings.Instance != null
+                ? 1f
+                : levelMusicVolume;
+
+
+        float targetVolume =
+            currentLevelSettings.MusicVolume *
+            sourceUserMultiplier;
 
 
         float transitionDuration = currentLevelSettings.CrossfadeDuration;

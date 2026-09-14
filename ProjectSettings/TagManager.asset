@@ -47,6 +47,15 @@ TagManager:
   - name: bg_1
     uniqueID: 4113232591
     locked: 0
+  - name: Plane_1
+    uniqueID: 1574387467
+    locked: 0
+  - name: Plane_2
+    uniqueID: 1801256441
+    locked: 0
+  - name: Plane_bottom_1
+    uniqueID: 2151408147
+    locked: 0
   - name: Smoke_under
     uniqueID: 856453977
     locked: 0
@@ -112,6 +121,21 @@ TagManager:
     locked: 0
   - name: Lever_info
     uniqueID: 4033787931
+    locked: 0
+  - name: Plane_top
+    uniqueID: 3435805431
+    locked: 0
+  - name: Plane_top_1
+    uniqueID: 2427777091
+    locked: 0
+  - name: Plane_top_2
+    uniqueID: 2518418335
+    locked: 0
+  - name: Plane_top_3
+    uniqueID: 1951519319
+    locked: 0
+  - name: Plane_top_4
+    uniqueID: 4190109
     locked: 0
   m_RenderingLayers:
   - Default

@@ -48,6 +48,41 @@ public class LevelVideoIntroManager : MonoBehaviour
     [SerializeField] private bool resetIntroVideoHistoryAfterEnding = true;
 
 
+    // ENDING PRESENTATION
+    [Header("Ending Presentation")]
+
+    [Tooltip("Root shown AFTER the final ending video finishes or is skipped. Recommended hierarchy: EndingScreen -> EndingBackground + Continue_End_btn.")]
+    [SerializeField] private GameObject endingScreenRoot;
+
+    [Tooltip("RawImage inside EndingScreen that displays the LOOPED ending background video.")]
+    [SerializeField] private RawImage endingBackgroundVideoRawImage;
+
+    [Tooltip("Dedicated VideoPlayer used only for the LOOPED ending background.")]
+    [SerializeField] private VideoPlayer endingBackgroundVideoPlayer;
+
+    [Tooltip("VideoClip that loops behind Continue_End_btn after the final ending video finishes.")]
+    [SerializeField] private VideoClip endingBackgroundVideoClip;
+
+    [Tooltip("Dedicated AudioSource for the ending music. Use a separate AudioSource from both VideoPlayer AudioSources.")]
+    [SerializeField] private AudioSource endingMusicSource;
+
+
+    [Tooltip("Music played after the ending video finishes. It keeps playing until Continue_End_btn returns to the main menu.")]
+    [SerializeField] private AudioClip endingMusicClip;
+
+    [SerializeField, Range(0f, 1f)] private float endingMusicVolume = 0.7f;
+
+
+    [Tooltip("Loop the ending-screen music.")]
+    [SerializeField] private bool loopEndingMusic = true;
+
+    [Tooltip("ON = preserve the old Continue_End countdown/auto-return behavior. OFF = keep the ending screen and looping music visible until the player clicks the button.")]
+    [SerializeField] private bool useContinueEndCountdown = false;
+
+    [Tooltip("If ON, the manager automatically prefers a Continue_End_btn that is a CHILD of EndingScreen. This prevents the old duplicate button under Controls from being shown by mistake.")]
+    [SerializeField] private bool autoResolveEndingButtonInsideEndingScreen = true;
+
+
     // UI
 
     [Header("UI")]
@@ -104,7 +139,6 @@ public class LevelVideoIntroManager : MonoBehaviour
 
 
     // VIDEO PLAYER
-
     [Header("Video Player")]
     [SerializeField] private VideoPlayer videoPlayer;
 
@@ -113,14 +147,12 @@ public class LevelVideoIntroManager : MonoBehaviour
 
 
     // VIDEO AUDIO
-
     [Header("Video Audio")]
     [SerializeField, Range(0f, 1f)] private float videoVolume = 1f;
     private const string VideoVolumeKey = "Settings.LevelIntroVideoVolume";
 
 
     // LEVEL 1
-
     [Header("Initial Already-Loaded Level")]
 
     [Tooltip("Bootstrap already loads this level behind the Start Menu.")]
@@ -181,7 +213,7 @@ public class LevelVideoIntroManager : MonoBehaviour
 
     public bool IsBusy => isBusy;
     public string PendingSceneName => pendingSceneName;
-    public float VideoVolume => videoVolume;
+    public float VideoVolume => GameAudioMixerSettings.Instance != null ? GameAudioMixerSettings.Instance.VideoVolume : videoVolume;
     public bool IsPlayingGameEnding => isBusy && videoFlowMode == VideoFlowMode.GameEnding;
     public bool KeepWorldAudioMutedDuringLevelLoad => keepWorldAudioMutedDuringLevelLoad;
 
@@ -204,8 +236,11 @@ public class LevelVideoIntroManager : MonoBehaviour
         videoVolume = Mathf.Clamp01(PlayerPrefs.GetFloat(VideoVolumeKey, videoVolume));
 
         ConfigureVideoPlayer();
+        ResolveEndingPresentationReferences();
+        ConfigureEndingBackgroundVideoPlayer();
         ConfigureButtons();
         ConfigureCountdownTexts();
+        ConfigureEndingPresentation();
         HideVideoMenuImmediate();
     }
 
@@ -220,6 +255,8 @@ public class LevelVideoIntroManager : MonoBehaviour
     {
         UnsubscribeVideoEvents();
         StopButtonTimers();
+        StopEndingBackgroundVideo();
+        StopEndingMusic();
     }
 
     // TRANSITION AUDIO ISOLATION
@@ -455,9 +492,12 @@ public class LevelVideoIntroManager : MonoBehaviour
         if (endingVideoClip == null)
         {
             isBusy = true;
+            videoFinished = true;
+
             DisableCurrentPlayerControls();
             ShowVideoMenu();
-            ShowFinishedButton();
+            ShowEndingPresentation();
+
             return;
         }
 
@@ -476,9 +516,11 @@ public class LevelVideoIntroManager : MonoBehaviour
             if (videoFlowMode == VideoFlowMode.GameEnding)
             {
                 isBusy = true;
+                videoFinished = true;
+
                 DisableCurrentPlayerControls();
                 ShowVideoMenu();
-                ShowFinishedButton();
+                ShowEndingPresentation();
             }
             else if (continueIfVideoMissing)
             {
@@ -495,6 +537,7 @@ public class LevelVideoIntroManager : MonoBehaviour
         isBusy = true;
 
         DisableCurrentPlayerControls();
+        HideEndingPresentationImmediate();
         ShowVideoMenu();
         SetPlayingButtonState();
 
@@ -530,8 +573,17 @@ public class LevelVideoIntroManager : MonoBehaviour
 
         videoFinished = true;
 
+
+        if (videoFlowMode == VideoFlowMode.GameEnding)
+        {
+            ShowEndingPresentation();
+            return;
+        }
+
+
         /*
-         * Keep the final video frame visible.
+         * Normal level intro:
+         * keep the final video frame visible and show Continue.
          */
         ShowFinishedButton();
 
@@ -548,6 +600,14 @@ public class LevelVideoIntroManager : MonoBehaviour
          * Never block progression because a video failed.
          */
         videoFinished = true;
+
+
+        if (videoFlowMode == VideoFlowMode.GameEnding)
+        {
+            ShowEndingPresentation();
+            return;
+        }
+
 
         ShowFinishedButton();
     }
@@ -573,7 +633,7 @@ public class LevelVideoIntroManager : MonoBehaviour
         if (videoFlowMode == VideoFlowMode.GameEnding)
         {
             videoFinished = true;
-            ShowFinishedButton();
+            ShowEndingPresentation();
             return;
         }
 
@@ -869,9 +929,25 @@ public class LevelVideoIntroManager : MonoBehaviour
     public void SetVideoVolume(float value)
     {
         videoVolume = Mathf.Clamp01(value);
+
+
+        if (GameAudioMixerSettings.Instance != null)
+        {
+            /*
+             * Mixer owns the user's VideoVolume.
+             * Keep the VideoPlayer AudioSource at full/base volume
+             * so the setting is not applied twice.
+             */
+            GameAudioMixerSettings.Instance.SetVideoVolume(videoVolume);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(VideoVolumeKey, videoVolume);
+            PlayerPrefs.Save();
+        }
+
+
         ApplyVideoVolume();
-        PlayerPrefs.SetFloat(VideoVolumeKey, videoVolume);
-        PlayerPrefs.Save();
     }
 
 
@@ -891,7 +967,18 @@ public class LevelVideoIntroManager : MonoBehaviour
     {
         if (videoAudioSource == null)
             return;
-        videoAudioSource.volume = videoVolume;
+
+
+        /*
+         * Mixer setup:
+         * source stays at 1 and Video_Audio mixer group applies
+         * the user's saved volume.
+         *
+         * Fallback:
+         * old direct AudioSource behavior remains available if
+         * GameAudioMixerSettings is missing.
+         */
+        videoAudioSource.volume = GameAudioMixerSettings.Instance != null ? 1f : videoVolume;
     }
 
 
@@ -907,9 +994,7 @@ public class LevelVideoIntroManager : MonoBehaviour
         if (videoMenuCanvasGroup != null)
         {
             videoMenuCanvasGroup.alpha = 1f;
-
             videoMenuCanvasGroup.interactable = true;
-
             videoMenuCanvasGroup.blocksRaycasts = true;
         }
 
@@ -951,31 +1036,298 @@ public class LevelVideoIntroManager : MonoBehaviour
     {
         StopSkipAppearTimer();
 
+
+        if (videoFlowMode == VideoFlowMode.GameEnding)
+        {
+            ShowEndingPresentation();
+            return;
+        }
+
+
         if (skipButton != null)
         {
             skipButton.gameObject.SetActive(false);
             skipButton.interactable = false;
         }
 
-        bool isEnding = videoFlowMode == VideoFlowMode.GameEnding;
 
         if (continueButton != null)
         {
-            continueButton.gameObject.SetActive(!isEnding);
-            continueButton.interactable = !isEnding;
+            continueButton.gameObject.SetActive(true);
+            continueButton.interactable = true;
         }
+
 
         if (continueEndButton != null)
         {
-            continueEndButton.gameObject.SetActive(isEnding);
-            continueEndButton.interactable = isEnding;
+            continueEndButton.gameObject.SetActive(false);
+            continueEndButton.interactable = false;
         }
 
+
+        StartContinueCountdown(false);
+    }
+
+
+    // ENDING PRESENTATION
+
+    private void ConfigureEndingPresentation()
+    {
+        ResolveEndingPresentationReferences();
+        ConfigureEndingBackgroundVideoPlayer();
+
+
+        if (endingMusicSource != null)
+        {
+            endingMusicSource.playOnAwake = false;
+
+            endingMusicSource.loop = loopEndingMusic;
+
+            endingMusicSource.ignoreListenerPause = true;
+
+            endingMusicSource.volume = endingMusicVolume;
+        }
+
+
+        HideEndingPresentationImmediate();
+    }
+
+
+    private void ResolveEndingPresentationReferences()
+    {
+        if (endingScreenRoot == null)
+            return;
+
+
+        if (endingBackgroundVideoRawImage == null)
+        {
+            RawImage[] rawImages = endingScreenRoot.GetComponentsInChildren<RawImage>(true);
+
+            if (rawImages != null && rawImages.Length > 0)
+                endingBackgroundVideoRawImage = rawImages[0];
+        }
+
+
+        if (autoResolveEndingButtonInsideEndingScreen)
+        {
+            bool currentButtonIsInsideEndingScreen = continueEndButton != null && continueEndButton.transform.IsChildOf(endingScreenRoot.transform);
+
+
+            if (!currentButtonIsInsideEndingScreen)
+            {
+                Button[] buttons = endingScreenRoot.GetComponentsInChildren<Button>(true);
+                Button preferredButton = null;
+
+                foreach (Button button in buttons)
+                {
+                    if (button == null)
+                        continue;
+
+                    if (button.name == "Continue_End_btn")
+                    {
+                        preferredButton = button;
+                        break;
+                    }
+
+                    if (preferredButton == null)
+                        preferredButton = button;
+                }
+
+                if (preferredButton != null)
+                    continueEndButton = preferredButton;
+            }
+        }
+    }
+
+
+    private void ConfigureEndingBackgroundVideoPlayer()
+    {
+        if (endingBackgroundVideoPlayer == null)
+            return;
+
+
+        endingBackgroundVideoPlayer.playOnAwake = false;
+        endingBackgroundVideoPlayer.isLooping = true;
+        endingBackgroundVideoPlayer.waitForFirstFrame = true;
+        endingBackgroundVideoPlayer.timeUpdateMode = VideoTimeUpdateMode.UnscaledGameTime;
+
         /*
-         * Start the countdown only AFTER the correct Continue button appears.
-         * The player can still click the button early.
+         * Ending background video is VISUAL ONLY.
+         * Final ending music is handled by endingMusicSource.
          */
-        StartContinueCountdown(isEnding);
+        endingBackgroundVideoPlayer.audioOutputMode = VideoAudioOutputMode.None;
+
+
+        if (endingBackgroundVideoClip != null)
+            endingBackgroundVideoPlayer.clip = endingBackgroundVideoClip;
+
+
+        /*
+         * If the VideoPlayer already has a target RenderTexture,
+         * automatically display it in the RawImage.
+         */
+        if (endingBackgroundVideoRawImage != null)
+        {
+            endingBackgroundVideoRawImage.raycastTarget = false;
+
+
+            if (endingBackgroundVideoPlayer.targetTexture != null)
+                endingBackgroundVideoRawImage.texture = endingBackgroundVideoPlayer.targetTexture;
+
+        }
+    }
+
+
+    private void ShowEndingPresentation()
+    {
+        StopSkipAppearTimer();
+        StopContinueCountdown();
+
+
+        ResolveEndingPresentationReferences();
+        ConfigureEndingBackgroundVideoPlayer();
+
+
+        /*
+         * Stop the FINAL story video first.
+         */
+        if (videoPlayer != null)
+            videoPlayer.Stop();
+
+
+        if (videoRawImage != null)
+            videoRawImage.enabled = false;
+
+        if (skipButton != null)
+        {
+            skipButton.gameObject.SetActive(false);
+            skipButton.interactable = false;
+        }
+
+
+        if (continueButton != null)
+        {
+            continueButton.gameObject.SetActive(false);
+            continueButton.interactable = false;
+        }
+
+
+        /*
+         * Show EndingScreen BEFORE enabling its children.
+         */
+        if (endingScreenRoot != null)
+            endingScreenRoot.SetActive(true);
+
+
+        /*
+         * Start the LOOPED ending background video.
+         */
+        PlayEndingBackgroundVideo();
+
+
+        /*
+         * Continue_End_btn must render ABOVE the RawImage.
+         */
+        if (continueEndButton != null)
+        {
+            continueEndButton.gameObject.SetActive(true);
+            continueEndButton.interactable = true;
+            continueEndButton.transform.SetAsLastSibling();
+        }
+
+        PlayEndingMusic();
+
+        if (useContinueEndCountdown)
+            StartContinueCountdown(true);
+        else
+            SetCountdownText(continueEndCountdownText, 0, false);
+
+    }
+
+
+    private void PlayEndingBackgroundVideo()
+    {
+        if (endingBackgroundVideoRawImage != null)
+        {
+            endingBackgroundVideoRawImage.gameObject.SetActive(true);
+            endingBackgroundVideoRawImage.enabled = true;
+            endingBackgroundVideoRawImage.raycastTarget = false;
+        }
+
+
+        if (endingBackgroundVideoPlayer == null || endingBackgroundVideoClip == null)
+            return;
+
+
+        endingBackgroundVideoPlayer.Stop();
+        endingBackgroundVideoPlayer.clip = endingBackgroundVideoClip;
+        endingBackgroundVideoPlayer.isLooping = true;
+        endingBackgroundVideoPlayer.audioOutputMode = VideoAudioOutputMode.None;
+
+
+        if (endingBackgroundVideoPlayer.targetTexture != null && endingBackgroundVideoRawImage != null)
+            endingBackgroundVideoRawImage.texture = endingBackgroundVideoPlayer.targetTexture;
+
+
+
+        endingBackgroundVideoPlayer.Play();
+    }
+
+
+    private void StopEndingBackgroundVideo()
+    {
+        if (endingBackgroundVideoPlayer != null)
+            endingBackgroundVideoPlayer.Stop();
+
+
+
+        if (endingBackgroundVideoRawImage != null)
+            endingBackgroundVideoRawImage.enabled = false;
+
+    }
+
+
+    private void HideEndingPresentationImmediate()
+    {
+        StopEndingBackgroundVideo();
+        StopEndingMusic();
+
+
+        if (continueEndButton != null)
+        {
+            continueEndButton.gameObject.SetActive(false);
+            continueEndButton.interactable = false;
+        }
+
+
+        if (endingScreenRoot != null)
+            endingScreenRoot.SetActive(false);
+
+    }
+
+
+    private void PlayEndingMusic()
+    {
+        if (endingMusicSource == null || endingMusicClip == null)
+            return;
+
+        endingMusicSource.Stop();
+        endingMusicSource.clip = endingMusicClip;
+        endingMusicSource.loop = loopEndingMusic;
+        endingMusicSource.playOnAwake = false;
+        endingMusicSource.ignoreListenerPause = true;
+        endingMusicSource.volume = endingMusicVolume;
+        endingMusicSource.Play();
+    }
+
+
+    private void StopEndingMusic()
+    {
+        if (endingMusicSource == null)
+            return;
+
+
+        endingMusicSource.Stop();
     }
 
 
@@ -1058,6 +1410,14 @@ public class LevelVideoIntroManager : MonoBehaviour
         Button targetButton = isEnding ? continueEndButton : continueButton;
         TMP_Text targetText = isEnding ? continueEndCountdownText : continueCountdownText;
         float duration = isEnding ? continueEndCountdownDuration : continueCountdownDuration;
+
+
+        if (isEnding && !useContinueEndCountdown)
+        {
+            SetCountdownText(targetText, 0, false);
+            return;
+        }
+
 
         if (targetButton == null)
             return;
@@ -1226,6 +1586,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     {
         StopButtonTimers();
         HideCountdownTexts();
+        HideEndingPresentationImmediate();
 
         if (skipButton != null)
             skipButton.gameObject.SetActive(false);
@@ -1323,6 +1684,7 @@ public class LevelVideoIntroManager : MonoBehaviour
     private void OnValidate()
     {
         videoVolume = Mathf.Clamp01(videoVolume);
+        endingMusicVolume = Mathf.Clamp01(endingMusicVolume);
 
         skipAppearDelay = Mathf.Max(0f, skipAppearDelay);
         continueCountdownDuration = Mathf.Max(0f, continueCountdownDuration);
@@ -1334,6 +1696,12 @@ public class LevelVideoIntroManager : MonoBehaviour
         if (string.IsNullOrWhiteSpace(watchedKeyPrefix))
             watchedKeyPrefix = "WakeInTheDark.LevelIntroVideoSeen.";
 
+
+        if (endingScreenRoot != null)
+        {
+            ResolveEndingPresentationReferences();
+        }
+
     }
 
 
@@ -1342,6 +1710,8 @@ public class LevelVideoIntroManager : MonoBehaviour
     private void OnDestroy()
     {
         StopButtonTimers();
+        StopEndingBackgroundVideo();
+        StopEndingMusic();
 
         if (skipButton != null)
             skipButton.onClick.RemoveListener(SkipVideo);

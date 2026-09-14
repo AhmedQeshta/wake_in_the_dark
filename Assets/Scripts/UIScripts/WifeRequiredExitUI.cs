@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(CanvasGroup))]
@@ -17,8 +18,8 @@ public class WifeRequiredExitUI : MonoBehaviour
   [SerializeField] private RectTransform warningRoot;
 
 
-  [Tooltip("Arabic/English warning text.")]
-  [SerializeField] private TMP_Text messageText;
+  [Tooltip("Arabic warning image.")]
+  [SerializeField] private Image messageImage;
 
 
   [Tooltip("Arrow UI RectTransform. At rotation 0 the arrow sprite " + "should preferably point RIGHT.")]
@@ -101,8 +102,8 @@ public class WifeRequiredExitUI : MonoBehaviour
     if (directionArrow != null)
       directionArrow.gameObject.SetActive(false);
 
-    if (messageText != null)
-      messageText.gameObject.SetActive(false);
+    if (messageImage != null)
+      messageImage.gameObject.SetActive(false);
   }
 
 
@@ -134,8 +135,9 @@ public class WifeRequiredExitUI : MonoBehaviour
       wifeTarget = FindWifeTarget();
 
 
-    if (messageText != null)
-      messageText.gameObject.SetActive(true);
+
+    if (messageImage != null)
+      messageImage.gameObject.SetActive(true);
 
 
     visibleRequested = true;
@@ -412,8 +414,8 @@ public class WifeRequiredExitUI : MonoBehaviour
     if (warningRoot == null)
       warningRoot = transform as RectTransform;
 
-    if (messageText != null)
-      messageText.gameObject.SetActive(true);
+    if (messageImage != null)
+      messageImage.gameObject.SetActive(true);
   }
 
 
